@@ -113,30 +113,7 @@ public class ChatService {
      */
     public Long extractChatIdFromSession(WebSocketSession session) {
         String uri = Objects.requireNonNull(session.getUri()).toString();
-        return extractChatIdFromUri(uri);
-    }
-
-    /**
-     * URI에서 chatId를 추출
-     * @param uri WebSocket URI
-     * @return URI에 포함된 chatId 값 (존재하지 않으면 null 반환)
-     */
-    private Long extractChatIdFromUri(String uri) {
-        // uir가 ws://localhost:8080/ws?chatId=12345&userId=67890로 요청이 들어온다면
-        try {
-            return Stream
-                .of(new URI(uri).getQuery()
-                    .split("&")) //URI에서 쿼리문자열에서 &로 구분 지어 매개변수 분리 및 스트림으로 변환 ex) chatId=12345&userId=67890
-                .map(param -> param.split("=")) // 매개변수에서 =을 제거하여 key - value로 변경 [["chatId", "12345"], ["userId", "67890"]]
-                .filter(values -> values.length == 2
-                    && "chatId".equals(values[0])) // 요소가 2개 이면서 chatId인 것만 가져오기 ["chatId","12345"]]
-                .map(pair -> Long.parseLong(pair[1])) // 2번째인 value 값가져와 chatId 추출 ["12345"], chatId를 Long으로 변환
-                .findFirst() // chatId 가져오기 "12345"
-                .orElse(null); // 없다면 null값 리턴
-        } catch (URISyntaxException | NumberFormatException e) {
-            logger.error("URI에서 chatId 추출 실패: {}", uri, e);
-            return null;
-        }
+        return extractParamFromUri(uri, "chatId");
     }
 
     /**
@@ -146,25 +123,33 @@ public class ChatService {
      */
     public Long extractUserIdFromSession(WebSocketSession session) {
         String uri = Objects.requireNonNull(session.getUri()).toString();
-        return extractUserIdFromUri(uri);
+        return extractParamFromUri(uri, "userId");
     }
 
     /**
-     * URI에서 userId를 추출
-     * @param uri WebSocket URI
-     * @return URI에 포함된 userId 값 (존재하지 않으면 null 반환)
+     * URI에서 특정 파라미터 값을 추출
+     * @param uri WebSocket URI 문자열
+     * @param paramName 추출할 파라미터 이름
+     * @return 해당 파라미터 값 (존재하지 않으면 null 반환)
      */
-    private Long extractUserIdFromUri(String uri) {
+    private Long extractParamFromUri(String uri, String paramName) {
+        // e.g. `ws://localhost:8080/ws?chatId=1&userId=1` 입력의 경우,
         try {
-            return Stream
-                .of(new URI(uri).getQuery().split("&")) // 쿼리 문자열에서 &로 분리
-                .map(param -> param.split("=")) // =으로 key-value 분리
-                .filter(values -> values.length == 2 && "userId".equals(values[0])) // userId 필터링
-                .map(pair -> Long.parseLong(pair[1])) // userId 값 추출 후 Long으로 변환
-                .findFirst() // 첫 번째 값 반환
-                .orElse(null); // 없으면 null 반환
-        } catch (URISyntaxException e) {
-            logger.error("URI에서 userId 추출 실패: {}", uri, e);
+            // "?"로 나누어 쿼리 파라미터 부분만 가져옴 (e.g. `chatId=1&userId=1`)
+            String[] parts = uri.split("\\?");
+            if (parts.length < 2) {
+                logger.warn("쿼리 파라미터 없음: {}", uri);
+                return null;
+            }
+            // 쿼리 부분을 "&"로 나누어 매개변수 배열로 변환
+            return Stream.of(parts[1].split("&"))  // 쿼리 문자열에서 &로 분리 (e.g. `["chatId=1", "userId=1"]`)
+                .map(param -> param.split("="))  // =으로 key-value 분리 (e.g. `[["chatId", "1"], ["userId", "1"]])`
+                .filter(values -> values.length == 2 && paramName.equals(values[0]))  // paramName(userId 또는 chatId) 필터링 (e.g. `["chatId", "1"]`)
+                .map(pair -> Long.parseLong(pair[1]))  // 값 추출 후 Long으로 변환 (e.g. `[1]`)
+                .findFirst()  // 값 가져오기 (e.g. `1`)
+                .orElse(null);  // 없으면 null 반환
+        } catch (NumberFormatException e) {
+            logger.error("URI에서 {} 추출 실패: {}", paramName, uri, e);
             return null;
         }
     }

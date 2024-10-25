@@ -58,6 +58,15 @@ public class ChatService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatId)
             .orElseThrow(() -> new ChatRoomNotFoundException(CHAT_ROOM_NOT_FOUND + chatId));
 
+        // 참여자 검증 (해당 채팅방에 sender가 포함되어 있는지)
+        boolean isParticipant = chatRoom.getParticipants().stream()
+            .anyMatch(user -> user.getId().equals(userId));
+
+        if (!isParticipant) {
+            logger.warn("사용자가 채팅방에 참여하지 않음: userId={}, chatId={}", userId, chatId);
+            throw new IllegalArgumentException("사용자가 해당 채팅방의 참여자가 아닙니다.");
+        }
+
         // 메시지 저장
         ChatMessage chatMessage = new ChatMessage(chatRoom, "user_" + userId, message, LocalDateTime.now());
         chatRepository.save(chatMessage);

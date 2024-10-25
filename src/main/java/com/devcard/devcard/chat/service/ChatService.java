@@ -67,14 +67,31 @@ public class ChatService {
         if (sessions != null) {
             for (WebSocketSession webSocketSession : sessions) {
                 if (webSocketSession.isOpen()) {
-                    try {
-                        webSocketSession.sendMessage(new TextMessage(message));
-                    } catch (IOException e) {
-                        logger.error("메시지 전송 실패: {}", webSocketSession.getId(), e);
+                    boolean success = sendMessageWithRetry(webSocketSession, message, 3);
+                    if (!success) {
+                        logger.error("메시지 전송 실패: sessionId={}, message={}", webSocketSession.getId(), message);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * 메시지 전송 실패 시 재전송을 고려한 로직
+     * @param session 추가할 WebSocketSession
+     * @param message 전송할 message
+     * @param retries 재전송 시도 횟수
+     */
+    private boolean sendMessageWithRetry(WebSocketSession session, String message, int retries) {
+        for (int i = 0; i < retries; i++) {
+            try {
+                session.sendMessage(new TextMessage(message));
+                return true;
+            } catch (IOException e) {
+                logger.warn("메시지 전송 실패 (재시도 {}/{}): sessionId={}, message={}", i + 1, retries, session.getId(), message);
+            }
+        }
+        return false;
     }
 
     /**

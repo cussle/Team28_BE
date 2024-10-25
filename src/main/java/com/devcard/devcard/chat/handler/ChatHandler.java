@@ -28,9 +28,9 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception {
         String payload = textMessage.getPayload();
-        Long chatId = chatService.extractChatId(payload);
-        Long userId = chatService.extractUserIdFromSession(session);
-        String message = chatService.extractMessage(payload);
+        Long chatId = chatService.extractChatIdFromSession(session);  // URI에서 chatId,
+        Long userId = chatService.extractUserIdFromSession(session);  // URI에서 userId 추출
+        String message = chatService.extractMessage(payload);  // 페이로드에서 message만 추출
 
         chatService.handleIncomingMessage(chatId, userId, message);
     }

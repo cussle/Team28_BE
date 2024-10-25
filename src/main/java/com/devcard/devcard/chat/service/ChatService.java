@@ -109,26 +109,6 @@ public class ChatService {
     }
 
     /**
-     * 메시지 payload에서 chatId 추출
-     * @param payload 메시지의 payload
-     * @return 추출된 chatId 값 (존재하지 않으면 null 반환)
-     */
-    public Long extractChatId(String payload) {
-        JSONParser parser = new JSONParser();
-        try {
-            JSONObject jsonObject = (JSONObject) parser.parse(payload);
-            String chatIdStr = jsonObject.getAsString("chatId");
-            if (chatIdStr != null) {
-                return Long.parseLong(chatIdStr);
-            }
-            return null;
-        } catch (ParseException | NumberFormatException e) {
-            logger.error("payload에서 chatId 추출 실패: {}", payload, e);
-            return null; // 예외 발생 시 null 반환
-        }
-    }
-
-    /**
      * 메시지 payload에서 message 값 추출
      * @param payload 메시지의 payload
      * @return 추출된 메시지 내용 (존재하지 않으면 null 반환)

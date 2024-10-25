@@ -85,6 +85,7 @@ public class ChatService {
     public void addSessionToChatRoom(Long chatId, WebSocketSession session) {
         // computIfAbsent메소드: 키 값이 없으면 해당되는 키값으로 생성 해 리턴, 있다면 해당 값 리턴
         chatRoomSessions.computeIfAbsent(chatId, k -> new CopyOnWriteArrayList<>()).add(session);
+        logger.info("세션 추가됨: chatId={}, sessionId={}", chatId, session.getId());
     }
 
     /**
@@ -94,8 +95,8 @@ public class ChatService {
      */
     public void removeSessionFromChatRoom(Long chatId, WebSocketSession session) {
         List<WebSocketSession> sessions = chatRoomSessions.get(chatId);
-        if (sessions != null) {
-            sessions.remove(session);
+        if (sessions != null && sessions.remove(session)) {
+            logger.info("세션 제거됨: chatId={}, sessionId={}", chatId, session.getId());
         }
     }
 

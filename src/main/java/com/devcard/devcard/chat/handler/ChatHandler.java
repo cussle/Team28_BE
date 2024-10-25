@@ -1,6 +1,9 @@
 package com.devcard.devcard.chat.handler;
 
 import com.devcard.devcard.chat.service.ChatService;
+import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -14,6 +17,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Component
 public class ChatHandler extends TextWebSocketHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
     private final ChatService chatService;
 
     public ChatHandler(ChatService chatService) {
@@ -42,8 +46,23 @@ public class ChatHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        Long chatId = chatService.extractChatIdFromSession(session);
-        chatService.addSessionToChatRoom(chatId, session);
+        try {
+            Long chatId = chatService.extractChatIdFromSession(session);
+            Long userId = chatService.extractUserIdFromSession(session);
+            if (chatId == null || userId == null) {
+                session.close(CloseStatus.BAD_DATA);
+                logger.error("잘못된 chatId 또는 userId로 WebSocket 연결 시도: {}", session.getUri());
+                return;
+            }
+            chatService.addSessionToChatRoom(chatId, session);
+        } catch (Exception e) {
+            logger.error("WebSocket 연결 처리 중 오류 발생: {}", e.getMessage());
+            try {
+                session.close(CloseStatus.BAD_DATA);
+            } catch (IOException ioException) {
+                logger.error("WebSocket 연결 종료 실패: {}", ioException.getMessage());
+            }
+        }
     }
 
     /**

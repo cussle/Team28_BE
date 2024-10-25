@@ -157,7 +157,7 @@ public class ChatService {
             String[] parts = uri.split("\\?");
             if (parts.length < 2) {
                 logger.warn("쿼리 파라미터 없음: {}", uri);
-                return null;
+                throw new IllegalArgumentException(paramName + " 파라미터가 없음");
             }
             // 쿼리 부분을 "&"로 나누어 매개변수 배열로 변환
             return Stream.of(parts[1].split("&"))  // 쿼리 문자열에서 &로 분리 (e.g. `["chatId=1", "userId=1"]`)
@@ -169,7 +169,7 @@ public class ChatService {
                 .orElse(null);  // 없으면 null 반환
         } catch (NumberFormatException e) {
             logger.error("URI에서 {} 추출 실패: {}", paramName, uri, e);
-            return null;
+            throw new IllegalArgumentException(paramName + " 추출 중 숫자 형식 오류");
         }
     }
 }

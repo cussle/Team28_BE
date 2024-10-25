@@ -92,8 +92,8 @@ public class ChatHandler extends TextWebSocketHandler {
         Long chatId = chatService.extractChatIdFromSession(session);
         List<WebSocketSession> sessions = chatService.getChatRoomSessions(chatId);
         if (sessions != null) {
-            sessions.remove(session);
             // 채팅방을 제거하지 않고 해당 세션만 제거
+            sessions.remove(session);
         }
     }
 }

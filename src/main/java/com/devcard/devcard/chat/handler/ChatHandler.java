@@ -1,10 +1,7 @@
 package com.devcard.devcard.chat.handler;
 
-import com.devcard.devcard.chat.dto.CreateRoomRequest;
-import com.devcard.devcard.chat.service.ChatRoomService;
 import com.devcard.devcard.chat.service.ChatService;
 import java.io.IOException;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,13 +17,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Component
 public class ChatHandler extends TextWebSocketHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(ChatHandler.class);
-
-    private final ChatRoomService chatRoomService;
+    private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
     private final ChatService chatService;
 
-    public ChatHandler(ChatRoomService chatRoomService, ChatService chatService) {
-        this.chatRoomService = chatRoomService;
+    public ChatHandler(ChatService chatService) {
         this.chatService = chatService;
     }
 
@@ -38,23 +32,11 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception {
         String payload = textMessage.getPayload();
-        Long chatId = chatService.extractChatId(payload);
-        String message = chatService.extractMessage(payload);
-        List<WebSocketSession> chatRoom = chatService.getChatRoomSessions(chatId);
+        Long chatId = chatService.extractChatIdFromSession(session);  // URI에서 chatId,
+        Long userId = chatService.extractUserIdFromSession(session);  // URI에서 userId 추출
+        String message = chatService.extractMessage(payload);  // 페이로드에서 message만 추출
 
-        if (chatRoom != null) {
-            for (WebSocketSession webSocketSession : chatRoom) { // 해당 채팅방의 모든 세션에 대해서 메세지 보내기
-                if (webSocketSession.isOpen()) { // 세션이 열려있다면
-                    try {
-                        webSocketSession.sendMessage(new TextMessage(message)); // 세션에 메세지 보내기
-                    } catch (IOException e) { // 오류 일시적 처리
-                        logger.error("세션에 메시지 보내기 실패: {}", webSocketSession.getId(), e);
-                    }
-                }
-            }
-        } else {
-            logger.warn("다음의 chatId로 채팅방 찾기 실패: {}", chatId);
-        }
+        chatService.handleIncomingMessage(chatId, userId, message);
     }
 
     /**
@@ -64,22 +46,23 @@ public class ChatHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        Long chatId = chatService.extractChatIdFromSession(session);
-        Long userId = chatService.extractUserIdFromSession(session);
-
-        // 채팅방 존재 여부 확인 ( ## 검토 필요 )
-        if (!chatRoomService.existsChatRoom(chatId)) {
-            // 참여자 ID 리스트를 CreateRoomRequest에 추가
-            List<Long> participantsId = List.of(userId); // userId를 Long 타입으로 변환하여 리스트로 추가
-            CreateRoomRequest createRoomRequest = new CreateRoomRequest();
-            createRoomRequest.setParticipantsId(participantsId);
-
-            // 새로운 채팅방 생성
-            chatRoomService.createChatRoom(createRoomRequest);
+        try {
+            Long chatId = chatService.extractChatIdFromSession(session);
+            Long userId = chatService.extractUserIdFromSession(session);
+            if (chatId == null || userId == null) {
+                session.close(CloseStatus.BAD_DATA);
+                logger.error("잘못된 chatId 또는 userId로 WebSocket 연결 시도: {}", session.getUri());
+                return;
+            }
+            chatService.addSessionToChatRoom(chatId, session);
+        } catch (Exception e) {
+            logger.error("WebSocket 연결 처리 중 오류 발생: {}", e.getMessage());
+            try {
+                session.close(CloseStatus.BAD_DATA);
+            } catch (IOException ioException) {
+                logger.error("WebSocket 연결 종료 실패: {}", ioException.getMessage());
+            }
         }
-
-        // 세션 추가
-        chatService.addSessionToChatRoom(chatId, session);
     }
 
     /**
@@ -90,10 +73,6 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         Long chatId = chatService.extractChatIdFromSession(session);
-        List<WebSocketSession> sessions = chatService.getChatRoomSessions(chatId);
-        if (sessions != null) {
-            sessions.remove(session);
-            // 채팅방을 제거하지 않고 해당 세션만 제거
-        }
+        chatService.removeSessionFromChatRoom(chatId, session);
     }
 }

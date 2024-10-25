@@ -1,10 +1,13 @@
 package com.devcard.devcard.chat.service;
 
-import com.devcard.devcard.chat.dto.SendingMessageRequest;
-import com.devcard.devcard.chat.dto.SendingMessageResponse;
+import static com.devcard.devcard.chat.util.Constants.CHAT_ROOM_NOT_FOUND;
+
+import com.devcard.devcard.chat.exception.room.ChatRoomNotFoundException;
+import com.devcard.devcard.chat.model.ChatMessage;
+import com.devcard.devcard.chat.model.ChatRoom;
 import com.devcard.devcard.chat.repository.ChatRepository;
-import java.net.URI;
-import java.net.URISyntaxException;
+import com.devcard.devcard.chat.repository.ChatRoomRepository;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
@@ -36,19 +40,67 @@ public class ChatService {
     private static final ConcurrentMap<Long, List<WebSocketSession>> chatRoomSessions = new ConcurrentHashMap<>();
 
     private final ChatRepository chatRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
-    public ChatService(ChatRepository chatRepository) {
+    public ChatService(ChatRepository chatRepository, ChatRoomRepository chatRoomRepository) {
         this.chatRepository = chatRepository;
+        this.chatRoomRepository = chatRoomRepository;
     }
 
     /**
-     * 메시지를 전송
-     * @param sendingMessageRequest 전송하려는 메시지 정보를 담은 요청 객체
-     * @return 전송된 메시지 정보와 타임스탬프를 포함하는 응답 객체
+     * DB에 채팅을 저장하고 해당 채팅방에 연결된 모든 WebSocket 세션에 메시지 전송
+     * @param chatId  채팅방 ID
+     * @param userId  사용자 ID
+     * @param message 전송하려는 메시지
      */
-    public SendingMessageResponse sendMessage(SendingMessageRequest sendingMessageRequest) {
-        // 메세지 전송 로직( jpa, h2-db, 소켓 등...)
-        return new SendingMessageResponse(123L, LocalDateTime.now());
+    public void handleIncomingMessage(Long chatId, Long userId, String message) {
+        // ChatRoom 조회
+        ChatRoom chatRoom = chatRoomRepository.findById(chatId)
+            .orElseThrow(() -> new ChatRoomNotFoundException(CHAT_ROOM_NOT_FOUND + chatId));
+
+        // 참여자 검증 (해당 채팅방에 sender가 포함되어 있는지)
+        boolean isParticipant = chatRoom.getParticipants().stream()
+            .anyMatch(user -> user.getId().equals(userId));
+
+        if (!isParticipant) {
+            logger.warn("사용자가 채팅방에 참여하지 않음: userId={}, chatId={}", userId, chatId);
+            throw new IllegalArgumentException("사용자가 해당 채팅방의 참여자가 아닙니다.");
+        }
+
+        // 메시지 저장
+        ChatMessage chatMessage = new ChatMessage(chatRoom, "user_" + userId, message, LocalDateTime.now());
+        chatRepository.save(chatMessage);
+
+        // 채팅방에 연결된 모든 WebSocket 세션에 메시지 전송
+        List<WebSocketSession> sessions = getChatRoomSessions(chatId);
+        if (sessions != null) {
+            for (WebSocketSession webSocketSession : sessions) {
+                if (webSocketSession.isOpen()) {
+                    boolean success = sendMessageWithRetry(webSocketSession, message, 3);
+                    if (!success) {
+                        logger.error("메시지 전송 실패: sessionId={}, message={}", webSocketSession.getId(), message);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 메시지 전송 실패 시 재전송을 고려한 로직
+     * @param session 추가할 WebSocketSession
+     * @param message 전송할 message
+     * @param retries 재전송 시도 횟수
+     */
+    private boolean sendMessageWithRetry(WebSocketSession session, String message, int retries) {
+        for (int i = 0; i < retries; i++) {
+            try {
+                session.sendMessage(new TextMessage(message));
+                return true;
+            } catch (IOException e) {
+                logger.warn("메시지 전송 실패 (재시도 {}/{}): sessionId={}, message={}", i + 1, retries, session.getId(), message);
+            }
+        }
+        return false;
     }
 
     /**
@@ -57,8 +109,21 @@ public class ChatService {
      * @param session 추가할 WebSocketSession
      */
     public void addSessionToChatRoom(Long chatId, WebSocketSession session) {
-        // computIfAbsent메소드: 키값이 없으면 해당되는 키값으로 생성 해 리턴, 있다면 해당 값 리턴
+        // computIfAbsent메소드: 키 값이 없으면 해당되는 키값으로 생성 해 리턴, 있다면 해당 값 리턴
         chatRoomSessions.computeIfAbsent(chatId, k -> new CopyOnWriteArrayList<>()).add(session);
+        logger.info("세션 추가됨: chatId={}, sessionId={}", chatId, session.getId());
+    }
+
+    /**
+     * 특정 채팅방에 WebSocketSession 제거
+     * @param chatId  채팅방 ID
+     * @param session 추가할 WebSocketSession
+     */
+    public void removeSessionFromChatRoom(Long chatId, WebSocketSession session) {
+        List<WebSocketSession> sessions = chatRoomSessions.get(chatId);
+        if (sessions != null && sessions.remove(session)) {
+            logger.info("세션 제거됨: chatId={}, sessionId={}", chatId, session.getId());
+        }
     }
 
     /**
@@ -68,26 +133,6 @@ public class ChatService {
      */
     public List<WebSocketSession> getChatRoomSessions(Long chatId) {
         return chatRoomSessions.get(chatId);
-    }
-
-    /**
-     * 메시지 payload에서 chatId 추출
-     * @param payload 메시지의 payload
-     * @return 추출된 chatId 값 (존재하지 않으면 null 반환)
-     */
-    public Long extractChatId(String payload) {
-        JSONParser parser = new JSONParser();
-        try {
-            JSONObject jsonObject = (JSONObject) parser.parse(payload);
-            String chatIdStr = jsonObject.getAsString("chatId");
-            if (chatIdStr != null) {
-                return Long.parseLong(chatIdStr);
-            }
-            return null;
-        } catch (ParseException | NumberFormatException e) {
-            logger.error("payload에서 chatId 추출 실패: {}", payload, e);
-            return null; // 예외 발생 시 null 반환
-        }
     }
 
     /**
@@ -113,30 +158,7 @@ public class ChatService {
      */
     public Long extractChatIdFromSession(WebSocketSession session) {
         String uri = Objects.requireNonNull(session.getUri()).toString();
-        return extractChatIdFromUri(uri);
-    }
-
-    /**
-     * URI에서 chatId를 추출
-     * @param uri WebSocket URI
-     * @return URI에 포함된 chatId 값 (존재하지 않으면 null 반환)
-     */
-    private Long extractChatIdFromUri(String uri) {
-        // uir가 ws://localhost:8080/ws?chatId=12345&userId=67890로 요청이 들어온다면
-        try {
-            return Stream
-                .of(new URI(uri).getQuery()
-                    .split("&")) //URI에서 쿼리문자열에서 &로 구분 지어 매개변수 분리 및 스트림으로 변환 ex) chatId=12345&userId=67890
-                .map(param -> param.split("=")) // 매개변수에서 =을 제거하여 key - value로 변경 [["chatId", "12345"], ["userId", "67890"]]
-                .filter(values -> values.length == 2
-                    && "chatId".equals(values[0])) // 요소가 2개 이면서 chatId인 것만 가져오기 ["chatId","12345"]]
-                .map(pair -> Long.parseLong(pair[1])) // 2번째인 value 값가져와 chatId 추출 ["12345"], chatId를 Long으로 변환
-                .findFirst() // chatId 가져오기 "12345"
-                .orElse(null); // 없다면 null값 리턴
-        } catch (URISyntaxException | NumberFormatException e) {
-            logger.error("URI에서 chatId 추출 실패: {}", uri, e);
-            return null;
-        }
+        return extractParamFromUri(uri, "chatId");
     }
 
     /**
@@ -146,26 +168,35 @@ public class ChatService {
      */
     public Long extractUserIdFromSession(WebSocketSession session) {
         String uri = Objects.requireNonNull(session.getUri()).toString();
-        return extractUserIdFromUri(uri);
+        return extractParamFromUri(uri, "userId");
     }
 
     /**
-     * URI에서 userId를 추출
-     * @param uri WebSocket URI
-     * @return URI에 포함된 userId 값 (존재하지 않으면 null 반환)
+     * URI에서 특정 파라미터 값을 추출
+     * @param uri       WebSocket URI 문자열
+     * @param paramName 추출할 파라미터 이름
+     * @return 해당 파라미터 값 (존재하지 않으면 null 반환)
      */
-    private Long extractUserIdFromUri(String uri) {
+    private Long extractParamFromUri(String uri, String paramName) {
+        // e.g. `ws://localhost:8080/ws?chatId=1&userId=1` 입력의 경우,
         try {
-            return Stream
-                .of(new URI(uri).getQuery().split("&")) // 쿼리 문자열에서 &로 분리
-                .map(param -> param.split("=")) // =으로 key-value 분리
-                .filter(values -> values.length == 2 && "userId".equals(values[0])) // userId 필터링
-                .map(pair -> Long.parseLong(pair[1])) // userId 값 추출 후 Long으로 변환
-                .findFirst() // 첫 번째 값 반환
-                .orElse(null); // 없으면 null 반환
-        } catch (URISyntaxException e) {
-            logger.error("URI에서 userId 추출 실패: {}", uri, e);
-            return null;
+            // "?"로 나누어 쿼리 파라미터 부분만 가져옴 (e.g. `chatId=1&userId=1`)
+            String[] parts = uri.split("\\?");
+            if (parts.length < 2) {
+                logger.warn("쿼리 파라미터 없음: {}", uri);
+                throw new IllegalArgumentException(paramName + " 파라미터가 없음");
+            }
+            // 쿼리 부분을 "&"로 나누어 매개변수 배열로 변환
+            return Stream.of(parts[1].split("&"))  // 쿼리 문자열에서 &로 분리 (e.g. `["chatId=1", "userId=1"]`)
+                .map(param -> param.split("="))  // =으로 key-value 분리 (e.g. `[["chatId", "1"], ["userId", "1"]])`
+                .filter(values -> values.length == 2
+                    && paramName.equals(values[0]))  // paramName(userId 또는 chatId) 필터링 (e.g. `["chatId", "1"]`)
+                .map(pair -> Long.parseLong(pair[1]))  // 값 추출 후 Long으로 변환 (e.g. `[1]`)
+                .findFirst()  // 값 가져오기 (e.g. `1`)
+                .orElse(null);  // 없으면 null 반환
+        } catch (NumberFormatException e) {
+            logger.error("URI에서 {} 추출 실패: {}", paramName, uri, e);
+            throw new IllegalArgumentException(paramName + " 추출 중 숫자 형식 오류");
         }
     }
 }

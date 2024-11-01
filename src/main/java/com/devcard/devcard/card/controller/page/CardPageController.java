@@ -27,11 +27,4 @@ public class CardPageController {
         model.addAttribute("kakaoJavascriptKey", kakaoJavascriptKey);
         return "cardDetail";
     }
-
-    @GetMapping("/cards/{id}/update")
-    public String updateCard(@PathVariable Long id, Model model) {
-        CardResponseDto card = cardService.getCard(id);
-        model.addAttribute("card", card);
-        return "updateCard";
-    }
 }

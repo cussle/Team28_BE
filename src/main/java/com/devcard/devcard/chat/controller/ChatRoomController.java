@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 채팅방과 관련된 CRUD 기능을 관리
+ * <p></p>
  * 채팅방 생성, 목록 조회, 특정 채팅방 조회 및 삭제 기능 제공
  */
 @RestController
-@RequestMapping("/chats")
+@RequestMapping("/api/chats")
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;

@@ -59,7 +59,7 @@ public class ChatRoomController {
     }
 
     /**
-     * 특정 ID의 채팅방을 조회
+     * 특정 ID의 채팅방을 상세 조회
      * @param chatId 조회하려는 채팅방의 ID
      * @return 요청한 채팅방의 상세 정보 반환
      */
@@ -71,11 +71,11 @@ public class ChatRoomController {
     /**
      * 특정 ID의 채팅방을 삭제
      * @param chatId 삭제하려는 채팅방의 ID
-     * @return 삭제가 완료되면 상태 코드 200 반환
+     * @return 삭제가 완료되면 상태 코드 204 반환
      */
     @DeleteMapping("/{chatId}")
     public ResponseEntity<Void> deleteChatRoom(@PathVariable String chatId) {
         chatRoomService.deleteChatRoom(chatId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

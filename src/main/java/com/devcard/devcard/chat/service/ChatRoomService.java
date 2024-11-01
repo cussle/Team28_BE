@@ -117,7 +117,7 @@ public class ChatRoomService {
             .collect(Collectors.toList());
 
         return new ChatRoomResponse(
-            "chat_" + chatRoomId,
+            "room_" + chatRoomId,
             participants,
             messageResponses
         );
@@ -166,7 +166,7 @@ public class ChatRoomService {
      */
     public CreateRoomResponse makeCreateChatRoomResponse(ChatRoom chatRoom) {
         return new CreateRoomResponse(
-            "chat_" + chatRoom.getId(),
+            "room_" + chatRoom.getId(),
             chatRoom.getParticipantsName(),
             chatRoom.getCreatedAt()
         );

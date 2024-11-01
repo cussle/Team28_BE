@@ -42,11 +42,20 @@ public class ChatRoomController {
 
     /**
      * 모든 채팅방 목록을 조회
-     * @return 전체 채팅방 목록을 리스트 형태 반환
+     * @return 전체 채팅방 목록을 리스트 형태로 반환
      */
     @GetMapping("")
     public ResponseEntity<List<ChatRoomListResponse>> getChatRoomList() {
         return ResponseEntity.ok(chatRoomService.getChatRoomList());
+    }
+
+    /**
+     * 특정 유저가 참여하고 있는 채팅방 목록을 조회
+     * @return 해당 채팅방 목록을 리스트 형태로 반환
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ChatRoomListResponse>> getChatRoomsByUser(@PathVariable String userId) {
+        return ResponseEntity.ok(chatRoomService.getChatRoomsByUser(userId));
     }
 
     /**

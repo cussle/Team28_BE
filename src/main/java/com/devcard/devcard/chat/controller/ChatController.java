@@ -17,22 +17,22 @@ public class ChatController {
     /**
      * 채팅 목록 페이지로 이동하는 엔드포인트
      * @param model 뷰에 데이터를 전달하기 위한 모델 객체
-     * @return 채팅 목록 페이지 템플릿 (chats.html)의 이름
+     * @return 채팅 목록 페이지 템플릿 (chat-list.html)의 이름
      */
     @GetMapping("/chats")
     public String getChatList(Model model) {
-        return "chats";  // 채팅 목록 페이지를 반환합니다.
+        return "chat-list";  // 채팅 목록 페이지를 반환합니다.
     }
 
     /**
      * 특정 채팅방 페이지로 이동하는 엔드포인트
      * @param chatId 조회하려는 채팅방의 ID
      * @param model 뷰에 데이터를 전달하기 위한 모델 객체
-     * @return 특정 채팅방 페이지 템플릿 (chat.html)의 이름
+     * @return 특정 채팅방 페이지 템플릿 (chat-room.html)의 이름
      */
     @GetMapping("/chats/{chatId}")
     public String getChatRoom(@PathVariable Long chatId, Model model) {
         model.addAttribute("chatId", chatId);
-        return "chat";
+        return "chat-room";
     }
 }

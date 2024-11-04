@@ -56,6 +56,7 @@ public class ChatRoom {
     public List<String> getParticipantsName() {
         return this.participants.stream().map(ChatUser::getName).toList();
     }
+
     // lastMessage와 LastMessageTime 업데이트
     public void updateLastMessageAndLastMessageTime(String newLastMessage, LocalDateTime newLastMessageTime) {
         this.lastMessage = newLastMessage;

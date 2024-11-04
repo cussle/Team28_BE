@@ -21,7 +21,7 @@
 
 .search-container label {
   margin-left: 0.5rem;
-  color: #888;
+  color: var(--pantone-877c);
 }
 
 .search-container input {

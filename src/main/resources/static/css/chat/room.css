@@ -1,5 +1,5 @@
 div.header > span {
-  color: #0066ff;
+  color: var(--cnu-light-blue);
   position: absolute;
   left: 2rem;
 }
@@ -10,14 +10,6 @@ div.header > span {
   display: flex;
   flex-direction: column;
 }
-
-/*.header {*/
-/*  background-color: #f1f1f1;*/
-/*  padding: 10px;*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  gap: 10px;*/
-/*}*/
 
 .chat-message {
   flex: 1;
@@ -37,13 +29,13 @@ div.header > span {
 }
 
 .left .message-content {
-  background-color: #f1f1f1;
+  background-color: var(--pantone-877c);
   color: #000;
 }
 
 .right .message-content {
-  background-color: #0066ff;
-  color: #fff;
+  background-color: var(--cnu-light-blue);
+  color: white;
 }
 
 .left {
@@ -56,7 +48,7 @@ div.header > span {
 
 .sender {
   font-size: 12px;
-  color: #888;
+  color: var(--pantone-877c);
   margin-bottom: 3px;
 }
 
@@ -76,19 +68,7 @@ input[type="text"] {
 }
 
 div.input-message > span {
-  color: #0066ff;
+  color: var(--cnu-light-blue);
   font-size: 1.8rem;
   margin: 0 0.2rem 0 1rem;
 }
-
-/*button {*/
-/*  background-color: #0066ff;*/
-/*  border: none;*/
-/*  color: #fff;*/
-/*  font-size: 20px;*/
-/*  margin-left: 10px;*/
-/*  border-radius: 50%;*/
-/*  width: 36px;*/
-/*  height: 36px;*/
-/*  cursor: pointer;*/
-/*}*/

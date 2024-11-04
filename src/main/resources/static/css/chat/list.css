@@ -33,16 +33,18 @@
 }
 
 .chat-message {
-  font-size: 1rem;
+  display: -webkit-box; /* 플렉스 컨테이너처럼 동작 */
   color: var(--pantone-blackc);
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 13rem;
+  -webkit-box-orient: vertical; /* 세로 방향으로 박스를 설정 */
+  -webkit-line-clamp: 2; /* 최대 두 줄까지 표시 */
 }
 
 .chat-time {
   color: var(--pantone-877c);
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
 }
 
 .notification-badge {

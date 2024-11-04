@@ -25,8 +25,13 @@
 }
 
 .search-container input {
+  width: 100%;
   font-size: 1rem;
   border: none;
   background: transparent;
   margin-left: 1rem;
+}
+
+.search-container input:focus {
+  outline: none;
 }

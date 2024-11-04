@@ -31,7 +31,7 @@ public class ChatController {
      * @return 특정 채팅방 페이지 템플릿 (chat-room.html)의 이름
      */
     @GetMapping("/chats/{chatId}")
-    public String getChatRoom(@PathVariable Long chatId, Model model) {
+    public String getChatRoom(@PathVariable("chatId") Long chatId, Model model) {
         model.addAttribute("chatId", chatId);
         return "chat-room";
     }

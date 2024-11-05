@@ -1,4 +1,4 @@
-package com.devcard.devcard.chat.controller;
+package com.devcard.devcard.chat.controller.page;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,11 +27,11 @@ public class ChatController {
     /**
      * 특정 채팅방 페이지로 이동하는 엔드포인트
      * @param chatId 조회하려는 채팅방의 ID
-     * @param model 뷰에 데이터를 전달하기 위한 모델 객체
+     * @param model  뷰에 데이터를 전달하기 위한 모델 객체
      * @return 특정 채팅방 페이지 템플릿 (chat-room.html)의 이름
      */
     @GetMapping("/chats/{chatId}")
-    public String getChatRoom(@PathVariable Long chatId, Model model) {
+    public String getChatRoom(@PathVariable("chatId") Long chatId, Model model) {
         model.addAttribute("chatId", chatId);
         return "chat-room";
     }

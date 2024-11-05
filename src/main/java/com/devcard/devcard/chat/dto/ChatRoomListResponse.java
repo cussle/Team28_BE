@@ -24,28 +24,28 @@ public class ChatRoomListResponse {
         return id;
     }
 
-    public List<String> getParticipants() {
-        return participants;
-    }
-
-    public String getLastMessage() {
-        return lastMessage;
-    }
-
-    public LocalDateTime getLastMessageTime() {
-        return lastMessageTime;
-    }
-
     public void setId(long id) {
         this.id = "msg_" + id;
+    }
+
+    public List<String> getParticipants() {
+        return participants;
     }
 
     public void setParticipants(List<String> participants) {
         this.participants = participants;
     }
 
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public LocalDateTime getLastMessageTime() {
+        return lastMessageTime;
     }
 
     public void setLastMessageTime(LocalDateTime lastMessageTime) {

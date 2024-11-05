@@ -71,6 +71,9 @@ public class ChatService {
         ChatMessage chatMessage = new ChatMessage(chatRoom, "user_" + userId, message, LocalDateTime.now());
         chatRepository.save(chatMessage);
 
+        // 마지막 메세지 변경
+        chatRoom.updateLastMessageAndLastMessageTime(message, LocalDateTime.now());
+
         // 채팅방에 연결된 모든 WebSocket 세션에 메시지 전송
         List<WebSocketSession> sessions = getChatRoomSessions(chatId);
         if (sessions != null) {
@@ -97,7 +100,13 @@ public class ChatService {
                 session.sendMessage(new TextMessage(message));
                 return true;
             } catch (IOException e) {
-                logger.warn("메시지 전송 실패 (재시도 {}/{}): sessionId={}, message={}", i + 1, retries, session.getId(), message);
+                logger.warn(
+                    "메시지 전송 실패 (재시도 {}/{}): sessionId={}, message={}",
+                    i + 1,
+                    retries,
+                    session.getId(),
+                    message
+                );
             }
         }
         return false;

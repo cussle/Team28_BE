@@ -1,4 +1,4 @@
-package com.devcard.devcard.chat.controller;
+package com.devcard.devcard.chat.controller.rest;
 
 import com.devcard.devcard.chat.dto.ChatRoomListResponse;
 import com.devcard.devcard.chat.dto.ChatRoomResponse;
@@ -55,7 +55,7 @@ public class ChatRoomController {
      * @return 해당 채팅방 목록을 리스트 형태로 반환
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ChatRoomListResponse>> getChatRoomsByUser(@PathVariable String userId) {
+    public ResponseEntity<List<ChatRoomListResponse>> getChatRoomsByUser(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(chatRoomService.getChatRoomsByUser(userId));
     }
 
@@ -65,7 +65,7 @@ public class ChatRoomController {
      * @return 요청한 채팅방의 상세 정보 반환
      */
     @GetMapping("/{chatId}")
-    public ResponseEntity<ChatRoomResponse> getChatRoomById(@PathVariable String chatId) {
+    public ResponseEntity<ChatRoomResponse> getChatRoomById(@PathVariable("chatId") String chatId) {
         return ResponseEntity.ok(chatRoomService.getChatRoomById(chatId));
     }
 
@@ -75,7 +75,7 @@ public class ChatRoomController {
      * @return 삭제가 완료되면 상태 코드 204 반환
      */
     @DeleteMapping("/{chatId}")
-    public ResponseEntity<Void> deleteChatRoom(@PathVariable String chatId) {
+    public ResponseEntity<Void> deleteChatRoom(@PathVariable("chatId") String chatId) {
         chatRoomService.deleteChatRoom(chatId);
         return ResponseEntity.noContent().build();
     }

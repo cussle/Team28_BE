@@ -3,45 +3,65 @@ $(document).ready(function () {
     $(".nav-item[data-page='chats']").addClass("active"); // chats에 active 클래스 추가
 
     if (window.location.pathname.includes('chats')) {
-        const sampleChatData = [
-            {
-                id: "room_123",
-                participants: ["John Doe"],
-                message: "당일 보내진 메시지일 경우",
-                time: "2024-11-05T08:15:00Z"
-            },
-            {
-                id: "room_124",
-                participants: ["Jane Smith"],
-                message: "올해 보내진 메시지일 경우",
-                time: "2024-09-05T12:30:00Z"
-            },
-            {
-                id: "room_125",
-                participants: ["죠르디"],
-                message: "다른 연도에 보내진 메시지일 경우",
-                time: "2023-09-05T12:30:00Z"
-            }
-        ];
+        const userId = "1"; // 실제로는 로그인한 유저 ID
+        let userName;
 
-        sampleChatData.forEach(chat => {
-            const $chatItem = $('<div>', { class: 'chat-item' });
+        // 유저 이름을 가져오는 함수
+        function fetchUserName() {
+            $.ajax({
+                url: `/cards/${userId}`,
+                method: "GET",
+                success: function (response) {
+                    userName = response.name; // API 응답에서 이름을 가져옴
+                    console.log("유저 네임: " + userName);
+                    fetchUserChatRooms(); // 이름을 가져온 후 채팅방 목록을 호출
+                },
+                error: function (error) {
+                    console.error("본인 정보를 불러오는데 오류가 발생했습니다:", error);
+                }
+            });
+        }
 
-            const $chatImage = $('<div>', { class: 'chat-image' });
-            const $img = $('<img>', { src: '/images/temp_chat_user_image.png', alt: 'User Avatar' });
-            $chatImage.append($img);
+        // 특정 유저의 참여 채팅방 목록을 가져오는 함수
+        function fetchUserChatRooms() {
+            $.ajax({
+                url: `/api/chats/user/${userId}`, // 본인 ID로 채팅방 목록 요청
+                method: "GET",
+                success: function (chatRooms) {
+                    renderChatRooms(chatRooms);
+                },
+                error: function (error) {
+                    console.error("채팅방 목록을 불러오는데 오류가 발생했습니다:", error);
+                }
+            });
+        }
 
-            const $chatInfo = $('<div>', { class: 'chat-info' });
-            const $chatName = $('<span>', { class: 'chat-name', text: chat.participants.join(', ') });
-            const $chatMessage = $('<p>', { class: 'chat-message', text: chat.message });
-            $chatInfo.append($chatName).append($chatMessage);
+        // 채팅방 목록을 화면에 렌더링하는 함수
+        function renderChatRooms(chatRooms) {
+            const chatListContainer = $("#chat-list");
+            chatListContainer.empty(); // 기존 목록 초기화
 
-            const $chatTime = $('<div>', { class: 'chat-time' });
-            const $chatTimeSpan = $('<span>', { text: formatChatTime(chat.time) });
-            $chatTime.append($chatTimeSpan);
-            $chatItem.append($chatImage).append($chatInfo).append($chatTime);
-            $('#chat-list').append($chatItem);
-        });
+            chatRooms.forEach(room => {
+                const chatItem = $('<div>', { class: 'chat-item' });
+
+                const chatImage = $('<div>', { class: 'chat-image' }).append(
+                    $('<img>', { src: '/images/temp_chat_user_image.png', alt: 'User Avatar' })
+                );
+
+                const chatInfo = $('<div>', { class: 'chat-info' });
+                const filteredParticipants = room.participants.filter(name => name !== userName);
+                const chatName = $('<span>', { class: 'chat-name', text: filteredParticipants.join(', ') });
+                const chatMessage = $('<p>', { class: 'chat-message', text: room.lastMessage });
+                chatInfo.append(chatName).append(chatMessage);
+
+                const chatTime = $('<div>', { class: 'chat-time' }).append(
+                    $('<span>', { text: formatChatTime(room.lastMessageTime) })
+                );
+
+                chatItem.append(chatImage).append(chatInfo).append(chatTime);
+                chatListContainer.append(chatItem);
+            });
+        }
 
         function formatChatTime(chatTimeText) {
             const chatTime = new Date(chatTimeText);
@@ -63,5 +83,8 @@ $(document).ready(function () {
                 return `${chatTime.getFullYear()}.${chatTime.getMonth() + 1}.${chatTime.getDate()}.`;
             }
         }
+
+        // 페이지 로드 시 본인 이름을 가져온 후 채팅방 목록 가져오기
+        fetchUserName();
     }
 });

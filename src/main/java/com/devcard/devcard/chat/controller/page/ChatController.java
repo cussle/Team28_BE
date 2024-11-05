@@ -1,4 +1,4 @@
-package com.devcard.devcard.chat.controller;
+package com.devcard.devcard.chat.controller.page;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

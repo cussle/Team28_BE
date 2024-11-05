@@ -1,10 +1,11 @@
--- 채팅 관련 data.sql (line 1~25)
--- 예시 명함 데이터
-INSERT INTO chat_user (id, name, company, position, email, phone, timestamp) VALUES
-    (1, '라이언', 'kakao', 'Software Engineer', 'ryan@kakao.com', '123-123', CURRENT_TIMESTAMP),
-    (2, '죠르디', 'kakao', 'Product Manager', 'jordy@kakao.com', '456-456', CURRENT_TIMESTAMP),
-    (3, '어피치', 'kakao', 'Backend Developer', 'apeach@kakao.com', '789-789', CURRENT_TIMESTAMP);
+-- 회원 관련 data.sql (line 1~6)
+-- 예시 회원 데이터
+INSERT INTO member (member_id, create_date, email, github_id, nickname, profile_img, role, username) VALUES
+    (1, CURRENT_TIMESTAMP, 'member1@example.com', 'github1', 'Member1', 'profile1.jpg', 'USER', 'member1'),
+    (2, CURRENT_TIMESTAMP, 'member2@example.com', 'github2', 'Member2', 'profile2.jpg', 'USER', 'member2'),
+    (3, CURRENT_TIMESTAMP, 'member3@example.com', 'github3', 'Member3', 'profile3.jpg', 'USER', 'member3');
 
+-- 채팅 관련 data.sql (line 8~25)
 -- 예시 채팅방 데이터
 INSERT INTO chat_room (created_at, last_message, last_message_time) VALUES
     (CURRENT_TIMESTAMP, 'Hello, world!', CURRENT_TIMESTAMP),
@@ -12,12 +13,12 @@ INSERT INTO chat_room (created_at, last_message, last_message_time) VALUES
 
 -- 예시 채팅 메시지 데이터
 INSERT INTO chat_message (content, sender, timestamp, chat_room_id) VALUES
-    ('안녕하세요', '라이언', CURRENT_TIMESTAMP, 1),
-    ('새로운 채팅방 메시지~', '어피치', CURRENT_TIMESTAMP, 2),
-    ('Hello, world!', '죠르디', CURRENT_TIMESTAMP + 0.1, 1);
+    ('안녕하세요', 'Member1', CURRENT_TIMESTAMP, 1),
+    ('새로운 채팅방 메시지~', 'Member1', CURRENT_TIMESTAMP, 2),
+    ('Hello, world!', 'Member2', CURRENT_TIMESTAMP + 0.1, 1);
 
 -- 예시 채팅방 참가자 데이터
-INSERT INTO chat_room_participants (chat_room_id, participants_id) VALUES
+INSERT INTO chat_room_participants (chat_room_id, participants_member_id) VALUES
     (1, 1),
     (1, 2),
     (2, 1),

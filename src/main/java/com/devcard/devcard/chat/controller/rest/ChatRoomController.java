@@ -1,4 +1,4 @@
-package com.devcard.devcard.chat.controller;
+package com.devcard.devcard.chat.controller.rest;
 
 import com.devcard.devcard.chat.dto.ChatRoomListResponse;
 import com.devcard.devcard.chat.dto.ChatRoomResponse;

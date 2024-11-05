@@ -1,10 +1,13 @@
 package com.devcard.devcard.card.controller.rest;
 
+import com.devcard.devcard.auth.entity.Member;
+import com.devcard.devcard.auth.model.OauthMemberDetails;
 import com.devcard.devcard.card.dto.CardResponseDto;
 import com.devcard.devcard.card.dto.CardRequestDto;
 import com.devcard.devcard.card.service.CardService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -22,8 +25,12 @@ public class CardController {
     }
 
     @PostMapping
-    public ResponseEntity<CardResponseDto> createCard(@Valid @RequestBody CardRequestDto cardRequestDto) {
-        CardResponseDto responseDto = cardService.createCard(cardRequestDto);
+    public ResponseEntity<CardResponseDto> createCard(
+            @Valid @RequestBody CardRequestDto cardRequestDto,
+            @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
+
+        Member member = oauthMemberDetails.getMember();
+        CardResponseDto responseDto = cardService.createCard(cardRequestDto, member);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(responseDto.getId())
@@ -45,14 +52,23 @@ public class CardController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long id, @Valid @RequestBody CardRequestDto cardRequestDto) {
-        CardResponseDto responseDto = cardService.updateCard(id, cardRequestDto);
+    public ResponseEntity<CardResponseDto> updateCard(
+            @PathVariable Long id,
+            @Valid @RequestBody CardRequestDto cardRequestDto,
+            @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
+
+        Member member = oauthMemberDetails.getMember();
+        CardResponseDto responseDto = cardService.updateCard(id, cardRequestDto, member);
         return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCard(@PathVariable Long id) {
-        cardService.deleteCard(id);
+    public ResponseEntity<Void> deleteCard(
+            @PathVariable Long id,
+            @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
+
+        Member member = oauthMemberDetails.getMember();
+        cardService.deleteCard(id, member);
         return ResponseEntity.noContent().build();
     }
 

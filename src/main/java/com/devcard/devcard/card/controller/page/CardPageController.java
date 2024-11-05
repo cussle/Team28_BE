@@ -23,18 +23,18 @@ public class CardPageController {
     }
 
     @GetMapping("/cards/{id}/view")
-    public String viewCard(@PathVariable Long id, Model model) {
+    public String viewCard(@PathVariable("id") Long id, Model model) {
         CardResponseDto card = cardService.getCard(id);
         model.addAttribute("card", card);
         model.addAttribute("kakaoJavascriptKey", kakaoJavascriptKey);
-        return "cardDetail";
+        return "card-detail";
     }
 
     @GetMapping("/cards/{id}/update")
-    public String updateCard(@PathVariable Long id, Model model) {
+    public String updateCard(@PathVariable("id") Long id, Model model) {
         CardResponseDto card = cardService.getCard(id);
         model.addAttribute("card", card);
-        return "updateCard";
+        return "card-update";
     }
 
     @GetMapping("/cards/view")

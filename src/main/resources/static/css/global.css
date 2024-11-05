@@ -47,6 +47,14 @@ body {
   justify-content: center;
 }
 
+.nav-item a {
+  text-decoration: none; /* 밑줄 제거 */
+  color: inherit; /* 텍스트 색상 상속 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .nav-item img {
   width: 30px;
   height: 30px;

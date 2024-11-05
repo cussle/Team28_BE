@@ -4,10 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class walletListController {
+public class WalletListController {
 
-    @GetMapping("walletList")
+    @GetMapping("wallet-List")
     public String walletList() {
-        return "walletList";
+        return "wallet-list";
     }
 }

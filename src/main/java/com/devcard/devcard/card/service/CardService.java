@@ -1,5 +1,6 @@
 package com.devcard.devcard.card.service;
 
+import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.card.dto.CardRequestDto;
 import com.devcard.devcard.card.dto.CardResponseDto;
 import com.devcard.devcard.card.exception.CardNotFoundException;
@@ -20,13 +21,12 @@ public class CardService {
     }
 
     @Transactional
-    public CardResponseDto createCard(CardRequestDto cardRequestDto) {
-        Card card = new Card.Builder()
-                .name(cardRequestDto.getName())
+    public CardResponseDto createCard(CardRequestDto cardRequestDto, Member member) {
+        Card card = new Card.Builder(member)
                 .company(cardRequestDto.getCompany())
                 .position(cardRequestDto.getPosition())
-                .email(cardRequestDto.getEmail())
                 .phone(cardRequestDto.getPhone())
+                .bio(cardRequestDto.getBio())
                 .build();
 
         Card savedCard = cardRepository.save(card);
@@ -40,7 +40,7 @@ public class CardService {
         return CardResponseDto.fromEntity(card);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CardResponseDto> getCards() {
         List<Card> cards = cardRepository.findAll();
         return cards.stream()
@@ -49,19 +49,31 @@ public class CardService {
     }
 
     @Transactional
-    public CardResponseDto updateCard(Long id, CardRequestDto cardRequestDto) {
+    public CardResponseDto updateCard(Long id, CardRequestDto cardRequestDto, Member member) {
         Card existingCard = cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException("해당 명함을 찾을 수 없습니다."));
 
+        // 명함 소유자 확인
+        if (!existingCard.getMember().getId().equals(member.getId())) {
+            throw new RuntimeException("권한이 없습니다.");
+        }
+
+        // 기존 엔티티의 필드 업데이트
         existingCard.updateFromDto(cardRequestDto);
-        cardRepository.save(existingCard);
+
         return CardResponseDto.fromEntity(existingCard);
     }
 
     @Transactional
-    public void deleteCard(Long id) {
+    public void deleteCard(Long id, Member member) {
         Card card = cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException("해당 명함을 찾을 수 없습니다."));
+
+        // 명함 소유자 확인
+        if (!card.getMember().getId().equals(member.getId())) {
+            throw new RuntimeException("권한이 없습니다.");
+        }
+
         cardRepository.delete(card);
     }
 

@@ -153,7 +153,7 @@ public class ChatService {
         JSONParser parser = new JSONParser();
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(payload);
-            return jsonObject.getAsString("message");
+            return jsonObject.getAsString("content");
         } catch (ParseException e) {
             logger.error("payload에서 message 추출 실패: {}", payload, e);
             return null; // 예외 발생 시 null 반환

@@ -92,17 +92,69 @@ $(document).ready(function () {
         fetchUserName();
     } else if (path.startsWith('/chats/')) {
 
-        // 채팅방 세부 정보 요청 가져오기 => 지난 대화 불러와 로드
+
         const chatId = path.split('/')[2];
         fetchChatRoom(chatId);
 
+        // 임시로 로컬 서버 설정
+        const socket = new WebSocket(`ws://localhost:8080/ws?chatId=${chatId}&userId=${userId}`);
 
-        // 윈도우가 언로드될 때 웹소켓 연결 끊기
+        // 웹소켓 연결
+        socket.addEventListener("open", () => {
+            console.log("웹소켓 연결 성공");
+        });
+
+        // 새로고침 하거나 나갈 때 연결 끊기
         $(window).on('beforeunload', function () {
-            if (websocket) {
-                websocket.close();
+            if (socket) {
+                socket.close();
             }
         });
+
+        // 메시지 보내기
+        function sendMessage(messageContent) {
+            const message = {
+                senderId: userId,  // 예시: 메시지를 보낸 사용자의 ID (적절한 값으로 수정)
+                sender: '나',       // 예시: 메시지를 보낸 사용자 이름 (적절한 값으로 수정)
+                content: messageContent  // 메시지 내용
+            };
+
+            socket.send(JSON.stringify(message));  // 서버로 메시지 보내기
+            console.log("보낸 메시지:", messageContent);
+
+            // 메시지 박스 추가
+            const chatRoomContainer = $('#chatWindow');
+            makeMessageBox(message, chatRoomContainer);
+
+            // 자동 스크롤
+            chatRoomContainer.scrollTop(chatRoomContainer[0].scrollHeight);
+        }
+
+
+        // 버튼 클릭 시 메시지 보내기
+        const sendButton = document.getElementById("sendButton");
+        sendButton.addEventListener('click', function() {
+            const messageInput = document.getElementById("messageInput");
+            const messageContent = messageInput.value;
+            if (messageContent.trim()) { // 비어있는 메시지는 보내지 않음
+                sendMessage(messageContent);
+                messageInput.value = '';  // 메시지 전송 후 입력창 비우기
+            }
+        });
+
+        // Enter 키로 메시지 보내기
+        const messageInput = document.getElementById("messageInput");
+        messageInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();  // 기본 Enter 동작 (줄바꿈)을 방지
+                const messageContent = messageInput.value;
+                if (messageContent.trim()) { // 비어있는 메시지는 보내지 않음
+                    sendMessage(messageContent);
+                    messageInput.value = '';  // 메시지 전송 후 입력창 비우기
+                }
+            }
+        });
+
 
         // 특정 채팅방의 세부 정보를 가져오는 함수
         function fetchChatRoom(chatId) {
@@ -124,33 +176,29 @@ $(document).ready(function () {
             chatRoomContainer.empty(); // 기존 내용 초기화
 
             chatRoom.messages.forEach(message => {
-                // 각 메시지 요소 생성
-                let messageElement;
-
-                // 메시지 내용을 담을 div 생성
-                const messageContent = $('<div>', { class: 'message-content' });
-                let senderName; // 발신자 이름
-
-                // 로그인한 사용자의 메시지인지 확인하여 왼쪽 또는 오른쪽 정렬 클래스 적용
-                if (message.senderId === userId) {
-                    messageElement = $('<div>', { class: 'rightMessage' });
-                    messageElement.addClass('right'); // 본인의 메시지: 오른쪽 정렬
-                    senderName = $('<div>', { class: 'sender', text: message.sender }); // 발신자 이름
-                } else {
-                    messageElement = $('<div>', { class: 'leftMessage' });
-                    messageElement.addClass('left'); // 상대방의 메시지: 왼쪽 정렬
-                    senderName = $('<div>', { class: 'customer', text: message.sender }); // 발신자 이름
-                }
-
-                // 발신자 이름과 메시지 내용 추가
-                const messageText = $('<div>', { class: 'message-content', text: message.content}); // 메시지 텍스트
-
-                messageContent.append(messageText);
-                messageElement.append(senderName).append(messageContent);
-                chatRoomContainer.append(messageElement);
+                makeMessageBox(message, chatRoomContainer);
             });
         }
 
+        // 메세지 박스 만들기 로직
+        function makeMessageBox(message, chatRoomContainer) {
+            console.log(message);
+            // 메시지 요소 생성
+            // userId면 오른쪽 / 상대면 왼쪽
+            const messageElement = $('<div>', { class: message.senderId === userId ? 'rightMessage right' : 'leftMessage left' });
+            //  userId와 같으면 sender 아니면 customer
+            const senderNameClass = message.senderId === userId ? 'sender' : 'customer';
+            // 이름 표시
+            const senderName = $('<div>', { class: senderNameClass, text: message.sender });
+            // 메세지 표시
+            const messageContent = $('<div>', { class: 'message-content' }).append($('<div>', { class: 'message-text', text: message.content }));
+
+            // 메시지 구성
+            messageElement.append(senderName).append(messageContent);
+
+            // 채팅방에 메시지 추가
+            chatRoomContainer.append(messageElement);
+        }
 
     }
 });

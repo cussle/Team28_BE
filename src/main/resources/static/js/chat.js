@@ -92,6 +92,11 @@ $(document).ready(function () {
         fetchUserName();
     } else if (path.startsWith('/chats/')) {
 
+        // 뒤로가기 아이콘 클릭 시 /chats로 이동
+        const backButton = document.getElementById("backButton");
+        backButton.addEventListener("click", function() {
+            window.location.href = "/chats"; // /chats 페이지로 이동
+        });
 
         const chatId = path.split('/')[2];
         fetchChatRoom(chatId);

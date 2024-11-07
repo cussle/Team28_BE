@@ -64,6 +64,7 @@ public class ChatRoomService {
         // 채팅방 목록을 가져와 알맞는 Response 변경 후 리턴
         return chatRoomRepository.findAll().stream().map(chatRoom -> new ChatRoomListResponse(
             chatRoom.getId(),
+            chatRoom.getParticipantsName(),
             chatRoom.getParticipantsId(),
             chatRoom.getLastMessage(),
             chatRoom.getLastMessageTime()
@@ -82,6 +83,7 @@ public class ChatRoomService {
         // 각 채팅방 정보를 ChatRoomListResponse로 변환하여 반환
         return userChatRooms.stream().map(chatRoom -> new ChatRoomListResponse(
             chatRoom.getId(),
+            chatRoom.getParticipantsName(),
             chatRoom.getParticipantsId(),
             chatRoom.getLastMessage(),
             chatRoom.getLastMessageTime()

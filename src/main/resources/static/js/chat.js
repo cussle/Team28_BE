@@ -96,15 +96,20 @@ $(document).ready(function () {
         }
 
         // 검색창 이벤트 처리
+        let debounceTimeout;
         $('#search-input').on('input', function() {
-            const searchTerm = $(this).val().trim().toLowerCase();
-            const filteredRooms = chatRoomsData.filter(room => {
-                const participants = room.participants.join(', ').toLowerCase();
-                const lastMessage = room.lastMessage ? room.lastMessage.toLowerCase() : '';
-                return participants.includes(searchTerm) || lastMessage.includes(searchTerm);
-            });
-            renderChatRooms(filteredRooms, searchTerm);  // 필터링된 채팅방 렌더링
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => {
+                const searchTerm = $(this).val().trim().toLowerCase();
+                const filteredRooms = chatRoomsData.filter(room => {
+                    const participants = room.participants.join(', ').toLowerCase();
+                    const lastMessage = room.lastMessage ? room.lastMessage.toLowerCase() : '';
+                    return participants.includes(searchTerm) || lastMessage.includes(searchTerm);
+                });
+                renderChatRooms(filteredRooms, searchTerm);  // 필터링된 채팅방 렌더링
+            }, 300); // 300ms 딜레이 적용
         });
+
 
         // 날짜 및 시간 포맷팅 함수
         function formatChatTime(chatTimeText) {

@@ -65,6 +65,7 @@ public class ChatRoomService {
         return chatRoomRepository.findAll().stream().map(chatRoom -> new ChatRoomListResponse(
             chatRoom.getId(),
             chatRoom.getParticipantsName(),
+            chatRoom.getParticipantsId(),
             chatRoom.getLastMessage(),
             chatRoom.getLastMessageTime()
         )).toList();
@@ -83,6 +84,7 @@ public class ChatRoomService {
         return userChatRooms.stream().map(chatRoom -> new ChatRoomListResponse(
             chatRoom.getId(),
             chatRoom.getParticipantsName(),
+            chatRoom.getParticipantsId(),
             chatRoom.getLastMessage(),
             chatRoom.getLastMessageTime()
         )).collect(Collectors.toList());

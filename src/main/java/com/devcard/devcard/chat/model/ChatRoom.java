@@ -58,6 +58,11 @@ public class ChatRoom {
         return this.participants.stream().map(Member::getNickname).toList();
     }
 
+    // participants로부터 id를 가져와 리스트화
+    public List<Long> getParticipantsId() {
+        return this.participants.stream().map(Member::getId).toList();
+    }
+
     // lastMessage와 LastMessageTime 업데이트
     public void updateLastMessageAndLastMessageTime(String newLastMessage, LocalDateTime newLastMessageTime) {
         this.lastMessage = newLastMessage;

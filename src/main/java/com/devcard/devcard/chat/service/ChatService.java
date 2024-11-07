@@ -2,6 +2,9 @@ package com.devcard.devcard.chat.service;
 
 import static com.devcard.devcard.chat.util.Constants.CHAT_ROOM_NOT_FOUND;
 
+import com.devcard.devcard.auth.entity.Member;
+import com.devcard.devcard.auth.repository.MemberRepository;
+import com.devcard.devcard.chat.dto.ChatUserResponse;
 import com.devcard.devcard.chat.exception.room.ChatRoomNotFoundException;
 import com.devcard.devcard.chat.model.ChatMessage;
 import com.devcard.devcard.chat.model.ChatRoom;
@@ -41,10 +44,12 @@ public class ChatService {
 
     private final ChatRepository chatRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final MemberRepository memberRepository;
 
-    public ChatService(ChatRepository chatRepository, ChatRoomRepository chatRoomRepository) {
+    public ChatService(ChatRepository chatRepository, ChatRoomRepository chatRoomRepository, MemberRepository memberRepository) {
         this.chatRepository = chatRepository;
         this.chatRoomRepository = chatRoomRepository;
+        this.memberRepository = memberRepository;
     }
 
     /**
@@ -207,5 +212,11 @@ public class ChatService {
             logger.error("URI에서 {} 추출 실패: {}", paramName, uri, e);
             throw new IllegalArgumentException(paramName + " 추출 중 숫자 형식 오류");
         }
+    }
+
+    public ChatUserResponse getUserProfileById(String userId) {
+        Member member = memberRepository.findById(Integer.parseInt(userId))
+            .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
+        return new ChatUserResponse(member.getNickname(), member.getProfileImg());
     }
 }

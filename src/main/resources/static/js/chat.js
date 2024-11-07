@@ -4,32 +4,14 @@ $(document).ready(function () {
 
     const path = window.location.pathname;
     let websocket;
-    const userId = "1"; // 실제로는 로그인한 유저 ID
-    let userName;
 
     if (path === '/chats') {
         // 채팅 목록 페이지
 
-        // 유저 이름을 가져오는 함수
-        function fetchUserName() {
-            $.ajax({
-                url: `/cards/${userId}`,
-                method: "GET",
-                success: function (response) {
-                    userName = response.name; // API 응답에서 이름을 가져옴
-                    console.log("유저 네임: " + userName);
-                    fetchUserChatRooms(); // 이름을 가져온 후 채팅방 목록을 호출
-                },
-                error: function (error) {
-                    console.error("본인 정보를 불러오는데 오류가 발생했습니다:", error);
-                }
-            });
-        }
-
         // 특정 유저의 참여 채팅방 목록을 가져오는 함수
         function fetchUserChatRooms() {
             $.ajax({
-                url: `/api/chats/user/${userId}`, // 본인 ID로 채팅방 목록 요청
+                url: `/api/chats/user/${memberId}`, // 본인 ID로 채팅방 목록 요청
                 method: "GET",
                 success: function (chatRooms) {
                     renderChatRooms(chatRooms);
@@ -53,7 +35,7 @@ $(document).ready(function () {
                 );
 
                 const chatInfo = $('<div>', { class: 'chat-info' });
-                const filteredParticipants = room.participants.filter(name => name !== userName);
+                const filteredParticipants = room.participants.filter(name => name !== nickname);
                 const chatName = $('<span>', { class: 'chat-name', text: filteredParticipants.join(', ') });
                 const chatMessage = $('<p>', { class: 'chat-message', text: room.lastMessage });
                 chatInfo.append(chatName).append(chatMessage);
@@ -89,7 +71,7 @@ $(document).ready(function () {
         }
 
         // 페이지 로드 시 본인 이름을 가져온 후 채팅방 목록 가져오기
-        fetchUserName();
+        fetchUserChatRooms();
     } else if (path.startsWith('/chats/')) {
 
         // 뒤로가기 아이콘 클릭 시 /chats로 이동
@@ -102,7 +84,7 @@ $(document).ready(function () {
         fetchChatRoom(chatId);
 
         // 임시로 로컬 서버 설정
-        const socket = new WebSocket(`ws://localhost:8080/ws?chatId=${chatId}&userId=${userId}`);
+        const socket = new WebSocket(`ws://localhost:8080/ws?chatId=${chatId}&userId=${memberId}`);
 
         // 웹소켓 연결
         socket.addEventListener("open", () => {
@@ -119,7 +101,7 @@ $(document).ready(function () {
         // 메시지 보내기
         function sendMessage(messageContent) {
             const message = {
-                senderId: userId,  // 예시: 메시지를 보낸 사용자의 ID (적절한 값으로 수정)
+                senderId: memberId,  // 예시: 메시지를 보낸 사용자의 ID (적절한 값으로 수정)
                 sender: '나',       // 예시: 메시지를 보낸 사용자 이름 (적절한 값으로 수정)
                 content: messageContent  // 메시지 내용
             };
@@ -189,10 +171,10 @@ $(document).ready(function () {
         function makeMessageBox(message, chatRoomContainer) {
             console.log(message);
             // 메시지 요소 생성
-            // userId면 오른쪽 / 상대면 왼쪽
-            const messageElement = $('<div>', { class: message.senderId === userId ? 'rightMessage right' : 'leftMessage left' });
-            //  userId와 같으면 sender 아니면 customer
-            const senderNameClass = message.senderId === userId ? 'sender' : 'customer';
+            // memberId면 오른쪽 / 상대면 왼쪽
+            const messageElement = $('<div>', { class: message.senderId === memberId ? 'rightMessage right' : 'leftMessage left' });
+            //  memberId와 같으면 sender 아니면 customer
+            const senderNameClass = message.senderId === memberId ? 'sender' : 'customer';
             // 이름 표시
             const senderName = $('<div>', { class: senderNameClass, text: message.sender });
             // 메세지 표시

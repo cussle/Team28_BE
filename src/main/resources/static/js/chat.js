@@ -3,11 +3,8 @@ $(document).ready(function () {
     $(".nav-item[data-page='chats']").addClass("active"); // chats에 active 클래스 추가
 
     const path = window.location.pathname;
-    let websocket;
 
-    if (path === '/chats') {
-        // 채팅 목록 페이지
-
+    if (path === '/chats') {  // 채팅 목록 페이지
         // 특정 유저의 참여 채팅방 목록을 가져오는 함수
         function fetchUserChatRooms() {
             $.ajax({
@@ -72,7 +69,7 @@ $(document).ready(function () {
 
         // 페이지 로드 시 본인 이름을 가져온 후 채팅방 목록 가져오기
         fetchUserChatRooms();
-    } else if (path.startsWith('/chats/')) {
+    } else if (path.startsWith('/chats/')) {  // 채팅 방 페이지
 
         // 뒤로가기 아이콘 클릭 시 /chats로 이동
         const backButton = document.getElementById("backButton");

@@ -48,10 +48,19 @@ public class ChatController {
      * 특정 채팅방 페이지로 이동하는 엔드포인트
      * @param chatId 조회하려는 채팅방의 ID
      * @param model  뷰에 데이터를 전달하기 위한 모델 객체
+     * @param authentication 인증 정보를 포함하는 객체 (OAuth2 사용자 정보 포함)
      * @return 특정 채팅방 페이지 템플릿 (chat-room.html)의 이름
      */
     @GetMapping("/chats/{chatId}")
-    public String getChatRoom(@PathVariable("chatId") Long chatId, Model model) {
+    public String getChatRoom(@PathVariable("chatId") Long chatId, Model model, Authentication authentication) {
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String githubId = String.valueOf(oAuth2User.getAttributes().get("id"));
+
+        // GitHub ID로 사용자를 찾아서 등록 여부 확인
+        Member member = memberRepository.findByGithubId(githubId);
+
+        model.addAttribute("memberId", member.getId());
+        model.addAttribute("nickname", member.getNickname());
         model.addAttribute("chatId", chatId);
         return "chat-room";
     }

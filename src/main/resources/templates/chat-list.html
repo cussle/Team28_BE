@@ -56,6 +56,13 @@
 
   <!-- 하단 네비게이션 바 -->
   <div th:replace="nav-bar :: navBar"></div>
+
+  <!-- 전달받은 데이터를 관리 -->
+  <script>
+    const memberId = [[${memberId}]];
+    const nickname = '[[${nickname}]]';
+  </script>
 </body>
+
 
 </html>

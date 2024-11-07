@@ -29,6 +29,10 @@ $(document).ready(function () {
             chatRooms.forEach(room => {
                 const chatItem = $('<div>', { class: 'chat-item' });
 
+                chatItem.on('click', function() {
+                    window.location.href = `/chats/${room.id.split("_")[1]}`;
+                });
+
                 const chatImage = $('<div>', { class: 'chat-image' }).append(
                     $('<img>', { src: '/images/temp_chat_user_image.png', alt: 'User Avatar' })
                 );

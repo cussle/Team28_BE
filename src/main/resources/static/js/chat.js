@@ -11,6 +11,8 @@ $(document).ready(function () {
                 url: `/api/chats/user/${memberId}`, // 본인 ID로 채팅방 목록 요청
                 method: "GET",
                 success: function (chatRooms) {
+                    // lastMessageTime을 기준으로 오름차순(오래된 대화부터)으로 정렬
+                    chatRooms.sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
                     renderChatRooms(chatRooms);
                 },
                 error: function (error) {
@@ -70,7 +72,6 @@ $(document).ready(function () {
         // 페이지 로드 시 본인 이름을 가져온 후 채팅방 목록 가져오기
         fetchUserChatRooms();
     } else if (path.startsWith('/chats/')) {  // 채팅 방 페이지
-
         // 뒤로가기 아이콘 클릭 시 /chats로 이동
         const backButton = document.getElementById("backButton");
         backButton.addEventListener("click", function() {

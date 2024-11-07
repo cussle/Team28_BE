@@ -8,21 +8,25 @@ INSERT INTO member (member_id, create_date, email, github_id, nickname, profile_
 -- 채팅 관련 data.sql (line 8~25)
 -- 예시 채팅방 데이터
 INSERT INTO chat_room (created_at, last_message, last_message_time) VALUES
-    (CURRENT_TIMESTAMP, 'Hello, world!', CURRENT_TIMESTAMP),
-    (CURRENT_TIMESTAMP, '새로운 채팅방 메시지~', CURRENT_TIMESTAMP);
+    (CURRENT_TIMESTAMP, '테스트 채팅방 1', '2023-11-07 16:59:34'),
+    (CURRENT_TIMESTAMP, '테스트 채팅방 2', '2024-10-07 16:59:34'),
+    (CURRENT_TIMESTAMP, '테스트 채팅방 3', '2024-11-07 16:59:34');
 
 -- 예시 채팅 메시지 데이터
 INSERT INTO chat_message (content, sender, timestamp, chat_room_id) VALUES
-    ('안녕하세요', 'Member1', CURRENT_TIMESTAMP, 1),
-    ('새로운 채팅방 메시지~', 'Member1', CURRENT_TIMESTAMP, 2),
-    ('Hello, world!', 'Member2', CURRENT_TIMESTAMP + 0.1, 1);
+    ('테스트 메시지 1', 'user_1', '2023-11-07 16:59:34', 1),
+    ('테스트 메시지 2', 'user_2', '2024-10-07 16:59:34', 2),
+    ('테스트 메시지 3', 'user_3', '2024-11-07 16:59:34', 3);
 
 -- 예시 채팅방 참가자 데이터
 INSERT INTO chat_room_participants (chat_room_id, participants_member_id) VALUES
     (1, 1),
-    (1, 2),
-    (2, 1),
-    (2, 3);
+    (2, 2),
+    (3, 3);
+-- INSERT INTO chat_room_participants (chat_room_id, participants_member_id) VALUES
+--     (1, 4),
+--     (2, 4),
+--     (3, 4);
 
 -- 명함(Card) 테이블에 예시 데이터 추가
 -- INSERT INTO card (github_id, name, company, position, email, phone, profile_picture, bio) VALUES

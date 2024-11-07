@@ -24,40 +24,67 @@ $(document).ready(function () {
             });
         }
 
+        // 특정 사용자 정보를 가져오는 함수
+        function fetchUserProfile(participantId, callback) {
+            $.ajax({
+                url: `/api/chats/user/${participantId}/profile`, // 해당 사용자 ID로 프로필 요청
+                method: "GET",
+                success: function (profile) {
+                    callback(profile);
+                },
+                error: function (error) {
+                    console.error("프로필 정보를 불러오는데 오류가 발생했습니다:", error);
+                }
+            });
+        }
+
         // 채팅방 목록을 화면에 렌더링하는 함수
         function renderChatRooms(chatRooms, searchTerm = '') {
             const chatListContainer = $("#chat-list");
             chatListContainer.empty(); // 기존 목록 초기화
 
-            chatRooms.forEach(room => {
-                const filteredParticipants = room.participants.filter(name => name !== nickname).join(', ');
+            const chatRoomPromises = chatRooms.map(room => {
+                const participantId = room.participantsId.find(id => id !== memberId);
                 const lastMessage = room.lastMessage || '';
 
-                // 검색어가 포함된 경우 하이라이트 처리
-                const highlightedName = highlightText(filteredParticipants, searchTerm);
-                const highlightedMessage = highlightText(lastMessage, searchTerm);
+                return new Promise((resolve) => {
+                    fetchUserProfile(participantId, function(profile) {
+                        // 검색어가 포함된 경우 하이라이트 처리
+                        const highlightedName = highlightText(profile.nickname, searchTerm);
+                        const highlightedMessage = highlightText(lastMessage, searchTerm);
 
-                const chatItem = $('<div>', { class: 'chat-item' });
+                        const chatItem = $('<div>', {class: 'chat-item'});
+                        chatItem.on('click', function () {
+                            window.location.href = `/chats/${room.id.split("_")[1]}`;
+                        });
 
-                chatItem.on('click', function() {
-                    window.location.href = `/chats/${room.id.split("_")[1]}`;
+                        const chatImage = $('<div>', {class: 'chat-image'}).append(
+                            $('<img>', {
+                                src: profile.profileImage,
+                                alt: 'User Avatar'
+                            })
+                        );
+
+                        const chatInfo = $('<div>', {class: 'chat-info'});
+                        const chatName = $('<span>', {class: 'chat-name'}).html(highlightedName);
+                        const chatMessage = $('<p>', {class: 'chat-message'}).html(highlightedMessage);
+                        chatInfo.append(chatName).append(chatMessage);
+
+                        const chatTime = $('<div>', {class: 'chat-time'}).append(
+                            $('<span>', {text: formatChatTime(room.lastMessageTime)})
+                        );
+
+                        chatItem.append(chatImage).append(chatInfo).append(chatTime);
+
+                        // 각 채팅 아이템을 resolve하여 완료
+                        resolve(chatItem);
+                    });
                 });
+            });
 
-                const chatImage = $('<div>', { class: 'chat-image' }).append(
-                    $('<img>', { src: '/images/temp_chat_user_image.png', alt: 'User Avatar' })
-                );
-
-                const chatInfo = $('<div>', { class: 'chat-info' });
-                const chatName = $('<span>', { class: 'chat-name' }).html(highlightedName);
-                const chatMessage = $('<p>', { class: 'chat-message' }).html(highlightedMessage);
-                chatInfo.append(chatName).append(chatMessage);
-
-                const chatTime = $('<div>', { class: 'chat-time' }).append(
-                    $('<span>', { text: formatChatTime(room.lastMessageTime) })
-                );
-
-                chatItem.append(chatImage).append(chatInfo).append(chatTime);
-                chatListContainer.append(chatItem);
+            // 모든 프로필 데이터가 준비된 후 한 번에 렌더링
+            Promise.all(chatRoomPromises).then(chatItems => {
+                chatItems.forEach(chatItem => chatListContainer.append(chatItem));
             });
         }
 

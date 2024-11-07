@@ -40,4 +40,6 @@ public class OauthMemberDetails implements OAuth2User {
     public String getName() {
         return member.getId()+"";
     }
+
+    public Member getMember() { return member; }
 }

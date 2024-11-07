@@ -5,6 +5,8 @@ $(document).ready(function () {
     const path = window.location.pathname;
 
     if (path === '/chats') {  // 채팅 목록 페이지
+        let chatRoomsData = [];  // 원본 데이터 저장
+
         // 특정 유저의 참여 채팅방 목록을 가져오는 함수
         function fetchUserChatRooms() {
             $.ajax({
@@ -13,6 +15,7 @@ $(document).ready(function () {
                 success: function (chatRooms) {
                     // lastMessageTime을 기준으로 오름차순(오래된 대화부터)으로 정렬
                     chatRooms.sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
+                    chatRoomsData = chatRooms;  // 검색을 위해 원본 데이터 저장
                     renderChatRooms(chatRooms);
                 },
                 error: function (error) {
@@ -22,11 +25,18 @@ $(document).ready(function () {
         }
 
         // 채팅방 목록을 화면에 렌더링하는 함수
-        function renderChatRooms(chatRooms) {
+        function renderChatRooms(chatRooms, searchTerm = '') {
             const chatListContainer = $("#chat-list");
             chatListContainer.empty(); // 기존 목록 초기화
 
             chatRooms.forEach(room => {
+                const filteredParticipants = room.participants.filter(name => name !== nickname).join(', ');
+                const lastMessage = room.lastMessage || '';
+
+                // 검색어가 포함된 경우 하이라이트 처리
+                const highlightedName = highlightText(filteredParticipants, searchTerm);
+                const highlightedMessage = highlightText(lastMessage, searchTerm);
+
                 const chatItem = $('<div>', { class: 'chat-item' });
 
                 chatItem.on('click', function() {
@@ -38,9 +48,8 @@ $(document).ready(function () {
                 );
 
                 const chatInfo = $('<div>', { class: 'chat-info' });
-                const filteredParticipants = room.participants.filter(name => name !== nickname);
-                const chatName = $('<span>', { class: 'chat-name', text: filteredParticipants.join(', ') });
-                const chatMessage = $('<p>', { class: 'chat-message', text: room.lastMessage });
+                const chatName = $('<span>', { class: 'chat-name' }).html(highlightedName);
+                const chatMessage = $('<p>', { class: 'chat-message' }).html(highlightedMessage);
                 chatInfo.append(chatName).append(chatMessage);
 
                 const chatTime = $('<div>', { class: 'chat-time' }).append(
@@ -52,6 +61,25 @@ $(document).ready(function () {
             });
         }
 
+        // 하이라이트 함수
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        // 검색창 이벤트 처리
+        $('#search-input').on('input', function() {
+            const searchTerm = $(this).val().trim().toLowerCase();
+            const filteredRooms = chatRoomsData.filter(room => {
+                const participants = room.participants.join(', ').toLowerCase();
+                const lastMessage = room.lastMessage ? room.lastMessage.toLowerCase() : '';
+                return participants.includes(searchTerm) || lastMessage.includes(searchTerm);
+            });
+            renderChatRooms(filteredRooms, searchTerm);  // 필터링된 채팅방 렌더링
+        });
+
+        // 날짜 및 시간 포맷팅 함수
         function formatChatTime(chatTimeText) {
             const chatTime = new Date(chatTimeText);
             const today = new Date();

@@ -225,6 +225,12 @@ $(document).ready(function () {
             chatRoomContainer.empty(); // 기존 내용 초기화
 
             chatRoom.messages.forEach(message => {
+                message = {
+                    senderId: parseInt(message.sender.split("_")[1]),
+                    sender: '상대방',
+                    content: message.content
+                };
+
                 makeMessageBox(message, chatRoomContainer);
             });
         }
@@ -235,6 +241,7 @@ $(document).ready(function () {
             // 메시지 요소 생성
             // memberId면 오른쪽 / 상대면 왼쪽
             const messageElement = $('<div>', { class: message.senderId === memberId ? 'rightMessage right' : 'leftMessage left' });
+            console.log("--- sender:" + message.senderId + " / member:" + memberId + " / " + (message.senderId === memberId));
             //  memberId와 같으면 sender 아니면 customer
             const senderNameClass = message.senderId === memberId ? 'sender' : 'customer';
             // 이름 표시

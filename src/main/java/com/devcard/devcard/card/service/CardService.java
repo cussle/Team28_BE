@@ -3,9 +3,11 @@ package com.devcard.devcard.card.service;
 import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.card.dto.CardRequestDto;
 import com.devcard.devcard.card.dto.CardResponseDto;
+import com.devcard.devcard.card.entity.Group;
 import com.devcard.devcard.card.exception.CardNotFoundException;
 import com.devcard.devcard.card.repository.CardRepository;
 import com.devcard.devcard.card.entity.Card;
+import com.devcard.devcard.card.repository.GroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +17,11 @@ import java.util.List;
 public class CardService {
 
     private final CardRepository cardRepository;
+    private final GroupRepository groupRepository;
 
-    public CardService(CardRepository cardRepository) {
+    public CardService(CardRepository cardRepository, GroupRepository groupRepository) {
         this.cardRepository = cardRepository;
+        this.groupRepository = groupRepository;
     }
 
     @Transactional
@@ -77,5 +81,26 @@ public class CardService {
         cardRepository.delete(card);
     }
 
+    @Transactional
+    public void addCardToGroup(Long cardId, Long groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("해당 그룹을 찾을 수 없습니다."));
+
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new CardNotFoundException("해당 명함을 찾을 수 없습니다."));
+
+        group.addCard(card);
+        groupRepository.save(group);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CardResponseDto> getCardsByGroup(Long groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("해당 그룹을 찾을 수 없습니다."));
+
+        return group.getCards().stream()
+                .map(CardResponseDto::fromEntity)
+                .toList();
+    }
 
 }

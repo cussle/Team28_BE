@@ -28,3 +28,16 @@ INSERT INTO chat_room_participants (chat_room_id, participants_member_id) VALUES
 INSERT INTO card (member_id, company, position, phone, bio) VALUES
     (1, 'DevCompany', '백엔드 개발자', '010-1234-5678', '열정적인 개발자입니다.'),
     (2, 'kakaoCompany', '백엔드 주니어 개발자', '010-7894-456', '소통하는 개발자입니다.');
+
+-- Group 데이터
+INSERT INTO groups (name, member_id) VALUES
+   ('친구', 1),
+   ('회사', 1),
+   ('동아리', 1);
+
+INSERT INTO group_card (group_id, card_id) VALUES
+    (1, 1),
+    (1, 2),
+    (2, 2),
+    (3, 1),
+    (3, 2);

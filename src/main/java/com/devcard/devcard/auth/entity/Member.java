@@ -2,11 +2,14 @@ package com.devcard.devcard.auth.entity;
 
 import com.devcard.devcard.auth.dto.MemberRequestDto;
 import com.devcard.devcard.card.entity.Card;
+import com.devcard.devcard.card.entity.Group;
 import jakarta.persistence.Entity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -29,6 +32,9 @@ public class Member {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Card card;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Group> groups = new ArrayList<>();
 
     public Member() {
     }
@@ -88,6 +94,10 @@ public class Member {
 
     public Timestamp getCreateDate() {
         return createDate;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
     }
 }
 

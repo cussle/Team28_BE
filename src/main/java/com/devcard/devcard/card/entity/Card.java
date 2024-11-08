@@ -4,6 +4,8 @@ import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.card.dto.CardRequestDto;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "card")
@@ -16,6 +18,9 @@ public class Card {
     @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @ManyToMany(mappedBy = "cards")
+    private List<Group> groups = new ArrayList<>();
 
     private String company;
     private String position;
@@ -84,6 +89,11 @@ public class Card {
     public String getBio() { return bio; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public List<Group> getGroups() { return groups; }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
 
     // DTO 기반 업데이트 메서드
     public void updateFromDto(CardRequestDto dto) {

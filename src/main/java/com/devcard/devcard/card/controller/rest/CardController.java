@@ -72,5 +72,20 @@ public class CardController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/add-to-group/{groupId}")
+    public ResponseEntity<Void> addCardToGroup(
+            @PathVariable Long id,
+            @PathVariable Long groupId
+    ) {
+        cardService.addCardToGroup(id, groupId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/group/{groupId}")
+    public ResponseEntity<List<CardResponseDto>> getCardsByGroup(@PathVariable Long groupId) {
+        List<CardResponseDto> responseDto = cardService.getCardsByGroup(groupId);
+        return ResponseEntity.ok(responseDto);
+    }
 
 }

@@ -1,4 +1,5 @@
 div.header > span {
+  cursor: pointer;
   color: var(--cnu-light-blue);
   position: absolute;
   left: 2rem;
@@ -20,21 +21,29 @@ div.header > span {
   gap: 10px;
 }
 
-.message {
+.rightMessage {
   max-width: 80%;
   padding: 10px;
   border-radius: 10px;
   font-size: 14px;
   display: inline-block;
+  background-color: var(--cnu-light-blue);
+}
+
+.leftMessage {
+  max-width: 80%;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  display: inline-block;
+  background-color: white;
 }
 
 .left .message-content {
-  background-color: var(--pantone-877c);
   color: #000;
 }
 
 .right .message-content {
-  background-color: var(--cnu-light-blue);
   color: white;
 }
 
@@ -48,9 +57,16 @@ div.header > span {
 
 .sender {
   font-size: 12px;
-  color: var(--pantone-877c);
+  color: white;
   margin-bottom: 3px;
 }
+
+.customer {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 3px;
+}
+
 
 .input-message {
   display: flex;
@@ -68,6 +84,7 @@ input[type="text"] {
 }
 
 div.input-message > span {
+  cursor: pointer;
   color: var(--cnu-light-blue);
   font-size: 1.8rem;
   margin: 0 0.2rem 0 1rem;

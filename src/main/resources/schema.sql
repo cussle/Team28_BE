@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS chat_room (
 -- 채팅 메시지(CHAT MESSAGE) 스키마
 CREATE TABLE IF NOT EXISTS chat_message (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    content VARCHAR(255),
+    content VARCHAR(2000),
     sender VARCHAR(255),
     timestamp TIMESTAMP,
     chat_room_id BIGINT,

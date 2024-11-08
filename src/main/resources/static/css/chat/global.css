@@ -35,3 +35,8 @@
 .search-container input:focus {
   outline: none;
 }
+
+.highlight {
+  background-color: var(--cnu-yellow);
+}
+

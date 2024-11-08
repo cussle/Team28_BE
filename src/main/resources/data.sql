@@ -28,7 +28,20 @@ INSERT INTO chat_room_participants (chat_room_id, participants_member_id) VALUES
 --     (2, 4),
 --     (3, 4);
 
--- 명함(Card) 테이블에 예시 데이터 추가
--- INSERT INTO card (github_id, name, company, position, email, phone, profile_picture, bio) VALUES
---     ('hong-gildong', '어피치', 'DevCompany', '백엔드 개발자', 'hong@example.com', '010-1234-5678', 'profile.jpg', '열정적인 개발자입니다.'),
---     ('hong-gildong', '춘식이', 'kakaoCompany', '백엔드 주니어 개발자', 'chun@kakaoTech.com', '010-7894-456', 'profile.jpg', '소통하는 개발자입니다.');
+-- Card 테이블에 데이터 삽입
+INSERT INTO card (member_id, company, position, phone, bio) VALUES
+    (1, 'DevCompany', '백엔드 개발자', '010-1234-5678', '열정적인 개발자입니다.'),
+    (2, 'kakaoCompany', '백엔드 주니어 개발자', '010-7894-456', '소통하는 개발자입니다.');
+
+-- Group 데이터
+INSERT INTO groups (name, member_id) VALUES
+   ('친구', 1),
+   ('회사', 1),
+   ('동아리', 1);
+
+INSERT INTO group_card (group_id, card_id) VALUES
+    (1, 1),
+    (1, 2),
+    (2, 2),
+    (3, 1),
+    (3, 2);

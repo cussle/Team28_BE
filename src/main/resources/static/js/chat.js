@@ -156,6 +156,11 @@ $(document).ready(function () {
             console.log("웹소켓 연결 성공");
         });
 
+        // 웹소켓 예외처리
+        socket.addEventListener("error", (error) => {
+            console.error("웹소켓 연결 중 오류가 발생:", error);
+        });
+
         // 새로고침 하거나 나갈 때 연결 끊기
         $(window).on('beforeunload', function () {
             if (socket) {
@@ -165,6 +170,12 @@ $(document).ready(function () {
 
         // 메시지 보내기
         function sendMessage(messageContent) {
+            // 메시지 길이 체크
+            if (messageContent.length > 2000) {
+                console.log("메시지 최대 길이 초과");
+                return;
+            }
+
             const message = {
                 senderId: memberId,  // 예시: 메시지를 보낸 사용자의 ID (적절한 값으로 수정)
                 sender: senderName,

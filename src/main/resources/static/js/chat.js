@@ -4,6 +4,20 @@ $(document).ready(function () {
 
     const path = window.location.pathname;
 
+    // 특정 사용자 정보를 가져오는 함수
+    function fetchUserProfile(participantId, callback) {
+        $.ajax({
+            url: `/api/chats/user/${participantId}/profile`, // 해당 사용자 ID로 프로필 요청
+            method: "GET",
+            success: function (profile) {
+                callback(profile);
+            },
+            error: function (error) {
+                console.error("프로필 정보를 불러오는데 오류가 발생했습니다:", error);
+            }
+        });
+    }
+
     if (path === '/chats') {  // 채팅 목록 페이지
         let chatRoomsData = [];  // 원본 데이터 저장
 
@@ -20,20 +34,6 @@ $(document).ready(function () {
                 },
                 error: function (error) {
                     console.error("채팅방 목록을 불러오는데 오류가 발생했습니다:", error);
-                }
-            });
-        }
-
-        // 특정 사용자 정보를 가져오는 함수
-        function fetchUserProfile(participantId, callback) {
-            $.ajax({
-                url: `/api/chats/user/${participantId}/profile`, // 해당 사용자 ID로 프로필 요청
-                method: "GET",
-                success: function (profile) {
-                    callback(profile);
-                },
-                error: function (error) {
-                    console.error("프로필 정보를 불러오는데 오류가 발생했습니다:", error);
                 }
             });
         }
@@ -136,6 +136,9 @@ $(document).ready(function () {
         // 페이지 로드 시 본인 이름을 가져온 후 채팅방 목록 가져오기
         fetchUserChatRooms();
     } else if (path.startsWith('/chats/')) {  // 채팅 방 페이지
+        const senderName = "나";  // 메시지를 보낸 사용자 이름 (적절한 값으로 수정)
+        let receiverName = null;  // 상대방 이름 저장할 변수
+
         // 뒤로가기 아이콘 클릭 시 /chats로 이동
         const backButton = document.getElementById("backButton");
         backButton.addEventListener("click", function() {
@@ -164,7 +167,7 @@ $(document).ready(function () {
         function sendMessage(messageContent) {
             const message = {
                 senderId: memberId,  // 예시: 메시지를 보낸 사용자의 ID (적절한 값으로 수정)
-                sender: '나',       // 예시: 메시지를 보낸 사용자 이름 (적절한 값으로 수정)
+                sender: senderName,
                 content: messageContent  // 메시지 내용
             };
 
@@ -224,20 +227,32 @@ $(document).ready(function () {
             const chatRoomContainer = $("#chatWindow");
             chatRoomContainer.empty(); // 기존 내용 초기화
 
-            chatRoom.messages.forEach(message => {
-                message = {
-                    senderId: parseInt(message.sender.split("_")[1]),
-                    sender: '상대방',
-                    content: message.content
-                };
+            const participantId = parseInt(chatRoom.participantsId.find(id => id !== memberId));
 
+            if (!receiverName) {
+                // 프로필 닉네임을 비동기로 가져오고 receiverName 저장
+                fetchUserProfile(participantId, function(profile) {
+                    receiverName = profile.nickname;
+                    renderMessages(chatRoom.messages);
+                    $("#roomTitle").text(receiverName);
+                });
+            } else {
+                renderMessages(chatRoom.messages);
+            }
+        }
+
+        // 채팅 메시지를 렌더링하는 함수
+        function renderMessages(messages) {
+            const chatRoomContainer = $("#chatWindow");
+            messages.forEach(message => {
+                message.senderId = parseInt(message.sender.split("_")[1]);
+                message.sender = (memberId === message.senderId) ? senderName : receiverName;
                 makeMessageBox(message, chatRoomContainer);
             });
         }
 
         // 메세지 박스 만들기 로직
         function makeMessageBox(message, chatRoomContainer) {
-            console.log(message);
             // 메시지 요소 생성
             // memberId면 오른쪽 / 상대면 왼쪽
             const messageElement = $('<div>', { class: message.senderId === memberId ? 'rightMessage right' : 'leftMessage left' });

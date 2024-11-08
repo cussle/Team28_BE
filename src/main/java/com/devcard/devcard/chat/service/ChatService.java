@@ -216,7 +216,7 @@ public class ChatService {
     }
 
     public ChatUserResponse getUserProfileById(String userId) {
-        Member member = memberRepository.findById(Integer.parseInt(userId))
+        Member member = memberRepository.findById(Long.parseLong(userId))
             .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
         return new ChatUserResponse(member.getNickname(), member.getProfileImg());
     }

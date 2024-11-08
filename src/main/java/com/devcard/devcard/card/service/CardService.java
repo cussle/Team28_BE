@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CardService {
@@ -94,13 +95,13 @@ public class CardService {
     }
 
     @Transactional(readOnly = true)
-    public List<CardResponseDto> getCardsByGroup(Long groupId) {
-        Group group = groupRepository.findById(groupId)
+    public List<CardResponseDto> getCardsByGroup(Long groupId, Member member) {
+        Group group = groupRepository.findByIdAndMember(groupId, member)
                 .orElseThrow(() -> new RuntimeException("해당 그룹을 찾을 수 없습니다."));
 
         return group.getCards().stream()
                 .map(CardResponseDto::fromEntity)
-                .toList();
+                .collect(Collectors.toList());
     }
 
 }

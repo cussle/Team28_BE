@@ -82,10 +82,4 @@ public class CardController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/group/{groupId}")
-    public ResponseEntity<List<CardResponseDto>> getCardsByGroup(@PathVariable Long groupId) {
-        List<CardResponseDto> responseDto = cardService.getCardsByGroup(groupId);
-        return ResponseEntity.ok(responseDto);
-    }
-
 }

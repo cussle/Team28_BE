@@ -2,7 +2,6 @@ package com.devcard.devcard.chat.controller.page;
 
 import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.auth.repository.MemberRepository;
-import com.devcard.devcard.chat.service.ChatRoomService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -27,7 +26,7 @@ public class ChatController {
 
     /**
      * 채팅 목록 페이지로 이동하는 엔드포인트
-     * @param model 뷰에 데이터를 전달하기 위한 모델 객체
+     * @param model          뷰에 데이터를 전달하기 위한 모델 객체
      * @param authentication 인증 정보를 포함하는 객체 (OAuth2 사용자 정보 포함)
      * @return 채팅 목록 페이지 템플릿 (chat-list.html)의 이름
      */
@@ -46,8 +45,8 @@ public class ChatController {
 
     /**
      * 특정 채팅방 페이지로 이동하는 엔드포인트
-     * @param chatId 조회하려는 채팅방의 ID
-     * @param model  뷰에 데이터를 전달하기 위한 모델 객체
+     * @param chatId         조회하려는 채팅방의 ID
+     * @param model          뷰에 데이터를 전달하기 위한 모델 객체
      * @param authentication 인증 정보를 포함하는 객체 (OAuth2 사용자 정보 포함)
      * @return 특정 채팅방 페이지 템플릿 (chat-room.html)의 이름
      */

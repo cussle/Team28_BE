@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -47,7 +46,11 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
 
-    public ChatService(ChatRepository chatRepository, ChatRoomRepository chatRoomRepository, MemberRepository memberRepository) {
+    public ChatService(
+        ChatRepository chatRepository,
+        ChatRoomRepository chatRoomRepository,
+        MemberRepository memberRepository
+    ) {
         this.chatRepository = chatRepository;
         this.chatRoomRepository = chatRoomRepository;
         this.memberRepository = memberRepository;

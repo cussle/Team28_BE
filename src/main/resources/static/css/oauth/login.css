@@ -11,24 +11,24 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f5f5f5;
+    background-color: var(--background);
 }
 
 /* Container for the login card */
-.login-container {
+.wrapper {
     text-align: center;
-    padding: 20px;
-    background-color: white;
     border-radius: 10px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 2rem 3rem;
 }
 
 /* Circle logo */
 .logo-circle {
     width: 80px;
     height: 80px;
-    background-color: #4285f4;
+    background-color: var(--cnu-light-blue);
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -60,18 +60,19 @@ body {
     border-radius: 30px;
     padding: 12px 20px;
     font-size: 16px;
-    margin: 20px auto;
+    margin: 20px auto 30px;
     cursor: pointer;
     width: 100%;
-    max-width: 280px;
+    max-width: 250px;
     transition: background-color 0.3s;
+    fill: white;
 }
 
 .github-login-btn:hover {
     background-color: #333;
 }
 
-.github-login-btn img {
+.github-login-btn svg {
     width: 24px;
     height: 24px;
     margin-right: 10px;
@@ -85,6 +86,6 @@ body {
 }
 
 .terms a {
-    color: #4285f4;
+    color: var(--cnu-sky-blue);
     text-decoration: none;
 }

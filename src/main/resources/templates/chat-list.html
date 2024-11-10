@@ -15,6 +15,7 @@
 
   <!-- JS -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script th:src="@{/js/script.js}"></script>
   <script th:src="@{/js/chat.js}"></script>
 </head>
 
@@ -56,6 +57,13 @@
 
   <!-- 하단 네비게이션 바 -->
   <div th:replace="nav-bar :: navBar"></div>
+
+  <!-- 전달받은 데이터를 관리 -->
+  <script>
+    const memberId = [[${memberId}]];
+    const nickname = '[[${nickname}]]';
+  </script>
 </body>
+
 
 </html>

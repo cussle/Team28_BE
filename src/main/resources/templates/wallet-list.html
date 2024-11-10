@@ -4,210 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wallet List</title>
-    <style>
-        /* General styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/card/wallet-list.css}">
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f5f5f5;
-        }
-
-        /* Container for the mobile-sized screen */
-        .wallet-container {
-            width: 360px;
-            height: 640px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 15px; /* 전체 패딩 추가 */
-            overflow: hidden;
-        }
-
-        /* Header Title */
-        .header {
-            text-align: center;
-            padding: 10px 0;
-            font-size: 18px; /* 글씨 크기 조정 */
-            font-weight: bold;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 15px; /* 헤더 아래 여백 추가 */
-            color: #333;
-        }
-
-        /* Group Add Button */
-        .group-add {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px; /* 아이템 사이 여백 추가 */
-        }
-
-        .group-add img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-        }
-
-        /* List Item */
-        .list-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px; /* 아이템 사이 여백 추가 */
-        }
-
-        .list-item img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-        }
-
-        .list-item .text {
-            display: flex;
-            align-items: center;
-            font-size: 15px; /* 리스트 항목 글씨 크기 */
-        }
-
-        .list-item .count {
-            font-size: 14px;
-            color: #666;
-        }
-
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4285f4;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 24px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #ddd;
-            background-color: #fff;
-        }
-
-        .bottom-nav div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .bottom-nav .active {
-            color: #4285f4;
-        }
-    </style>
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
 
-<div class="wallet-container">
+<div class="container">
+    <!-- 상단 헤더 -->
+    <div class="header">
+        <h2 class="title">Wallet</h2>
+    </div>
 
-    <!-- Header -->
-    <div class="header">명함첩</div>
-
-    <!-- Group Add Button -->
+    <!-- 그룹 추가 버튼 -->
     <div class="group-add">
-        <img src="https://via.placeholder.com/24" alt="Add Icon">
-        <span>그룹 추가</span>
+        <button class="add-button" onclick="createNewGroup()">
+            <span class="plus-icon">+</span>
+        </button>
     </div>
 
-    <!-- List Items -->
-    <div class="list-item">
-        <div class="text">
-            <img src="https://via.placeholder.com/24" alt="Wallet Icon">
-            <span>카테캠</span>
+    <!-- 그룹 리스트 -->
+    <div class="group-list">
+        <div class="group-item" th:each="group : ${groups}"
+            th:onclick="'redirectToGroup('+${group.id} + ')'"
+            style="cursor: pointer;">
+            <div class="icon">
+                <svg class="wallet-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path d="M10.75 9a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5h-1.5Z"></path><path d="M0 3.75C0 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25ZM14.5 6.5h-13v5.75c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25Zm0-2.75a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25V5h13Z"></path></svg>
+            </div>
+            <span class="group-name" th:text="${group.name}">Group name</span>
+            <span class="group-count" th:text="${group.count}">0</span>
         </div>
-        <div class="count">3</div>
-    </div>
-
-    <div class="list-item">
-        <div class="text">
-            <img src="https://via.placeholder.com/24" alt="Wallet Icon">
-            <span>대학교</span>
-        </div>
-        <div class="count">2</div>
-    </div>
-
-    <div class="list-item">
-        <div class="text">
-            <img src="https://via.placeholder.com/24" alt="Wallet Icon">
-            <span>친구</span>
-        </div>
-        <div class="count">4</div>
-    </div>
-
-    <div class="list-item">
-        <div class="text">
-            <img src="https://via.placeholder.com/24" alt="Wallet Icon">
-            <span>동아리</span>
-        </div>
-        <div class="count">10</div>
-    </div>
-
-    <div class="list-item">
-        <div class="text">
-            <img src="https://via.placeholder.com/24" alt="Wallet Icon">
-            <span>2024 하계 인턴</span>
-        </div>
-        <div class="count">5</div>
-    </div>
-
-    <div class="list-item">
-        <div class="text">
-            <img src="https://via.placeholder.com/24" alt="Wallet Icon">
-            <span>기타</span>
-        </div>
-        <div class="count">13</div>
-    </div>
-
-    <!-- Floating Action Button -->
-    <div class="fab">+</div>
-
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <div><span>⭐</span><span>MyCard</span></div>
-        <div class="active"><span>📂</span><span>Wallet</span></div>
-        <div><span>💬</span><span>Chats</span></div>
-        <div><span>👤</span><span>MyPage</span></div>
     </div>
 
 </div>
+
+<!-- NavBar 포함 -->
+<div th:replace="~{/nav-bar :: navBar}"></div>
+
+<script th:src="@{/js/wallet/wallet-list.js}"></script>
 
 </body>
 </html>

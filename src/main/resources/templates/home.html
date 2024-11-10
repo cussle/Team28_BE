@@ -6,6 +6,10 @@
     <title>My Business Card</title>
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
 <div class="container">
@@ -28,7 +32,5 @@
 
 <!-- NavBar 포함 -->
 <div th:replace="~{/nav-bar :: navBar}"></div>
-
-<script th:src="@{/script.js}"></script>
 </body>
 </html>

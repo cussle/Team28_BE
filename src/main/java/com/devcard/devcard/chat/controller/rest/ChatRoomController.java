@@ -2,9 +2,11 @@ package com.devcard.devcard.chat.controller.rest;
 
 import com.devcard.devcard.chat.dto.ChatRoomListResponse;
 import com.devcard.devcard.chat.dto.ChatRoomResponse;
+import com.devcard.devcard.chat.dto.ChatUserResponse;
 import com.devcard.devcard.chat.dto.CreateRoomRequest;
 import com.devcard.devcard.chat.dto.CreateRoomResponse;
 import com.devcard.devcard.chat.service.ChatRoomService;
+import com.devcard.devcard.chat.service.ChatService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,9 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
+    private final ChatService chatService;
 
-    public ChatRoomController(ChatRoomService chatRoomService) {
+    public ChatRoomController(ChatRoomService chatRoomService, ChatService chatService) {
         this.chatRoomService = chatRoomService;
+        this.chatService = chatService;
     }
 
     /**
@@ -78,5 +82,16 @@ public class ChatRoomController {
     public ResponseEntity<Void> deleteChatRoom(@PathVariable("chatId") String chatId) {
         chatRoomService.deleteChatRoom(chatId);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 특정 사용자의 프로필 정보를 조회
+     * @param userId 프로필 정보를 조회하려는 사용자의 ID
+     * @return 해당 사용자의 닉네임과 프로필 이미지
+     */
+    @GetMapping("/user/{userId}/profile")
+    public ResponseEntity<ChatUserResponse> getUserProfile(@PathVariable("userId") String userId) {
+        ChatUserResponse userProfile = chatService.getUserProfileById(userId);
+        return ResponseEntity.ok(userProfile);
     }
 }

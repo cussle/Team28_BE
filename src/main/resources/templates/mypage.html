@@ -2,9 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>마이페이지</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
+    <title>명함 관리</title>
 </head>
 <body>
+
+<div class="mypage-container">
+    <div class="profile-section">
+        <div class="profile-photo">
+            <img th:src="@{/images/profile.svg}" alt="User Profile Photo">
+        </div>
+        <div class="profile-info">
+            <h2 class="username">닉네임</h2>  <!-- 백으로 부터 닉네임 받아오기 -->
+        </div>
+    </div>
+    <div class="menu-section">
+        <div class="menu-item">
+            <img th:src="@{/images/person_black.svg}" alt="Person Icon">
+            <p>계정 설정</p>
+        </div>
+        <div class="menu-item">
+            <img th:src="@{/images/card_black.svg}" alt="Card Management Icon">
+            <p>카드 관리</p>
+        </div>
+        <div class="menu-item">
+            <img th:src="@{/images/customer-service.svg}" alt="Customer Service Icon">
+            <p>Q & A</p>
+        </div>
+        <div class="menu-item">
+            <img th:src="@{/images/notice.svg}" alt="Notice Icon">
+            <p>공지사항</p>
+        </div>
+        <div class="menu-item">
+            <img th:src="@{/images/settings.svg}" alt="Settings Icon">
+            <p>설정</p>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{/nav-bar :: navBar}"></div>
 
 </body>
 </html>

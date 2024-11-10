@@ -38,10 +38,17 @@ public class CardController {
         return ResponseEntity.created(location).body(responseDto);
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<CardResponseDto> getCard(@PathVariable Long id) {
         CardResponseDto responseDto = cardService.getCard(id);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<CardResponseDto>> getMyCards(
+            @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
+        Member member = oauthMemberDetails.getMember();
+        List<CardResponseDto> responseDto = cardService.getMyCards(member.getId());
         return ResponseEntity.ok(responseDto);
     }
 

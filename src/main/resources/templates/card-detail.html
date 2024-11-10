@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[[${card.name}]]님의 명함</title>
 
-    <!-- CSS 파일 로드 -->
+    <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/card/card-detail.css}">
 
     <!-- 카카오 JavaScript SDK 로드 -->
@@ -13,73 +13,52 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         Kakao.cleanup();
-        Kakao.init(/*[[${kakaoJavascriptKey}]]*/ '');
+        Kakao.init(/*[[${kakaoJavascriptKey}]]*/ '' );
         /*]]>*/
     </script>
 </head>
 <body>
+
+<!-- Header with smaller margin and padding -->
+<div class="header">
+    <h2 class="title">명함</h2>
+</div>
+
+<!-- Main container holding the card -->
 <div class="container">
     <div class="card">
+        <!-- Business card title -->
         <h2>[[${card.name}]]</h2>
+
+        <!-- Card details -->
         <p>회사: [[${card.company}]]</p>
         <p>직책: [[${card.position}]]</p>
-        <p>전화번호: [[${card.phone}]]</p>
-        <p>이메일: [[${card.email}]]</p>
-        <p>GitHub: <a th:href="'https://github.com/' + ${card.githubId}" target="_blank" class="github-link">[[${card.githubId}]]</a></p>
+        <p>📱 전화번호: [[${card.phone}]]</p>
+        <p>📧 이메일: [[${card.email}]]</p>
+
+        <p>💻 GitHub:
+            <a th:href="'https://github.com/' + ${card.githubId}" target="_blank" class="github-link">[[${card.githubId}]]</a>
+        </p>
+        <!-- Card introduction -->
         <p>소개: [[${card.bio}]]</p>
     </div>
+
+    <!-- Share button with improved styling -->
     <button id="kakao-share-btn" class="share-button">카카오톡으로 공유하기</button>
+
+    <!-- QR 공유 버튼 -->
+    <button id="qr-share-btn" class="share-button" th:attr="data-card-id=${card.id}">QR 코드로 공유하기</button>
+
+    <!-- NFC 공유 버튼 -->
+    <button id="nfc-share-btn" class="share-button" th:attr="data-card-id=${card.id}">NFC로 공유하기</button>
+
 </div>
 
-<div class="nav-bar">
-    <div class="nav-item">
-        <img src="mycard-icon.png" alt="My Card" class="nav-icon">
-        <p>MyCard</p>
-    </div>
-    <div class="nav-item">
-        <img src="wallet-icon.png" alt="Wallet" class="nav-icon">
-        <p>Wallet</p>
-    </div>
-    <div class="nav-item">
-        <img src="chat-icon.png" alt="Chat" class="nav-icon">
-        <p>Chats</p>
-    </div>
-    <div class="nav-item">
-        <img src="mypage-icon.png" alt="My Page" class="nav-icon">
-        <p>MyPage</p>
-    </div>
-</div>
+<!-- Footer navigation bar -->
+<div th:replace="~{/nav-bar :: navBar}"></div>
 
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    document.getElementById('kakao-share-btn').addEventListener('click', function () {
-        Kakao.Link.sendDefault({
-            objectType: 'feed',
-            content: {
-                title: '[[${card.name}]]님의 명함',
-                description: '회사: [[${card.company}]], 직책: [[${card.position}]]',
-                imageUrl: 'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png',
-                link: {
-                    mobileWebUrl: 'http://localhost:8080/cards/[[${card.id}]]/view',
-                    webUrl: 'http://localhost:8080/cards/[[${card.id}]]/view'
-                }
-            },
-            buttons: [
-                {
-                    title: '명함 보기',
-                    link: {
-                        mobileWebUrl: 'http://localhost:8080/cards/[[${card.id}]]/view',
-                        webUrl: 'http://localhost:8080/cards/[[${card.id}]]/view'
-                    }
-                }
-            ],
-            fail: function(error) {
-                console.error(error);
-                alert('카카오톡 공유에 실패했습니다.');
-            }
-        });
-    });
-    /*]]>*/
-</script>
+<!-- JavaScript for Kakao sharing functionality -->
+<script th:src="@{/js/card/card-send-kakao.js}"></script>
+
 </body>
 </html>

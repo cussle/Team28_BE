@@ -25,6 +25,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 <p>소개: ${card.bio}</p>
             `;
 
+                // 클릭 이벤트 추가
+                cardItem.addEventListener("click", () => {
+                    // 카드 상세 페이지로 이동
+                    window.location.href = `/cards/${card.id}/view`;
+                });
+
                 cardListSection.appendChild(cardItem);
             });
         })

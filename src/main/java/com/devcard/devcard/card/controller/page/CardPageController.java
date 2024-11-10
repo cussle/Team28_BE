@@ -46,4 +46,15 @@ public class CardPageController {
         return "card-list";
     }
 
+    @GetMapping("/cards/manage")
+    public String cardManage() {
+        return "card-manage";
+    }
+
+    @GetMapping("/cards/create-view")
+    public String createCardView() {
+        return "card-create";
+    }
+
+
 }

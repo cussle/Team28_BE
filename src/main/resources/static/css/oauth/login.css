@@ -1,4 +1,3 @@
-/* Reset styles */
 * {
     margin: 0;
     padding: 0;
@@ -27,6 +26,33 @@ html, body {
     width: 80px;
     height: 80px;
     background-color: #4285f4;
+=======
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--background);
+}
+
+/* Container for the login card */
+.wrapper {
+    text-align: center;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 2rem 3rem;
+}
+
+/* Circle logo */
+.logo-circle {
+    width: 80px;
+    height: 80px;
+    background-color: var(--cnu-light-blue);
     border-radius: 50%;
     display: flex;
     justify-content: center;

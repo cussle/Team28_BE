@@ -46,6 +46,14 @@ public class CardService {
     }
 
     @Transactional(readOnly = true)
+    public List<CardResponseDto> getMyCards(Long memberId) {
+        List<Card> cards = cardRepository.findByMemberId(memberId);
+        return cards.stream()
+                .map(CardResponseDto::fromEntity)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<CardResponseDto> getCards() {
         List<Card> cards = cardRepository.findAll();
         return cards.stream()

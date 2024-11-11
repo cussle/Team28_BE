@@ -1,8 +1,32 @@
-/* General styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    font-family: Arial, sans-serif;
+}
+
+/* Wrapper to center content */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Content styles */
+.logo-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #4285f4;
+=======
     font-family: Arial, sans-serif;
 }
 
@@ -33,7 +57,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
+    margin-bottom: 5vh; /* 로고와 텍스트 사이의 간격을 vh 단위로 설정 */
 }
 
 .logo-letter {
@@ -43,13 +67,12 @@ body {
 }
 
 .app-name {
-    margin-top: 20px;
-    font-size: 24px;
+    font-size: 2rem; /* rem 단위를 사용해 텍스트 크기 설정 */
     font-weight: bold;
     color: #333;
+    margin-bottom: 25vh; /* DevCard와 로그인 버튼 사이의 간격을 vh 단위로 설정 */
 }
 
-/* GitHub login button */
 .github-login-btn {
     display: flex;
     align-items: center;
@@ -59,33 +82,29 @@ body {
     border: none;
     border-radius: 30px;
     padding: 12px 20px;
-    font-size: 16px;
-    margin: 20px auto 30px;
+    font-size: 1rem;
     cursor: pointer;
-    width: 100%;
     max-width: 250px;
     transition: background-color 0.3s;
-    fill: white;
+    margin-bottom: 5vh; /* 로그인 버튼과 약관 링크 사이의 간격을 vh 단위로 설정 */
 }
 
 .github-login-btn:hover {
     background-color: #333;
 }
 
-.github-login-btn svg {
-    width: 24px;
-    height: 24px;
+.github-icon {
+    filter: invert(100%);
     margin-right: 10px;
 }
 
-/* Terms and conditions */
 .terms {
-    font-size: 12px;
+    font-size: 0.8rem;
     color: #666;
-    margin-top: 20px;
+    text-align: center;
 }
 
 .terms a {
-    color: var(--cnu-sky-blue);
+    color: #4285f4;
     text-decoration: none;
 }

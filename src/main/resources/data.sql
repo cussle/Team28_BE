@@ -13,7 +13,7 @@ INSERT INTO chat_room (created_at, last_message, last_message_time) VALUES
     (CURRENT_TIMESTAMP, '테스트 채팅방 3', '2024-11-07 16:59:34');
 
 -- 예시 채팅 메시지 데이터
-INSERT INTO chat_message (content, sender, timestamp, chat_room_id) VALUES
+INSERT INTO chat_message (content, sender, `timestamp`, chat_room_id) VALUES
     ('테스트 메시지 1', 'user_1', '2023-11-07 16:59:34', 1),
     ('테스트 메시지 2', 'user_2', '2024-10-07 16:59:34', 2),
     ('테스트 메시지 3', 'user_3', '2024-11-07 16:59:34', 3);
@@ -34,10 +34,10 @@ INSERT INTO card (member_id, company, position, phone, bio) VALUES
     (2, 'kakaoCompany', '백엔드 주니어 개발자', '010-7894-456', '소통하는 개발자입니다.');
 
 -- Group 데이터
-INSERT INTO groups (name, member_id) VALUES
-   ('친구', 1),
-   ('회사', 1),
-   ('동아리', 1);
+INSERT INTO `groups` (`name`, member_id) VALUES
+    ('친구', 1),
+    ('회사', 1),
+    ('동아리', 1);
 
 INSERT INTO group_card (group_id, card_id) VALUES
     (1, 1),

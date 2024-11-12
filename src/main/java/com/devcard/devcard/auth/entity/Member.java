@@ -30,8 +30,8 @@ public class Member {
     @CreationTimestamp
     private Timestamp createDate;
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
-    private Card card;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Card> cards = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Group> groups = new ArrayList<>();

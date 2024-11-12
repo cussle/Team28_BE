@@ -15,9 +15,10 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
 
     @ManyToMany(mappedBy = "cards")
     private List<Group> groups = new ArrayList<>();

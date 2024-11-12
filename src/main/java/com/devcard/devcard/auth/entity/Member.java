@@ -21,7 +21,10 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String githubId;
+
+    @Column(name = "email")
     private String email;
+
     private String profileImg;
     private String username;
     private String nickname;
@@ -50,7 +53,7 @@ public class Member {
     }
 
     public void updateFromAttributes(Map<String, Object> attributes) {
-        this.email = (String) attributes.get("email");
+        this.email = email;
         this.profileImg = (String) attributes.get("avatar_url");
         this.username = (String) attributes.get("name");
         this.nickname = (String) attributes.get("login");

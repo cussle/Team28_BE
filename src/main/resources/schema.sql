@@ -32,27 +32,31 @@ CREATE TABLE IF NOT EXISTS chat_room_participants (
 -- 명함(Card) 테이블 스키마
 CREATE TABLE IF NOT EXISTS card (
     id BIGINT AUTO_INCREMENT,
+    member_id BIGINT,
     company VARCHAR(255),
     position VARCHAR(255),
     phone VARCHAR(255),
     bio VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT fk_card_member FOREIGN KEY (member_id) REFERENCES member(member_id)
     );
+
 
 -- 회원(Member) 테이블 스키마
 CREATE TABLE IF NOT EXISTS member (
-    id BIGINT AUTO_INCREMENT,
-    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    member_id BIGINT AUTO_INCREMENT,
+    create_date TIMESTAMP,
     email VARCHAR(255),
     github_id VARCHAR(255),
     nickname VARCHAR(255),
     profile_img VARCHAR(255),
-    role VARCHAR(50),
+    role VARCHAR(255),
     username VARCHAR(255),
-    PRIMARY KEY (id)
+    PRIMARY KEY (member_id)
     );
+
 
 -- 그룹(Groups) 테이블 스키마
 CREATE TABLE IF NOT EXISTS `groups` (

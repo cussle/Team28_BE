@@ -29,7 +29,7 @@
     <ul>
       <!-- notices 리스트를 반복하여 각 공지사항 항목 생성 -->
       <li th:each="notice : ${noticeList}" class="notice-item">
-        <a th:href="@{/notice/{id}(id=${notice.id})}" style="display: flex; width: 100%; align-items: center; text-decoration: none;">
+        <a th:href="@{/mypage/notice/{id}(id=${notice.id})}" style="display: flex; width: 100%; align-items: center; text-decoration: none;">
           <div class="notice-title" th:text="${notice.title}">공지사항 제목</div>
           <div class="notice-date" th:text="${notice.timestamp}">날짜</div>
         </a>
@@ -38,7 +38,6 @@
   </div>
 </div>
 
-<!-- 뒤로 가기 버튼 클릭 시 페이지 이동 -->
 <script>
   // 타임스탬프 형식을 변환하는 함수
   function formatTimestamp(timestamp) {
@@ -59,6 +58,7 @@
     });
   });
 
+  <!-- 뒤로 가기 버튼 클릭 시 페이지 이동 -->
   document.getElementById("backButton").addEventListener("click", function() {
     window.location.href = /*[[@{/mypage}]]*/ '/mypage';
   });

@@ -22,6 +22,7 @@ public class MyPageController {
 
     @GetMapping("/mypage/notice/{id}")
     public String getNotice(@PathVariable(name = "id") Long id, Model model) {
+        model.addAttribute("notice", noticeService.getNotice(id));
         return "notice-detail";
     }
 }

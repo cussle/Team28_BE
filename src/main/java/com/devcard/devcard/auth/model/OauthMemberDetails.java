@@ -20,7 +20,7 @@ public class OauthMemberDetails implements OAuth2User {
 
     @Override
     public <A> A getAttribute(String name) {
-        return OAuth2User.super.getAttribute(name);
+        return (A) attributes.get(name);
     }
 
     @Override

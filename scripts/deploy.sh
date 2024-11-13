@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 빌드 파일 탐색 및 이름 설정
-BUILD_JAR=$(ls /home/ubuntu/app/build/libs/*.jar)
+BUILD_JAR=$(ls /home/ubuntu/app/build/libs/*-SNAPSHOT.jar)
 JAR_NAME=$(basename $BUILD_JAR)
 echo ">>> build 파일명: $JAR_NAME" >> /home/ubuntu/deploy.log
 

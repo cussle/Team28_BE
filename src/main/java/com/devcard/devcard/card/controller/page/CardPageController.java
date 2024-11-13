@@ -56,5 +56,10 @@ public class CardPageController {
         return "card-create";
     }
 
+    @GetMapping("/cards/{cardId}/edit")
+    public String editCardView(@PathVariable("cardId") Long cardId, Model model) {
+        model.addAttribute("cardId", cardId);
+        return "card-edit";
+    }
 
 }

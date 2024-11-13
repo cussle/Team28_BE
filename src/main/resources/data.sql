@@ -5,7 +5,6 @@ INSERT INTO member (create_date, email, github_id, nickname, profile_img, role, 
     (CURRENT_TIMESTAMP, 'member2@example.com', 'github2', 'Member2', 'https://picsum.photos/200', 'USER', 'member2'),
     (CURRENT_TIMESTAMP, 'member3@example.com', 'github3', 'Member3', 'https://picsum.photos/200', 'USER', 'member3');
 
-
 -- 채팅 관련 data.sql (line 8~25)
 -- 예시 채팅방 데이터
 INSERT INTO chat_room (created_at, last_message, last_message_time) VALUES

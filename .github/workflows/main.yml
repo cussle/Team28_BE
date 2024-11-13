@@ -36,7 +36,7 @@ jobs:
           mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application-secret.properties
-          echo "${{ secrets.APPLICATION-SECRET }}" > ./application-secret.properties
+          echo "${{ secrets.APPLICATION_SECRET }}" > ./application-secret.properties
 
       # 권한 부여
       - name: Grant execute permission for gradlew

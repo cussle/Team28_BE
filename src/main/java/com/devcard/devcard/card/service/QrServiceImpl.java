@@ -50,7 +50,7 @@ public class QrServiceImpl implements QrService{
     }
 
     private String generateQrUrl(Long cardId) {
-        return domainUri + "cards/" + cardId;
+        return domainUri + "cards/" + cardId + "/view";
     }
 
     private BitMatrix generateQrCode(String url) throws WriterException {

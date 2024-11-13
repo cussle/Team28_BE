@@ -37,21 +37,16 @@ document.getElementById('qr-share-btn').addEventListener('click', function () {
         return;
     }
 
-    alert(cardId);
-
     fetch(`/cards/${cardId}/qrcode`)
         .then(response => {
             if (!response.ok) {
-                // 상태 코드가 OK가 아니면 오류 메시지를 출력합니다.
                 console.error(`서버 응답 오류: ${response.status} ${response.statusText}`);
-                return response.text();  // 응답을 텍스트로 반환해서 확인할 수 있습니다.
+                return response.text();
             }
-            return response.json();  // 응답이 JSON이라면 그대로 처리
+            return response.json();
         })
         .then(data => {
-            // data는 정상적인 JSON 데이터일 것입니다.
-            console.log(data);
-            const qrUrl = data.qrcode_url;
+            const qrUrl = `${data.qrcode_url}?t=${new Date().getTime()}`;  // 타임스탬프 추가
             const qrImage = document.createElement('img');
             qrImage.src = qrUrl;
             qrImage.alt = 'QR Code';

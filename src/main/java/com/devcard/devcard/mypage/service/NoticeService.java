@@ -20,6 +20,7 @@ public class NoticeService {
     public List<NoticeResponse> getNoticeList() {
         List<Notice> noticeList = noticeRepository.findAllByOrderByTimestampDesc();
         return noticeList.stream().map(notice -> new NoticeResponse(
+            notice.getId(),
             notice.getTitle(),
             notice.getContent(),
             notice.getTimestamp()
@@ -28,22 +29,22 @@ public class NoticeService {
 
     public NoticeResponse getNotice(Long id) {
         Notice notice = noticeRepository.findNoticeById(id);
-        return new NoticeResponse(notice.getTitle(), notice.getContent(), notice.getTimestamp());
+        return new NoticeResponse(notice.getId(), notice.getTitle(), notice.getContent(), notice.getTimestamp());
     }
 
     public NoticeResponse addNotice(NoticeRequest noticeRequest) {
         Notice notice = noticeRepository.save(new Notice(noticeRequest.title(), noticeRequest.content(), LocalDateTime.now()));
-        return new NoticeResponse(notice.getTitle(), notice.getContent(), notice.getTimestamp());
+        return new NoticeResponse(notice.getId(), notice.getTitle(), notice.getContent(), notice.getTimestamp());
     }
 
     public NoticeResponse updateNotice(NoticeUpdateRequest noticeUpdateRequest) {
         Notice notice = noticeRepository.save(new Notice(noticeUpdateRequest.id(), noticeUpdateRequest.title(), noticeUpdateRequest.content(), LocalDateTime.now()));
-        return new NoticeResponse(notice.getTitle(), notice.getContent(), notice.getTimestamp());
+        return new NoticeResponse(notice.getId(), notice.getTitle(), notice.getContent(), notice.getTimestamp());
     }
 
     public NoticeResponse deleteNotice(Long id) {
         Notice deleteNotice = noticeRepository.findNoticeById(id);
         noticeRepository.delete(deleteNotice);
-        return new NoticeResponse(deleteNotice.getTitle(), deleteNotice.getContent(), deleteNotice.getTimestamp());
+        return new NoticeResponse(deleteNotice.getId(), deleteNotice.getTitle(), deleteNotice.getContent(), deleteNotice.getTimestamp());
     }
 }

@@ -29,8 +29,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # `application-secret.properties` 생성 단계 제거
-
       # 환경 변수 확인 단계 수정
       - name: Check environment variables
         run: |

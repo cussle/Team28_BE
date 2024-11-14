@@ -1,0 +1,107 @@
+/* 전체 배경 색상 */
+body {
+  background-color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* QnA 상세 헤더 */
+.header {
+  background-color: #3f8efc;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+#backButton {
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.title {
+  font-size: 1.5rem;
+  flex-grow: 1;
+  text-align: center; /* 제목만 중앙 정렬 */
+}
+
+/* QnA 세부 내용 */
+.qna-detail {
+  max-width: 800px;
+  margin: 1.5rem auto;
+  padding: 1rem;
+}
+
+.qna-header {
+  margin-bottom: 1rem;
+}
+
+#detail-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: left; /* 제목을 왼쪽으로 정렬 */
+}
+
+#detail-info {
+  color: #888;
+  font-size: 0.9rem;
+  text-align: left; /* 작성자, 시간도 왼쪽 정렬 */
+}
+
+#detail-content {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: #333;
+  text-align: left; /* 질문 내용 왼쪽 정렬 */
+}
+
+/* 답변 섹션 */
+.answer-section {
+  margin-top: 2rem;
+  text-align: left; /* 답변 섹션 왼쪽 정렬 */
+}
+
+.answer-section h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+#answer-content {
+  font-size: 1rem;
+  color: #555;
+}
+
+#answer-content span {
+  font-style: italic;
+  color: #999;
+}
+
+/* 기본 스타일을 위한 Toast 알림 */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: none;
+}
+
+.create-button {
+  background-color: white; /* 버튼 배경색 */
+  color: black; /* 버튼 텍스트 색상 */
+  padding: 10px 20px; /* 패딩 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.create-button:hover {
+  background-color: white; /* 버튼 호버 시 색상 */
+}

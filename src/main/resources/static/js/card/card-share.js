@@ -8,16 +8,16 @@ document.getElementById('kakao-share-btn').addEventListener('click', function ()
             description: '회사: [[${card.company}]], 직책: [[${card.position}]]',
             imageUrl: 'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png',
             link: {
-                mobileWebUrl: 'http://localhost:8080/cards/' + cardId + '/view',
-                webUrl: 'http://localhost:8080/cards/' + cardId + '/view'
+                mobileWebUrl: 'http://3.34.144.148:8080/cards/' + cardId + '/view',
+                webUrl: 'http://3.34.144.148:8080/cards/' + cardId + '/view'
             }
         },
         buttons: [
             {
                 title: '명함 보기',
                 link: {
-                    mobileWebUrl: 'http://localhost:8080/cards/' + cardId + '/view',
-                    webUrl: 'http://localhost:8080/cards/' + cardId + '/view'
+                    mobileWebUrl: 'http://3.34.144.148:8080/cards/' + cardId + '/view',
+                    webUrl: 'http://3.34.144.148:8080/cards/' + cardId + '/view'
                 }
             }
         ],

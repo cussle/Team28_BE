@@ -148,7 +148,7 @@ $(document).ready(function () {
         fetchChatRoom(chatId);
 
         // 임시로 로컬 서버 설정
-        const socket = new WebSocket(`ws://localhost:8080/ws?chatId=${chatId}&userId=${memberId}`);
+        const socket = new WebSocket(`ws://3.34.144.148:8080/ws?chatId=${chatId}&userId=${memberId}`);
 
         // 웹소켓 연결
         socket.addEventListener("open", () => {

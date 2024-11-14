@@ -6,11 +6,10 @@ public class CreateRoomRequest {
 
     private List<Long> participantsId;
 
-    public List<Long> getParticipantsId() {
-        return participantsId;
+    public <T> CreateRoomRequest(List<T> list) {
     }
 
-    public void setParticipantsId(List<Long> participantsId) {
-        this.participantsId = participantsId;
+    public List<Long> getParticipantsId() {
+        return participantsId;
     }
 }

@@ -1,0 +1,133 @@
+/* 전체 배경 스타일 */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+/* 헤더 스타일 */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #3f8efc;
+  color: white;
+}
+
+/* 뒤로가기 버튼 스타일 */
+#backButton {
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+/* 제목 스타일 */
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  flex-grow: 1;
+  text-align: center;
+}
+
+/* Q & A 리스트 컨테이너 */
+.qna-list-container {
+  max-width: 800px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+}
+
+/* Q & A 항목 스타일 */
+.qna-item {
+  list-style: none;
+  padding: 1rem 1.5rem;
+  margin: 0.75rem 0;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 항목들을 양옆에 배치 */
+  transition: background-color 0.2s;
+}
+
+.qna-item:hover {
+  background-color: #f0f5ff;
+}
+
+/* 각 항목 스타일: ID, 작성자, 제목, 날짜, 상태 */
+.qna-id,
+.qna-name,
+.qna-title,
+.qna-date,
+.qna-status {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.qna-id {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.qna-name {
+  color: #3f8efc;
+}
+
+.qna-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #3f8efc;
+  margin-left: 1rem;
+}
+
+.qna-date {
+  color: #888;
+  margin-left: auto; /* 오른쪽 끝으로 날짜 배치 */
+}
+
+.qna-status {
+  color: #888;
+  margin-left: 1rem; /* 상태는 제목 오른쪽에 배치 */
+}
+
+/* Q & A 리스트 항목에 간격 추가 */
+.qna-item > div {
+  margin-right: 1rem;
+}
+
+/* Q & A 제목, 상태, 날짜 등을 정렬하는 스타일 */
+.qna-item > .qna-id {
+  width: 50px; /* ID의 고정 너비 */
+}
+
+.qna-item > .qna-name {
+  width: 150px; /* 작성자의 고정 너비 */
+}
+
+.qna-item > .qna-title {
+  flex-grow: 2; /* 제목은 남은 공간을 차지 */
+}
+
+.qna-item > .qna-date {
+  width: 120px; /* 날짜의 고정 너비 */
+}
+
+.qna-item > .qna-status {
+  width: 100px; /* 상태의 고정 너비 */
+}
+
+.create-button {
+  background-color: white; /* 버튼 배경색 */
+  color: black; /* 버튼 텍스트 색상 */
+  padding: 10px 20px; /* 패딩 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.create-button:hover {
+  background-color: white; /* 버튼 호버 시 색상 */
+}

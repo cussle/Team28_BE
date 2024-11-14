@@ -212,7 +212,7 @@ public class ChatService {
      * @return 해당 파라미터 값 (존재하지 않으면 null 반환)
      */
     private Long extractParamFromUri(String uri, String paramName) {
-        // e.g. `ws://localhost:8080/ws?chatId=1&userId=1` 입력의 경우,
+        // e.g. `ws://3.34.144.148:8080/ws?chatId=1&userId=1` 입력의 경우,
         try {
             // "?"로 나누어 쿼리 파라미터 부분만 가져옴 (e.g. `chatId=1&userId=1`)
             String[] parts = uri.split("\\?");

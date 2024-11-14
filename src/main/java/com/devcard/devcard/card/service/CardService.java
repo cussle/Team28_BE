@@ -43,6 +43,9 @@ public class CardService {
                 .position(cardRequestDto.getPosition())
                 .phone(cardRequestDto.getPhone())
                 .bio(cardRequestDto.getBio())
+                .email(cardRequestDto.getEmail())
+                .nickname(cardRequestDto.getCardName())
+                .profileImg(cardRequestDto.getProfileImg())
                 .build();
 
         Card savedCard = cardRepository.save(card);

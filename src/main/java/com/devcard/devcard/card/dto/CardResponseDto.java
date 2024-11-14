@@ -11,6 +11,7 @@ public class CardResponseDto {
 
     private final Long id;
     private final String name;
+    private final String nickname;
     private final String company;
     private final String position;
     private final String email;
@@ -21,11 +22,12 @@ public class CardResponseDto {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public CardResponseDto(Long id, String name, String company, String position, String email, String phone,
-                           String githubId, String bio, String profileImg,
+    public CardResponseDto(Long id, String name, String nickname, String company, String position, String email,
+                           String phone, String githubId, String bio, String profileImg,
                            LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
+        this.nickname = nickname;
         this.company = company;
         this.position = position;
         this.email = email;
@@ -39,6 +41,7 @@ public class CardResponseDto {
 
     public Long getId() { return id; }
     public String getName() { return name; }
+    public String getNickname() { return nickname; }
     public String getCompany() { return company; }
     public String getPosition() { return position; }
     public String getEmail() { return email; }
@@ -54,6 +57,7 @@ public class CardResponseDto {
         return new CardResponseDto(
                 card.getId(),
                 member.getUsername(),
+                card.getNickname(),
                 card.getCompany(),
                 card.getPosition(),
                 member.getEmail(),

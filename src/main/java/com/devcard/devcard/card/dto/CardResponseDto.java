@@ -2,9 +2,11 @@ package com.devcard.devcard.card.dto;
 
 import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.card.entity.Card;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CardResponseDto {
 
     private final Long id;
@@ -15,12 +17,12 @@ public class CardResponseDto {
     private final String phone;
     private final String githubId;
     private final String bio;
-    private final String profilePicture;
+    private final String profileImg;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
     public CardResponseDto(Long id, String name, String company, String position, String email, String phone,
-                           String githubId, String bio, String profilePicture,
+                           String githubId, String bio, String profileImg,
                            LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
@@ -30,7 +32,7 @@ public class CardResponseDto {
         this.phone = phone;
         this.githubId = githubId;
         this.bio = bio;
-        this.profilePicture = profilePicture;
+        this.profileImg = profileImg;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -43,7 +45,7 @@ public class CardResponseDto {
     public String getPhone() { return phone; }
     public String getGithubId() { return githubId; }
     public String getBio() { return bio; }
-    public String getProfilePicture() { return profilePicture; }
+    public String getProfileImg() { return profileImg; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 

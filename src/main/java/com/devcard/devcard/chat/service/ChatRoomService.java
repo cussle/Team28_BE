@@ -147,7 +147,7 @@ public class ChatRoomService {
      */
     public void deleteChatRoomByParticipants(List<Long> participantsId) {
         // 참여자 ID 목록으로 채팅방 조회
-        ChatRoom chatRoom = chatRoomRepository.findByParticipantsIdIn(Collections.singleton(participantsId))
+        ChatRoom chatRoom = chatRoomRepository.findByParticipants_IdIn(participantsId)
             .orElseThrow(() -> new ChatRoomNotFoundException(
                 CHAT_ROOM_NOT_FOUND_BY_PARTICIPANTS + participantsId.toString()));
 

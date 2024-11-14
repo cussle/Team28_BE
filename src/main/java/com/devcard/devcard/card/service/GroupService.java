@@ -58,26 +58,15 @@ public class GroupService {
     }
 
     @Transactional
-    public void removeCardFromGroup(Long groupId, Long cardId, Member member) {
+    public void deleteCardFromGroup(Long groupId, Long cardId, Member member) {
         Group group = groupRepository.findByIdAndMember(groupId, member)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "해당 그룹이 존재하지 않거나 접근 권한이 없습니다."
-                ));
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 존재하지 않거나 접근 권한이 없습니다."));
 
         Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "해당 ID의 명함이 존재하지 않습니다."
-                ));
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 명함이 존재하지 않습니다."));
 
-        // 그룹에 해당 카드가 있는지 확인 후 삭제
-        if (!group.getCards().contains(card)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "해당 그룹에 명함이 존재하지 않습니다."
-            );
-        }
-
-        group.getCards().remove(card);
-        groupRepository.save(group);
+        group.removeCard(card); // 그룹에서 명함을 제거
+        groupRepository.save(group); // 변경사항 저장
     }
 
     @Transactional
@@ -90,4 +79,13 @@ public class GroupService {
         group.setName(newName);
         groupRepository.save(group);
     }
+
+    @Transactional
+    public void deleteGroup(Long groupId, Member member) {
+        Group group = groupRepository.findByIdAndMember(groupId, member)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 존재하지 않거나 접근 권한이 없습니다."));
+
+        groupRepository.delete(group); // 그룹 삭제
+    }
+
 }

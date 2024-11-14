@@ -42,4 +42,18 @@ public class GroupController {
         return ResponseEntity.ok("그룹 이름이 수정되었습니다.");
     }
 
+    @DeleteMapping("/{groupId}/cards/{cardId}/delete")
+    public ResponseEntity<Void> removeCardFromGroup(@PathVariable Long groupId, @PathVariable Long cardId, @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
+        groupService.deleteCardFromGroup(groupId, cardId, oauthMemberDetails.getMember());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{groupId}/delete")
+    public ResponseEntity<Void> deleteGroup(@PathVariable Long groupId, @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
+        groupService.deleteGroup(groupId, oauthMemberDetails.getMember());
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }

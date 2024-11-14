@@ -103,19 +103,31 @@
     color: #666;
 }
 
-.edit-button {
+.edit-button, .delete-button {
     display: none;
     margin-left: 10px;
     padding: 5px 10px;
-    background-color: var(--cnu-light-blue);
-    color: white;
     border: none;
     border-radius: 7px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
+.edit-button {
+    background-color: var(--cnu-light-blue);
+    color: white;
+}
+
+.delete-button {
+    background-color: var(--pantone-877c);
+    color: var(--pantone-blackc);
+}
+
 .group-item:hover .edit-button {
+    display: inline-block;
+}
+
+.group-item:hover .delete-button {
     display: inline-block;
 }
 
@@ -125,4 +137,8 @@
 
 .edit-button.editing {
     background-color: var(--cnu-yellow);
+}
+
+.delete-button:hover {
+    background-color: var(--pantone-871c);
 }

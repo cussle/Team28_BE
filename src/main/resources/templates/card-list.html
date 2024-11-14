@@ -12,6 +12,7 @@
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/card/card-list-delete.js}"></script>
 </head>
 <body>
 <div class="container">
@@ -36,6 +37,7 @@
                     <img th:src="@{${card.profilePicture}}" alt="Profile Picture">
                 </div>
             </a>
+            <button class="delete-button" th:attr="card-id=${card.id}" onclick="deleteCardFromGroup(this)">삭제</button>
         </div>
     </div>
 </div>

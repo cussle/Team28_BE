@@ -7,7 +7,9 @@ document.addEventListener("DOMContentLoaded", function() {
             if (isEditing) return;
 
             // "수정" 버튼을 클릭한 경우에는 redirectToGroup을 실행하지 않음
-            if (!event.target.classList.contains('edit-button') && !event.target.classList.contains('group-name-input')) {
+            if (!event.target.classList.contains('edit-button')
+                && !event.target.classList.contains('delete-button')
+                && !event.target.classList.contains('group-name-input')) {
                 const groupId = this.getAttribute('data-group-id');
                 redirectToGroup(groupId);
             }
@@ -86,3 +88,22 @@ function toggleEditMode(button) {
         });
     }
 }
+
+function deleteGroup(button) {
+    const groupId = button.getAttribute('data-group-id');
+
+    if (confirm("정말로 이 그룹을 삭제하시겠습니까?")) {
+        $.ajax({
+            url: `/groups/${groupId}/delete`, // 그룹 삭제 엔드포인트
+            type: 'DELETE',
+            success: function() {
+                alert("그룹이 삭제되었습니다.");
+                location.reload(); // 페이지 새로고침으로 삭제된 그룹 반영
+            },
+            error: function() {
+                alert("그룹 삭제에 실패했습니다.");
+            }
+        });
+    }
+}
+

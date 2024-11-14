@@ -46,8 +46,31 @@ body, html {
     border-radius: 15px;
     padding: 20px;
     margin: 10px 0;
-    width: 100%;
+    width: 90%;
+    max-width: 500px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative; /* 삭제 버튼 위치를 카드 내부로 제한하기 위해 relative 사용 */
+}
+
+/* 삭제 버튼 */
+.delete-button {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    z-index: 10; /* 삭제 버튼이 다른 요소 위에 표시되도록 설정 */
+}
+
+/* 카드 hover 시 삭제 버튼 표시 */
+.card:hover .delete-button {
+    display: block;
 }
 
 .card-content {
@@ -72,14 +95,4 @@ body, html {
     width: 100px;
     height: auto;
     border-radius: 8px;
-}
-
-/* 고정된 네비게이션 바 */
-.nav-bar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: white;
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2);
-    z-index: 1000; /* 네비게이션 바를 최상위에 고정 */
 }

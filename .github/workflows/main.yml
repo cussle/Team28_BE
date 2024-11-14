@@ -44,7 +44,6 @@ jobs:
           echo "GH_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}"
           echo "GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}"
           echo "GH_REDIRECT_URI: ${{ secrets.GH_REDIRECT_URI }}"
-
       # 권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew

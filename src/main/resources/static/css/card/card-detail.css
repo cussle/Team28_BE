@@ -148,3 +148,83 @@ body {
         font-size: 1.1em;
     }
 }
+
+#modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* 배경이 페이지 전체를 덮도록 설정 */
+    display: none; /* 기본적으로 숨김 */
+}
+
+/* 모달 창 설정 */
+#group-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(255 255 255 / 94%);
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    z-index: 1001; /* 모달 창이 배경 위에 표시되도록 설정 */
+    display: none; /* 기본적으로 숨김 */
+}
+
+/* 모달과 배경이 활성화될 때 */
+#modal-overlay.visible,
+#group-modal.visible {
+    display: block;
+}
+
+.group-option {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.group-option:hover {
+    color: #007bff;
+    transform: translateY(-2px);
+}
+
+#group-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#group-modal h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #555;
+}
+
+.add-to-group-button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: var(--cnu-yellow);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-group-button:hover {
+    background-color: var(--cnu-orange);
+}

@@ -5,10 +5,7 @@ import com.devcard.devcard.card.dto.GroupResponseDto;
 import com.devcard.devcard.card.service.GroupService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/groups")
@@ -24,6 +21,12 @@ public class GroupController {
     public ResponseEntity<GroupResponseDto> createGroup(@AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
         GroupResponseDto group = groupService.createGroup("새로운 그룹", oauthMemberDetails.getMember());
         return ResponseEntity.ok(group);
+    }
+
+    @PostMapping("/{groupId}/cards/{cardId}")
+    public ResponseEntity<Void> addCardToGroup(@PathVariable Long groupId, @PathVariable Long cardId, @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
+        groupService.addCardToGroup(groupId, cardId, oauthMemberDetails.getMember());
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -79,14 +79,14 @@ public class CardController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/add-to-group/{groupId}")
-    public ResponseEntity<Void> addCardToGroup(
-            @PathVariable Long id,
-            @PathVariable Long groupId
-    ) {
-        cardService.addCardToGroup(id, groupId);
-
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/{id}/add-to-group/{groupId}")
+//    public ResponseEntity<Void> addCardToGroup(
+//            @PathVariable Long id,
+//            @PathVariable Long groupId
+//    ) {
+//        cardService.addCardToGroup(id, groupId);
+//
+//        return ResponseEntity.ok().build();
+//    }
 
 }

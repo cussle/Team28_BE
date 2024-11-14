@@ -30,6 +30,18 @@
 
 <!-- Main container holding the card -->
 <div class="container">
+    <button th:if="!${isMyCard}" id="add-to-group-btn" class="add-to-group-button">그룹에 추가</button>
+
+    <div id="modal-overlay" style="display: none;"></div>
+
+    <div id="group-modal">
+        <h3>그룹 선택</h3>
+        <ul id="group-list">
+            <li th:each="group : ${groups}">
+                <button class="group-option" th:attr="data-group-id=${group.id}">[[${group.name}]]</button>
+            </li>
+        </ul>
+    </div>
     <div class="card">
         <!-- Business card title -->
         <h2>[[${card.name}]]</h2>
@@ -68,6 +80,7 @@
 
 <!-- JavaScript for Kakao sharing & Qr code functionality -->
 <script th:src="@{/js/card/card-share.js}"></script>
+<script th:src="@{/js/wallet/wallet-edit.js}"></script>
 
 </body>
 </html>

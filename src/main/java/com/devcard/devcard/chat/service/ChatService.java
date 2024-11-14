@@ -1,6 +1,8 @@
 package com.devcard.devcard.chat.service;
 
 import static com.devcard.devcard.chat.util.Constants.CHAT_ROOM_NOT_FOUND;
+import static com.devcard.devcard.chat.util.Constants.EMPTY_MESSAGE;
+import static com.devcard.devcard.chat.util.Constants.USER_NOT_IN_CHAT_ROOM;
 
 import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.auth.repository.MemberRepository;
@@ -63,6 +65,11 @@ public class ChatService {
      * @param message 전송하려는 메시지
      */
     public void handleIncomingMessage(Long chatId, Long userId, String message) {
+        // message가 null이거나 빈 문자열인 경우 예외 처리
+        if (message == null || message.trim().isEmpty()) {
+            throw new IllegalArgumentException(EMPTY_MESSAGE);
+        }
+
         // ChatRoom 조회
         ChatRoom chatRoom = chatRoomRepository.findById(chatId)
             .orElseThrow(() -> new ChatRoomNotFoundException(CHAT_ROOM_NOT_FOUND + chatId));
@@ -73,7 +80,7 @@ public class ChatService {
 
         if (!isParticipant) {
             logger.warn("사용자가 채팅방에 참여하지 않음: userId={}, chatId={}", userId, chatId);
-            throw new IllegalArgumentException("사용자가 해당 채팅방의 참여자가 아닙니다.");
+            throw new IllegalArgumentException(USER_NOT_IN_CHAT_ROOM);
         }
 
         // 메시지 저장

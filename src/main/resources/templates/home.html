@@ -6,32 +6,17 @@
     <title>My Business Card</title>
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/card/card.css}">
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
-<div class="container">
+<div class="card-title-container">
     <h2 class="title">My Business Card</h2>
-    <div class="card">
-        <div class="card-content">
-            <h3 th:text="${member.username}">Username</h3>
-            <p>📧: <span th:text="${member.email}">Email</span></p>
-            <p>💻: GitHub:
-                <a th:href="@{https://github.com/{username}(username=${member.username != null ? member.username : member.nickname})}"
-                   th:text="${member.username != null ? member.username : member.nickname}"
-                   target="_blank">
-                    GitHub Profile
-                </a>
-            </p>
-            <p>Location: Online</p>
-            <p>Contributor to 1,100+ open-source projects</p>
-        </div>
-        <div class="card-image">
-            <img th:src="@{/images/person-working.png}" alt="Person Working">
-        </div>
-    </div>
+    <!-- 명함 Card-->
+    <div th:replace="card :: cardSection"></div>
 </div>
 
 <!-- 하단 네비게이션 바 -->
@@ -39,5 +24,8 @@
 
 <!-- Toast 알림 -->
 <div id="toast" class="toast"></div>
+
+<script th:src="@{/js/card/card.js}"></script>
+
 </body>
 </html>

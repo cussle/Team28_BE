@@ -1,18 +1,3 @@
-/* General styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100vh;
-    background-color: #f5f5f5;
-}
 
 /* Header styling (like home.css) */
 .header {
@@ -39,63 +24,6 @@ body {
     align-items: center;
     padding: 20px;
     flex-flow: column;
-}
-
-/* Card styling (like home.css) */
-.card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    background-color: black;
-    color: white;
-    border-radius: 15px;
-    padding: 20px;
-    margin: 10px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Card content styling */
-.card-content {
-    flex: 1;
-}
-
-.card-content h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-}
-
-.card-content p {
-    margin-bottom: 8px;
-    padding: 10px;
-}
-
-.card-content a {
-    color: #00bfff;
-    text-decoration: none;
-}
-
-.card-image img {
-    width: 100px;
-    height: auto;
-    border-radius: 8px;
-}
-
-/* Hover effect for the card */
-.card:hover {
-    transform: translateY(-5px); /* Slight lift on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
-}
-
-/* Styling for GitHub link */
-.card .github-link {
-    color: #00bfff; /* Consistent color with the links */
-    text-decoration: none;
-}
-
-.card .github-link:hover {
-    text-decoration: underline;
 }
 
 /* Share button styling */
@@ -227,4 +155,36 @@ body {
 
 .add-to-group-button:hover {
     background-color: var(--cnu-orange);
+}
+
+
+/* Base button styling */
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Edit button styling */
+.edit-button.button {
+    background-color: grey; /* Green */
+    color: white;
+}
+
+.edit-button.button:hover {
+    background-color: #16a085; /* Darker green */
+}
+
+/* Delete button styling */
+.delete-button.button {
+    background-color: grey; /* Red */
+    color: white;
+    margin-left: 10px; /* Spacing between buttons */
+}
+
+.delete-button.button:hover {
+    background-color: #16a085; /* Darker red */
 }

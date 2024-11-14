@@ -26,12 +26,26 @@ public class CardService {
     }
 
     @Transactional
+    public void createCardWithDefaultInfo(Member member) {
+        Card card = new Card.Builder(member)
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .profileImg(member.getProfileImg())
+                .build();
+        cardRepository.save(card);
+    }
+
+
+    @Transactional
     public CardResponseDto createCard(CardRequestDto cardRequestDto, Member member) {
         Card card = new Card.Builder(member)
                 .company(cardRequestDto.getCompany())
                 .position(cardRequestDto.getPosition())
                 .phone(cardRequestDto.getPhone())
                 .bio(cardRequestDto.getBio())
+                .email(cardRequestDto.getEmail())
+                .nickname(cardRequestDto.getCardName())
+                .profileImg(cardRequestDto.getProfileImg())
                 .build();
 
         Card savedCard = cardRepository.save(card);

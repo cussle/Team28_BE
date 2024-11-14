@@ -19,10 +19,12 @@ public class Card {
     @JoinColumn(name = "member_id")
     private Member member;
 
-
     @ManyToMany(mappedBy = "cards")
     private List<Group> groups = new ArrayList<>();
 
+    private String email;
+    private String nickname;
+    private String profileImg;
     private String company;
     private String position;
     private String phone;
@@ -37,6 +39,9 @@ public class Card {
     // 빌더 패턴을 위한 생성자
     private Card(Builder builder) {
         this.member = builder.member;
+        this.email = builder.email;
+        this.nickname = builder.nickname;
+        this.profileImg = builder.profileImg;
         this.company = builder.company;
         this.position = builder.position;
         this.phone = builder.phone;
@@ -45,8 +50,13 @@ public class Card {
         this.updatedAt = LocalDateTime.now();
     }
 
+
+    // 빌더 패턴을 위한 생성자
     public static class Builder {
         private final Member member;
+        private String email;
+        private String nickname;
+        private String profileImg;
         private String company;
         private String position;
         private String phone;
@@ -54,6 +64,21 @@ public class Card {
 
         public Builder(Member member) {
             this.member = member;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder nickname(String nickname) {
+            this.nickname = nickname;
+            return this;
+        }
+
+        public Builder profileImg(String profileImg) {
+            this.profileImg = profileImg;
+            return this;
         }
 
         public Builder company(String company) {
@@ -84,6 +109,9 @@ public class Card {
     // Getter
     public Long getId() { return id; }
     public Member getMember() { return member; }
+    public String getEmail() { return email; }
+    public String getNickname() { return nickname; }
+    public String getProfileImg() { return profileImg; }
     public String getCompany() { return company; }
     public String getPosition() { return position; }
     public String getPhone() { return phone; }

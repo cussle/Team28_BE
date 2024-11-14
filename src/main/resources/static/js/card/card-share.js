@@ -46,6 +46,7 @@ document.getElementById('qr-share-btn').addEventListener('click', function () {
             return response.json();
         })
         .then(data => {
+            console.log(data)
             const qrUrl = `${data.qrcode_url}?t=${new Date().getTime()}`;  // 타임스탬프 추가
             const qrImage = document.createElement('img');
             qrImage.src = qrUrl;
@@ -57,6 +58,7 @@ document.getElementById('qr-share-btn').addEventListener('click', function () {
             qrContainer.innerHTML = '';  // 기존 내용 지우기
             qrContainer.appendChild(qrImage);  // QR 코드 이미지 추가
 
+            qrContainer.style.display = 'block';
             handleSuccess('QR 코드가 성공적으로 생성되었습니다.', 400);
         })
         .catch(error => {

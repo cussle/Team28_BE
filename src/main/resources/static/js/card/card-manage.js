@@ -1,80 +1,35 @@
-document.addEventListener("DOMContentLoaded", function() {
+// card-manage.js
 
-    fetch("/cards/my", {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        },
-    })
-        .then(response => response.json())
-        .then(data => {
-            const cardListSection = document.getElementById("card-list-section");
-
-            data.forEach(card => {
-                // 카드 요소 생성
-                const cardItem = document.createElement("div");
-                cardItem.className = "card-item";
-
-                // 사용자 이름 또는 닉네임 결정
-                const displayName = card.name || card.nickname; // @Todo CardResponseDto에서 nickname반환 필요
-
-                // 카드 내용 추가
-                cardItem.innerHTML = `
-                <h2>${displayName}</h2>
-                <p>회사: ${card.company}</p>
-                <p>직책: ${card.position}</p>
-                <p>전화번호: ${card.phone}</p>
-                <p>소개: ${card.bio}</p>
-                <button class="edit-button" data-id="${card.id}">수정</button>
-                <button class="delete-button" data-id="${card.id}">삭제</button>
-            `;
-
-                // 수정 버튼 클릭 시
-                cardItem.querySelector('.edit-button').addEventListener('click', function(event) {
-                    event.stopPropagation();  // 카드 클릭 이벤트가 실행되지 않도록
-                    const cardId = this.getAttribute("data-id");
-                    window.location.href = `/cards/${cardId}/edit`;  // 수정 페이지로 이동
-                });
-
-                // 삭제 버튼 클릭 시
-                cardItem.querySelector('.delete-button').addEventListener('click', function(event) {
-                    event.stopPropagation();  // 카드 클릭 이벤트가 실행되지 않도록
-                    const cardId = this.getAttribute("data-id");
-
-                    // 삭제 확인
-                    if (confirm("정말로 이 명함을 삭제하시겠습니까?")) {
-                        fetch(`/cards/${cardId}`, {
-                            method: "DELETE",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                        })
-                            .then(response => {
-                                if (response.ok) {
-                                    handleSuccess("명함이 삭제되었습니다.", 300);
-                                    // 삭제된 카드 항목 제거
-                                    cardItem.remove();
-                                } else {
-                                    handleError("명함 삭제에 실패했습니다.", 300);
-                                }
-                            })
-                            .catch(error => {
-                                console.error("명함 삭제 실패:", error);
-                                handleError("명함 삭제에 실패했습니다.", 300);
-                            });
-                    }
-                });
-
-                // 카드 클릭 시 상세 페이지로 이동
-                cardItem.addEventListener("click", () => {
-                    window.location.href = `/cards/${card.id}/view`;
-                });
-
-                cardListSection.appendChild(cardItem);
-            });
+document.addEventListener("DOMContentLoaded", function () {
+    function fetchCardList() {
+        fetch("/cards/my", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
         })
-        .catch(error => {
-            console.error("명함 목록 로딩 실패:", error);
-            handleError("명함 목록을 불러오는 데 실패했습니다.", 300);
+            .then(response => response.json())
+            .then(data => populateCardListSection(data))
+            .catch(error => console.error("명함 목록 로딩 실패:", error));
+    }
+
+    // card-list-section을 채우는 함수
+    function populateCardListSection(data) {
+        const cardListSection = document.getElementById("card-list-section");
+        cardListSection.innerHTML = ''; // 기존 내용을 초기화
+
+        data.forEach(card => {
+            const cardContainer = document.createElement("div");
+            cardContainer.className = "card-item";
+            cardContainer.id = `card-${card.id}`;
+
+            // 개별 카드 정보를 표시하기 위해 card.js의 populateCardSection 함수를 호출하여 HTML을 생성
+            populateCardSection(card, cardContainer);
+
+            cardListSection.appendChild(cardContainer);
         });
+    }
+
+    // 카드 목록을 가져옴
+    fetchCardList();
 });

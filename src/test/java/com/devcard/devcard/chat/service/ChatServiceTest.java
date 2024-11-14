@@ -6,6 +6,7 @@ import static com.devcard.devcard.chat.util.Constants.USER_NOT_IN_CHAT_ROOM;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -256,7 +257,7 @@ public class ChatServiceTest {
         chatService.removeSessionFromChatRoom(nonExistentChatId, session);
 
         // chatRoomSessions에 해당 chatId가 존재하지 않는지 확인
-        assertTrue(!chatService.getChatRoomSessions().containsKey(nonExistentChatId));
+        assertFalse(chatService.getChatRoomSessions().containsKey(nonExistentChatId));
     }
 
     @Test
@@ -328,4 +329,35 @@ public class ChatServiceTest {
         assertTrue(sessions == null || sessions.isEmpty());
     }
 
+    @Test
+    @DisplayName("유효한 JSON payload")
+    void testExtractMessage_ValidPayload() {
+        String payload = "{\"content\": \"Hello\"}";
+        String result = chatService.extractMessage(payload);
+        assertEquals("Hello", result);
+    }
+
+    @Test
+    @DisplayName("content 필드가 없는 JSON payload")
+    void testExtractMessage_NoContentField() {
+        String payload = "{\"message\": \"Hi\"}";
+        String result = chatService.extractMessage(payload);
+        assertNull(result);
+    }
+
+    @Test
+    @DisplayName("잘못된 JSON 형식의 payload")
+    void testExtractMessage_InvalidJsonFormat() {
+        String payload = "Invalid JSON";
+        String result = chatService.extractMessage(payload);
+        assertNull(result);
+    }
+
+    @Test
+    @DisplayName("빈 JSON 객체")
+    void testExtractMessage_EmptyJsonObject() {
+        String payload = "{}";
+        String result = chatService.extractMessage(payload);
+        assertNull(result);
+    }
 }

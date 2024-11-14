@@ -168,8 +168,14 @@ public class ChatService {
     public String extractMessage(String payload) {
         JSONParser parser = new JSONParser();
         try {
-            JSONObject jsonObject = (JSONObject) parser.parse(payload);
-            return jsonObject.getAsString("content");
+            Object obj = parser.parse(payload);
+            if (obj instanceof JSONObject) {  // JSONObject로 캐스팅 가능한지 확인
+                JSONObject jsonObject = (JSONObject) obj;
+                return jsonObject.getAsString("content");
+            } else {
+                logger.error("유효하지 않은 JSON 형식: {}", payload);
+                return null;
+            }
         } catch (ParseException e) {
             logger.error("payload에서 message 추출 실패: {}", payload, e);
             return null; // 예외 발생 시 null 반환

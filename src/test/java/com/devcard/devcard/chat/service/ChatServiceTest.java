@@ -28,6 +28,7 @@ import com.devcard.devcard.chat.repository.ChatRepository;
 import com.devcard.devcard.chat.repository.ChatRoomRepository;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
@@ -360,4 +361,83 @@ public class ChatServiceTest {
         String result = chatService.extractMessage(payload);
         assertNull(result);
     }
+
+    @Test
+    @DisplayName("유효한 chatId 추출 성공")
+    void testExtractChatIdFromSession_ValidChatId() {
+        // 유효한 URI 설정
+        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws?chatId=1&userId=1"));
+
+        // chatId가 1로 반환되는지 확인
+        Long chatId = chatService.extractChatIdFromSession(session);
+        assertEquals(1L, chatId);
+    }
+
+    @Test
+    @DisplayName("쿼리 파라미터 없음")
+    void testExtractChatIdFromSession_NoChatId() {
+        // chatId가 없는 URI 설정
+        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws"));
+
+        // chatId가 없으므로 IllegalArgumentException 발생
+        Exception exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> chatService.extractChatIdFromSession(session)
+        );
+        assertEquals("chatId 파라미터가 없음", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("chatId 숫자 형식 오류")
+    void testExtractChatIdFromSession_InvalidChatIdFormat() {
+        // chatId가 잘못된 형식인 URI 설정
+        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws?chatId=abc&userId=1"));
+
+        // chatId가 숫자 형식이 아니므로 IllegalArgumentException 발생
+        Exception exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> chatService.extractChatIdFromSession(session)
+        );
+        assertEquals("chatId 추출 중 숫자 형식 오류", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("유효한 userId 추출 성공")
+    void testExtractUserIdFromSession_ValidUserId() {
+        // 유효한 URI 설정
+        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws?chatId=1&userId=1"));
+
+        // userId가 1로 반환되는지 확인
+        Long userId = chatService.extractUserIdFromSession(session);
+        assertEquals(1L, userId);
+    }
+
+    @Test
+    @DisplayName("userId 없음")
+    void testExtractUserIdFromSession_NoUserId() {
+        // userId가 없는 URI 설정
+        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws"));
+
+        // userId가 없으므로 IllegalArgumentException 발생
+        Exception exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> chatService.extractUserIdFromSession(session)
+        );
+        assertEquals("userId 파라미터가 없음", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("userId 숫자 형식 오류")
+    void testExtractUserIdFromSession_InvalidUserIdFormat() {
+        // userId가 잘못된 형식인 URI 설정
+        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws?chatId=1&userId=abc"));
+
+        // userId가 숫자 형식이 아니므로 IllegalArgumentException 발생
+        Exception exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> chatService.extractUserIdFromSession(session)
+        );
+        assertEquals("userId 추출 중 숫자 형식 오류", exception.getMessage());
+    }
+
 }

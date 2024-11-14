@@ -6,16 +6,20 @@
     <title>Card List</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" th:href="@{/css/chat/global.css}">
-    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/card/card-list.css}">
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/card/card-list-delete.js}"></script>
 </head>
 <body>
 <div class="container">
-    <h2 class="title">Card List</h2>
+    <div class="header">
+        <h2 class="title">Wallet</h2>
+    </div>
+
     <div class="card-list">
         <!-- 카드 목록을 동적으로 생성 -->
         <div class="card" th:each="card : ${cards}">
@@ -33,6 +37,7 @@
                     <img th:src="@{${card.profilePicture}}" alt="Profile Picture">
                 </div>
             </a>
+            <button class="delete-button" th:attr="card-id=${card.id}" onclick="deleteCardFromGroup(this)">삭제</button>
         </div>
     </div>
 </div>

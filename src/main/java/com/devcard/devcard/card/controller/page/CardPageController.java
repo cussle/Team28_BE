@@ -2,7 +2,9 @@ package com.devcard.devcard.card.controller.page;
 
 import com.devcard.devcard.auth.model.OauthMemberDetails;
 import com.devcard.devcard.card.dto.CardResponseDto;
+import com.devcard.devcard.card.dto.GroupResponseDto;
 import com.devcard.devcard.card.service.CardService;
+import com.devcard.devcard.card.service.GroupService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -16,19 +18,29 @@ import java.util.List;
 public class CardPageController {
 
     private final CardService cardService;
+    private final GroupService groupService;
 
     @Value("${kakao.javascript.key}")
     private String kakaoJavascriptKey;
 
-    public CardPageController(CardService cardService) {
+    public CardPageController(CardService cardService, GroupService groupService) {
         this.cardService = cardService;
+        this.groupService = groupService;
     }
 
     @GetMapping("/cards/{id}/view")
-    public String viewCard(@PathVariable("id") Long id, Model model) {
+    public String viewCard(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
         CardResponseDto card = cardService.getCard(id);
+        boolean isMyCard = card.getGithubId().equals(oauthMemberDetails.getMember().getGithubId());
         model.addAttribute("card", card);
+        model.addAttribute("isMyCard", isMyCard);
         model.addAttribute("kakaoJavascriptKey", kakaoJavascriptKey);
+
+        if (!isMyCard) {
+            List<GroupResponseDto> groups = groupService.getGroupsByMember(oauthMemberDetails.getMember());
+            model.addAttribute("groups", groups);
+        }
+
         return "card-detail";
     }
 

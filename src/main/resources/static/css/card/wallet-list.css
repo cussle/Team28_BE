@@ -87,14 +87,58 @@
     margin-right: 15px;
 }
 
-.group-name {
+.group-name, .group-name-input {
     flex-grow: 1;
     font-size: 1rem;
     font-weight: bold;
     color: #333;
 }
 
+.group-name-input {
+    padding: 5px;
+}
+
 .group-count {
     font-size: 0.9rem;
     color: #666;
+}
+
+.edit-button, .delete-button {
+    display: none;
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button {
+    background-color: var(--cnu-light-blue);
+    color: white;
+}
+
+.delete-button {
+    background-color: var(--pantone-877c);
+    color: var(--pantone-blackc);
+}
+
+.group-item:hover .edit-button {
+    display: inline-block;
+}
+
+.group-item:hover .delete-button {
+    display: inline-block;
+}
+
+.edit-button:hover {
+    background-color: var(--cnu-dark-blue);
+}
+
+.edit-button.editing {
+    background-color: var(--cnu-yellow);
+}
+
+.delete-button:hover {
+    background-color: var(--pantone-871c);
 }

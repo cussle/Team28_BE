@@ -16,11 +16,15 @@
     <h2 class="title">My Business Card</h2>
     <div class="card">
         <div class="card-content">
-            <h3>DevCard</h3>
-            <p>App Developer | Backend Engineer</p>
-            <p>📱: 010-1234-5678</p>
-            <p>📧: devcard@example.com</p>
-            <p>💻: GitHub: <a href="https://github.com/your-profile" target="_blank">your-profile</a></p>
+            <h3 th:text="${member.username}">Username</h3>
+            <p>📧: <span th:text="${member.email}">Email</span></p>
+            <p>💻: GitHub:
+                <a th:href="@{https://github.com/{username}(username=${member.username != null ? member.username : member.nickname})}"
+                   th:text="${member.username != null ? member.username : member.nickname}"
+                   target="_blank">
+                    GitHub Profile
+                </a>
+            </p>
             <p>Location: Online</p>
             <p>Contributor to 1,100+ open-source projects</p>
         </div>

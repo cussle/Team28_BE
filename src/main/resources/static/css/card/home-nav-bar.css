@@ -1,0 +1,93 @@
+/* home-nav-bar.css*/
+.nav-bar {
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    position: relative; /* 자식 요소의 절대 위치 지정 가능하게 설정 */
+}
+
+#share-button {
+    position: absolute;
+    bottom: 40px; /* nav-bar 내에서의 위치를 조정 */
+    left: 50%; /* 가운데 정렬 */
+    transform: translateX(-50%); /* 가운데 정렬 보정 */
+    width: 70px;
+    height: 70px;
+    background-color:#D4D6DD;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    z-index: 10; /* 다른 요소와 겹치지 않도록 설정 */
+}
+
+#share-button img {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    display: block;
+}
+
+#share-button p {
+    display: none;
+}
+
+#share-options {
+    display: none;
+    position: absolute;
+    bottom: 110px; /* nav-bar 바로 위에 위치하도록 설정 */
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* nav-bar와 겹치지 않도록 설정 */
+}
+
+/* 공유 버튼 3개 아이콘 */
+.share-button-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80px; /* 동일한 너비 설정 */
+    height: 80px; /* 동일한 높이 설정 */
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: white;
+    background-color: var(--cnu-dark-blue);
+    border: none;
+    border-radius: 30%;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#kakao-share-btn, #nfc-share-btn {
+    margin-top: 70px; /* 카카오톡, nfc 버튼을 약간 아래로 */
+}
+
+/* Icon style within the share button */
+.share-button-icon img.icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 4px; /* 아이콘과 텍스트 사이 여백 */
+}
+
+/* Hover effect for share buttons */
+.share-button-icon:hover {
+    background-color: var(--cnu-yellow);
+    transform: translateY(-3px);
+}
+
+/* Active state for share buttons */
+.share-button-icon:active {
+    background-color: var(--cnu-sky-blue);
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

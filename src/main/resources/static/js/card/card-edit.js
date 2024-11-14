@@ -15,7 +15,10 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("phone").value = data.phone;
             document.getElementById("bio").value = data.bio;
         })
-        .catch(error => console.error("명함 데이터 로딩 실패:", error));
+        .catch(error => {
+            console.error("명함 데이터 로딩 실패:", error);
+            handleError("명함 데이터를 불러오는 데 실패했습니다.", 3000);
+        });
 
     // 수정하기 버튼 클릭 시
     document.getElementById("card-edit-form").addEventListener("submit", function(e) {
@@ -37,15 +40,17 @@ document.addEventListener("DOMContentLoaded", function() {
         })
             .then(response => {
                 if (response.ok) {
-                    alert("명함이 성공적으로 수정되었습니다!");
-                    window.location.href = "/cards/manage";
+                    handleSuccess("명함이 성공적으로 수정되었습니다!", 3000);
+                    setTimeout(() => {
+                        window.location.href = "/cards/manage";
+                    }, 300); // 토스트가 사라진 후 페이지 이동
                 } else {
-                    alert("명함 수정에 실패했습니다.");
+                    handleError("명함 수정에 실패했습니다.", 3000);
                 }
             })
             .catch(error => {
                 console.error("명함 수정 실패:", error);
-                alert("명함 수정에 실패했습니다.");
+                handleError("명함 수정에 실패했습니다.", 3000);
             });
     });
 });

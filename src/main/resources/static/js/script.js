@@ -10,7 +10,7 @@ $(document).ready(function () {
     $(".nav-item[data-page='wallet']").addClass("active"); // Wallet에 active 클래스 추가
   } else if (path === '/chats') {
     $(".nav-item[data-page='chats']").addClass("active"); // Chats에 active 클래스 추가
-  } else if (path === '/mypage') {
+  } else if (path.startsWith('/mypage') || path.startsWith('/cards')) {
     $(".nav-item[data-page='mypage']").addClass("active"); // MyPage에 active 클래스 추가
   }
 });

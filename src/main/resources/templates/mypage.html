@@ -16,7 +16,7 @@
 <div class="mypage-container">
     <div class="profile-section">
         <div class="profile-photo">
-            <img th:src="@{/images/profile.svg}" alt="User Profile Photo">
+            <img th:src="${member.profileImg}" alt="User Profile Photo">
         </div>
         <div class="profile-info">
             <h2 class="username" th:text="${member.username != null ? member.username : member.nickname}">닉네임</h2>
@@ -32,7 +32,7 @@
         <div class="menu-item">
             <a th:href="@{/cards/manage}">
                 <img th:src="@{/images/card_black.svg}" alt="Card Management Icon">
-                <p>카드 관리</p>
+                <p>명함 관리</p>
             </a>
         </div>
         <div class="menu-item">

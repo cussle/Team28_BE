@@ -4,9 +4,6 @@ name: Build and Deploy to EC2
 on:
   push:
     branches: [ "weekly/11"]
-  pull_request:
-    #    branches: [ "Master" ]
-    types: [closed]
 
 # AWS 관련 값 변수로 설정
 env:

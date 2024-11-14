@@ -32,13 +32,18 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # 공개되면 안되는 정보를 담은 .properties 파일을 생성
+      # 개별 환경 변수를 사용하여 application-secret.properties 파일 생성
       - name: make application-secret.properties
         run: |
           mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application-secret.properties
-          echo "${{ secrets.APPLICATION_SECRET }}" > ./application-secret.properties
+          echo "kakao.javascript.key=${{ secrets.KAKAO_JAVASCRIPT_KEY }}" >> ./application-secret.properties
+          echo "GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> ./application-secret.properties
+          echo "GITHUB_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> ./application-secret.properties
+          echo "GITHUB_REDIRECT_URI=${{ secrets.GH_REDIRECT_URI }}" >> ./application-secret.properties
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> ./application-secret.properties
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> ./application-secret.properties
 
       - name: Check environment variables
         run: |
@@ -47,7 +52,6 @@ jobs:
           echo "AWS_CODE_DEPLOY_APPLICATION: ${{ env.AWS_CODE_DEPLOY_APPLICATION }}"
           echo "AWS_CODE_DEPLOY_GROUP: ${{ env.AWS_CODE_DEPLOY_GROUP }}"
           echo "DATABASE_URL: ${{ secrets.DATABASE_URL }}"
-          echo "APPLICATION_SECRET is set" $([ -n "${{ secrets.APPLICATION_SECRET }}" ] && echo "Yes" || echo "No")
 
 
       # 권한 부여

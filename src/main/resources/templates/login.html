@@ -8,6 +8,10 @@
     <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/oauth/login.css}">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -28,6 +32,9 @@
         </p>
     </div>
 </div>
+
+<!-- Toast 알림 -->
+<div id="toast" class="toast"></div>
 
 <script th:src="@{/js/oauth/login.js}"></script>
 

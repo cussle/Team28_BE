@@ -12,8 +12,9 @@
   <!-- 분리된 CSS 파일 -->
   <link rel="stylesheet" th:href="@{/css/mypage/list-style.css}">
 
-  <!-- jQuery -->
+  <!-- JS -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script th:src="@{/js/script.js}"></script>
 </head>
 
 <body>
@@ -37,6 +38,9 @@
     </ul>
   </div>
 </div>
+
+<!-- Toast 알림 -->
+<div id="toast" class="toast"></div>
 
 <script>
   // 타임스탬프 형식을 변환하는 함수

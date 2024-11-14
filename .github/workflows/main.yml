@@ -2,8 +2,8 @@ name: Build and Deploy to EC2
 
 # 워크플로우가 언제 실행될 것인지 조건 명시
 on:
-#  push:
-#    branches: [ "weekly/11"]
+  push:
+    branches: [ "weekly/11"]
   pull_request:
 #    branches: [ "Master" ]
     types: [closed]
@@ -18,7 +18,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.repository == 'kakao-tech-campus-2nd-step3/Team28_BE' && github.event.pull_request.merged == true
+#    if: github.repository == 'kakao-tech-campus-2nd-step3/Team28_BE' && github.event.pull_request.merged == true
     permissions:
       contents: read
       packages: write
@@ -46,7 +46,7 @@ jobs:
         shell: bash
 
       - name: Build and Test
-        run: ./gradlew build test
+        run: ./gradlew build test --info
 
       # 빌드 파일을 zip 형식으로 압축
       - name: Make zip file

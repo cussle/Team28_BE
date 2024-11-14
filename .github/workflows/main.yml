@@ -2,8 +2,8 @@ name: Build and Deploy to EC2
 
 # 워크플로우가 언제 실행될 것인지 조건 명시
 on:
-#  push:
-#    branches: [ "weekly/11"]
+  push:
+    branches: [ "weekly/11"]
   pull_request:
 #    branches: [ "Master" ]
     types: [closed]
@@ -40,13 +40,23 @@ jobs:
           touch ./application-secret.properties
           echo "${{ secrets.APPLICATION_SECRET }}" > ./application-secret.properties
 
+      - name: Check environment variables
+        run: |
+          echo "AWS_REGION: ${{ env.AWS_REGION }}"
+          echo "AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}"
+          echo "AWS_CODE_DEPLOY_APPLICATION: ${{ env.AWS_CODE_DEPLOY_APPLICATION }}"
+          echo "AWS_CODE_DEPLOY_GROUP: ${{ env.AWS_CODE_DEPLOY_GROUP }}"
+          echo "DATABASE_URL: ${{ secrets.DATABASE_URL }}"
+          echo "APPLICATION_SECRET is set" $([ -n "${{ secrets.APPLICATION_SECRET }}" ] && echo "Yes" || echo "No")
+
+
       # 권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
 
       - name: Build and Test
-        run: ./gradlew build test
+        run: ./gradlew build test --info
 
       # 빌드 파일을 zip 형식으로 압축
       - name: Make zip file

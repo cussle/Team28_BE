@@ -19,7 +19,7 @@
             <img th:src="@{/images/profile.svg}" alt="User Profile Photo">
         </div>
         <div class="profile-info">
-            <h2 class="username">닉네임</h2>  <!-- 백으로 부터 닉네임 받아오기 -->
+            <h2 class="username" th:text="${member.nickname}">닉네임</h2>
         </div>
     </div>
     <div class="menu-section">

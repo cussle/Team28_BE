@@ -370,7 +370,7 @@ public class ChatServiceTest {
     @DisplayName("유효한 chatId 추출 성공")
     void testExtractChatIdFromSession_ValidChatId() {
         // 유효한 URI 설정
-        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws?chatId=1&userId=1"));
+        when(session.getUri()).thenReturn(URI.create("ws://3.34.144.148:8080/ws?chatId=1&userId=1"));
 
         // chatId가 1로 반환되는지 확인
         Long chatId = chatService.extractChatIdFromSession(session);
@@ -381,7 +381,7 @@ public class ChatServiceTest {
     @DisplayName("쿼리 파라미터 없음 - chatId")
     void testExtractChatIdFromSession_NoChatId() {
         // chatId가 없는 URI 설정
-        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws"));
+        when(session.getUri()).thenReturn(URI.create("ws://3.34.144.148:8080/ws"));
 
         // chatId가 없으므로 IllegalArgumentException 발생
         Exception exception = assertThrows(
@@ -395,7 +395,7 @@ public class ChatServiceTest {
     @DisplayName("chatId 숫자 형식 오류")
     void testExtractChatIdFromSession_InvalidChatIdFormat() {
         // chatId가 잘못된 형식인 URI 설정
-        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws?chatId=abc&userId=1"));
+        when(session.getUri()).thenReturn(URI.create("ws://3.34.144.148:8080/ws?chatId=abc&userId=1"));
 
         // chatId가 숫자 형식이 아니므로 IllegalArgumentException 발생
         Exception exception = assertThrows(
@@ -409,7 +409,7 @@ public class ChatServiceTest {
     @DisplayName("유효한 userId 추출 성공")
     void testExtractUserIdFromSession_ValidUserId() {
         // 유효한 URI 설정
-        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws?chatId=1&userId=1"));
+        when(session.getUri()).thenReturn(URI.create("ws://3.34.144.148:8080/ws?chatId=1&userId=1"));
 
         // userId가 1로 반환되는지 확인
         Long userId = chatService.extractUserIdFromSession(session);
@@ -420,7 +420,7 @@ public class ChatServiceTest {
     @DisplayName("쿼리 파라미터 없음 - userId")
     void testExtractUserIdFromSession_NoUserId() {
         // userId가 없는 URI 설정
-        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws"));
+        when(session.getUri()).thenReturn(URI.create("ws://3.34.144.148:8080/ws"));
 
         // userId가 없으므로 IllegalArgumentException 발생
         Exception exception = assertThrows(
@@ -434,7 +434,7 @@ public class ChatServiceTest {
     @DisplayName("userId 숫자 형식 오류")
     void testExtractUserIdFromSession_InvalidUserIdFormat() {
         // userId가 잘못된 형식인 URI 설정
-        when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws?chatId=1&userId=abc"));
+        when(session.getUri()).thenReturn(URI.create("ws://3.34.144.148:8080/ws?chatId=1&userId=abc"));
 
         // userId가 숫자 형식이 아니므로 IllegalArgumentException 발생
         Exception exception = assertThrows(

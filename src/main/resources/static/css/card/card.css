@@ -10,8 +10,15 @@
     padding: 20px;
     margin: 10px;
     width: 90%;
-    max-width: 500px;
+    max-width: 600px;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer; /* 클릭 가능 아이콘 */
+}
+
+.card:hover {
+    transform: scale(1.02); /* 마우스 호버 시 크기 살짝 증가 */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* 호버 시 그림자 강화 */
 }
 
 .card-image img {
@@ -20,7 +27,6 @@
     border-radius: 50%;
     object-fit: cover;
     margin-top: -10px;
-    /*border: 1px solid #ecf0f1; */
 }
 
 .card-content {
@@ -56,14 +62,4 @@
 .card-content a:hover {
     color: #16a085; /* 조금 더 어두운 민트색으로 호버 효과 */
     text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-    .add-card-btn-container {
-        justify-content: center; /* 작은 화면에서는 중앙 정렬 */
-        padding-left: 0;
-    }
-    .card-list-section {
-        grid-template-columns: 1fr;
-    }
 }

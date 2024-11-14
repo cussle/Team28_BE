@@ -1,4 +1,10 @@
-/* card-create.css */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
 .header {
     display: flex;
     justify-content: center;
@@ -8,15 +14,20 @@
     font-size: 0.8rem;
 }
 
+.scrollable-container {
+    height: calc(100% - 80px); /* 헤더와 네비게이션 바를 제외한 높이 조정 */
+    overflow-y: auto;
+}
+
 .card-create-container {
     width: 90%;
     max-width: 500px;
-    margin: 50px auto;
+    margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 박스 그림자 추가 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* 폼 그룹 스타일 */
@@ -40,7 +51,6 @@
     border-radius: 4px;
 }
 
-/* 텍스트 영역 조절 */
 .form-group textarea {
     resize: vertical;
 }

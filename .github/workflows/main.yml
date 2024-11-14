@@ -29,15 +29,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # `application-secret.properties` 생성
-      - name: Create application-secret.properties
-        run: |
-         echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> src/main/resources/application-secret.properties
-         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> src/main/resources/application-secret.properties
-         echo "GH_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> src/main/resources/application-secret.properties
-         echo "GH_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> src/main/resources/application-secret.properties
-         echo "GH_REDIRECT_URI=${{ secrets.GH_REDIRECT_URI }}" >> src/main/resources/application-secret.properties
-         echo "KAKAO_JAVASCRIPT_KEY=${{ secrets.KAKAO_JAVASCRIPT_KEY }}" >> src/main/resources/application-secret.properties
+      # `application-secret.properties` 생성 단계 제거
 
       # 환경 변수 확인 단계 수정
       - name: Check environment variables
@@ -52,7 +44,6 @@ jobs:
           echo "GH_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}"
           echo "GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}"
           echo "GH_REDIRECT_URI: ${{ secrets.GH_REDIRECT_URI }}"
-
       # 권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew

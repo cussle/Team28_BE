@@ -214,5 +214,64 @@ public class ChatServiceTest {
         assertTrue(sessions.contains(newSession));
     }
 
+    @Test
+    @DisplayName("존재하는 세션 제거")
+    void testRemoveSessionFromChatRoom_ExistingSession() {
+        // 기존 chatId에 session이 존재하는 경우 제거 시도
+        chatService.removeSessionFromChatRoom(chatRoom.getId(), session);
+
+        // 세션이 제거되었는지 확인
+        List<WebSocketSession> sessions = chatService.getChatRoomSessions(chatRoom.getId());
+        assertTrue(sessions == null || !sessions.contains(session));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 세션 제거")
+    void testRemoveSessionFromChatRoom_NonExistentSession() {
+        WebSocketSession nonExistentSession = mock(WebSocketSession.class);
+
+        // 존재하지 않는 session을 제거 시도
+        chatService.removeSessionFromChatRoom(chatRoom.getId(), nonExistentSession);
+
+        // 아무런 변경이 없는지 확인
+        List<WebSocketSession> sessions = chatService.getChatRoomSessions(chatRoom.getId());
+        assertTrue(sessions != null && !sessions.contains(nonExistentSession));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 채팅방에서 세션 제거")
+    void testRemoveSessionFromChatRoom_NonExistentChatRoom() {
+        Long nonExistentChatId = 999L;
+
+        // 존재하지 않는 chatId에 session을 제거 시도
+        chatService.removeSessionFromChatRoom(nonExistentChatId, session);
+
+        // chatRoomSessions에 해당 chatId가 존재하지 않는지 확인
+        assertTrue(!chatService.getChatRoomSessions().containsKey(nonExistentChatId));
+    }
+
+    @Test
+    @DisplayName("빈 세션 리스트에서 세션 제거")
+    void testRemoveSessionFromChatRoom_EmptySessionList() {
+        Long emptyChatId = 2L;
+
+        // 빈 세션 리스트에서 존재하지 않는 세션 제거 시도
+        chatService.removeSessionFromChatRoom(emptyChatId, session);
+
+        // 세션 리스트가 비어 있는지 확인
+        List<WebSocketSession> sessions = chatService.getChatRoomSessions(emptyChatId);
+        assertTrue(sessions == null || sessions.isEmpty());
+    }
+
+    @Test
+    @DisplayName("session이 null인 경우")
+    void testRemoveSessionFromChatRoom_NullSession() {
+        // session이 null인 경우 제거 시도
+        chatService.removeSessionFromChatRoom(chatRoom.getId(), null);
+
+        // chatRoomSessions에 아무런 변경이 없는지 확인
+        List<WebSocketSession> sessions = chatService.getChatRoomSessions(chatRoom.getId());
+        assertTrue(sessions != null && sessions.contains(session));
+    }
 
 }

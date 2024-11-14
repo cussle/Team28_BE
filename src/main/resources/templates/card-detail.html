@@ -49,6 +49,10 @@
     <!-- 명함 -->
     <div th:replace="card :: cardSection"></div>
 
+    <div class = "buttons">
+        <button class="edit-button button" th:attr="data-id=${card.id}">수정</button>
+        <button class="delete-button button" th:attr="data-id=${card.id}">삭제</button>
+    </div>
     <div class="share-options" id="share-options" style="display: none;">
         <button id="kakao-share-btn" class="share-button-icon">
             <img th:src="@{/images/kakaotalk-icon.svg}" alt="KakaoTalk Icon" class="icon">
@@ -89,8 +93,10 @@
         }
     }
 </script>
+</body>
+
+<script th:src="@{/js/card/card-detail.js}"></script>
 <script th:src="@{/js/card/card-share.js}"></script>
 <script th:src="@{/js/wallet/wallet-add.js}"></script>
 
-</body>
 </html>

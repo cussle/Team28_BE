@@ -156,3 +156,35 @@
 .add-to-group-button:hover {
     background-color: var(--cnu-orange);
 }
+
+
+/* Base button styling */
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Edit button styling */
+.edit-button.button {
+    background-color: grey; /* Green */
+    color: white;
+}
+
+.edit-button.button:hover {
+    background-color: #16a085; /* Darker green */
+}
+
+/* Delete button styling */
+.delete-button.button {
+    background-color: grey; /* Red */
+    color: white;
+    margin-left: 10px; /* Spacing between buttons */
+}
+
+.delete-button.button:hover {
+    background-color: #16a085; /* Darker red */
+}

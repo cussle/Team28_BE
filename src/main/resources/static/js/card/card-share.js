@@ -23,7 +23,7 @@ document.getElementById('kakao-share-btn').addEventListener('click', function ()
         ],
         fail: function(error) {
             console.error(error);
-            alert('카카오톡 공유에 실패했습니다.');
+            handleError('카카오톡 공유에 실패했습니다.', 300);
         }
     });
 });
@@ -33,7 +33,7 @@ document.getElementById('qr-share-btn').addEventListener('click', function () {
 
     if (!cardId) {
         console.error('Card ID가 제공되지 않았습니다.');
-        alert('Card ID가 유효하지 않습니다.');
+        handleError('Card ID가 유효하지 않습니다.', 300);
         return;
     }
 
@@ -56,9 +56,11 @@ document.getElementById('qr-share-btn').addEventListener('click', function () {
             const qrContainer = document.getElementById('qr-image-container');
             qrContainer.innerHTML = '';  // 기존 내용 지우기
             qrContainer.appendChild(qrImage);  // QR 코드 이미지 추가
+
+            handleSuccess('QR 코드가 성공적으로 생성되었습니다.', 400);
         })
         .catch(error => {
             console.error('QR 코드 fetch 오류:', error);
-            alert('QR 코드 생성에 실패했습니다.');
+            handleError('QR 코드 생성에 실패했습니다.', 400);
         });
 });

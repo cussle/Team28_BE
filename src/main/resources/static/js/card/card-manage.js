@@ -48,16 +48,16 @@ document.addEventListener("DOMContentLoaded", function() {
                         })
                             .then(response => {
                                 if (response.ok) {
-                                    alert("명함이 삭제되었습니다.");
+                                    handleSuccess("명함이 삭제되었습니다.", 300);
                                     // 삭제된 카드 항목 제거
                                     cardItem.remove();
                                 } else {
-                                    alert("명함 삭제에 실패했습니다.");
+                                    handleError("명함 삭제에 실패했습니다.", 300);
                                 }
                             })
                             .catch(error => {
                                 console.error("명함 삭제 실패:", error);
-                                alert("명함 삭제에 실패했습니다.");
+                                handleError("명함 삭제에 실패했습니다.", 300);
                             });
                     }
                 });
@@ -70,5 +70,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 cardListSection.appendChild(cardItem);
             });
         })
-        .catch(error => console.error("명함 목록 로딩 실패:", error));
+        .catch(error => {
+            console.error("명함 목록 로딩 실패:", error);
+            handleError("명함 목록을 불러오는 데 실패했습니다.", 300);
+        });
 });

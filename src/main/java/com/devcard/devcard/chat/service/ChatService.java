@@ -230,4 +230,8 @@ public class ChatService {
             .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
         return new ChatUserResponse(member.getNickname(), member.getProfileImg());
     }
+
+    public ConcurrentMap<Long, List<WebSocketSession>> getChatRoomSessions() {
+        return chatRoomSessions;
+    }
 }

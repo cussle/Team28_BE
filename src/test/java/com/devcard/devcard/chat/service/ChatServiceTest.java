@@ -6,6 +6,7 @@ import static com.devcard.devcard.chat.util.Constants.USER_NOT_IN_CHAT_ROOM;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
@@ -23,7 +24,6 @@ import com.devcard.devcard.chat.model.ChatRoom;
 import com.devcard.devcard.chat.repository.ChatRepository;
 import com.devcard.devcard.chat.repository.ChatRoomRepository;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,7 +77,7 @@ public class ChatServiceTest {
     }
 
     @Test
-    @DisplayName("성공적인 메시지 처리 - 유효한 chatId, userId, message가 입력된 경우")
+    @DisplayName("메시지 처리 성공")
     void testHandleIncomingMessage_Success() {
         ChatMessage chatMessage = mock(ChatMessage.class);
 
@@ -88,7 +88,7 @@ public class ChatServiceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 채팅방 - 존재하지 않는 chatId가 입력된 경우")
+    @DisplayName("존재하지 않는 채팅방")
     void testHandleIncomingMessage_ChatRoomNotFound() {
         when(chatRoomRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -100,7 +100,7 @@ public class ChatServiceTest {
     }
 
     @Test
-    @DisplayName("메시지 저장 오류 - 메시지 저장 중 chatRepository에서 예외가 발생한 경우")
+    @DisplayName("메시지 저장 오류")
     void testHandleIncomingMessage_MessageSaveError() {
         when(chatRoomRepository.findById(1L)).thenReturn(Optional.of(chatRoom));
         doThrow(new RuntimeException("DB 저장 오류")).when(chatRepository).save(any(ChatMessage.class));
@@ -113,7 +113,7 @@ public class ChatServiceTest {
     }
 
     @Test
-    @DisplayName("유효하지 않은 userId - userId가 null인 경우")
+    @DisplayName("유효하지 않은 userId")
     void testHandleIncomingMessage_InvalidUserId_Null() {
         when(chatRoomRepository.findById(1L)).thenReturn(Optional.of(chatRoom));
 
@@ -125,7 +125,7 @@ public class ChatServiceTest {
     }
 
     @Test
-    @DisplayName("빈 메시지 - message가 null로 입력된 경우")
+    @DisplayName("빈 메시지")
     void testHandleIncomingMessage_EmptyMessage_Null() {
         when(chatRoomRepository.findById(1L)).thenReturn(Optional.of(chatRoom));
 
@@ -137,7 +137,7 @@ public class ChatServiceTest {
     }
 
     @Test
-    @DisplayName("성공적인 메시지 전송 - 첫 번째 시도에서 전송 성공")
+    @DisplayName("첫 번째 시도에 메시지 전송 성공")
     void testHandleIncomingMessage_SuccessOnFirstTry() throws IOException {
         // session이 열려 있음을 설정
         when(session.isOpen()).thenReturn(true);
@@ -153,7 +153,7 @@ public class ChatServiceTest {
     }
 
     @Test
-    @DisplayName("메시지 전송 실패 후 성공 - 첫 번째 시도 실패, 두 번째 시도 성공")
+    @DisplayName("두 번째 시도에 메시지 전송 성공")
     void testHandleIncomingMessage_RetryAfterFailure() throws IOException {
         // session이 열려 있음을 설정
         when(session.isOpen()).thenReturn(true);
@@ -171,7 +171,7 @@ public class ChatServiceTest {
     }
 
     @Test
-    @DisplayName("모든 전송 시도 실패 - 모든 재시도에서 예외 발생")
+    @DisplayName("모든 전송 시도 실패")
     void testHandleIncomingMessage_AllRetriesFail() throws IOException {
         // session이 열려 있음을 설정
         when(session.isOpen()).thenReturn(true);
@@ -186,4 +186,33 @@ public class ChatServiceTest {
         // session.sendMessage가 재시도 횟수만큼 호출되었는지 확인 (3회)
         verify(session, times(3)).sendMessage(any(TextMessage.class));
     }
+
+    @Test
+    @DisplayName("새로운 채팅방에 세션 추가")
+    void testAddSessionToNewChatRoom() {
+        Long newChatId = 2L;
+        WebSocketSession newSession = mock(WebSocketSession.class);
+
+        // 새로운 채팅방에 세션 추가
+        chatService.addSessionToChatRoom(newChatId, newSession);
+
+        // chatRoomSessions에 새로운 chatId가 존재하고 해당 세션이 추가되었는지 확인
+        assertTrue(chatService.getChatRoomSessions().containsKey(newChatId));
+        assertTrue(chatService.getChatRoomSessions(newChatId).contains(newSession));
+    }
+
+    @Test
+    @DisplayName("기존 채팅방에 세션 추가")
+    void testAddSessionToExistingChatRoom() {
+        WebSocketSession newSession = mock(WebSocketSession.class);
+
+        // 기존 chatId에 새로운 세션 추가
+        chatService.addSessionToChatRoom(chatRoom.getId(), newSession);
+
+        // 기존 chatId 리스트에 새로운 세션이 추가되었는지 확인
+        List<WebSocketSession> sessions = chatService.getChatRoomSessions(chatRoom.getId());
+        assertTrue(sessions.contains(newSession));
+    }
+
+
 }

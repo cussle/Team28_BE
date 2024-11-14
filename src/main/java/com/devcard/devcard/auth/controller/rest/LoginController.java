@@ -1,4 +1,4 @@
-package com.devcard.devcard.auth.controller;
+package com.devcard.devcard.auth.controller.rest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,11 +1,14 @@
 package com.devcard.devcard.card.controller.rest;
 
+import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.auth.model.OauthMemberDetails;
 import com.devcard.devcard.card.dto.GroupResponseDto;
 import com.devcard.devcard.card.service.GroupService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/groups")
@@ -27,6 +30,16 @@ public class GroupController {
     public ResponseEntity<Void> addCardToGroup(@PathVariable Long groupId, @PathVariable Long cardId, @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
         groupService.addCardToGroup(groupId, cardId, oauthMemberDetails.getMember());
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{groupId}/update")
+    public ResponseEntity<String> updateGroupName(@PathVariable Long groupId,
+                                                  @RequestBody Map<String, String> request,
+                                                  @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
+        String newName = request.get("name");
+        Member member = oauthMemberDetails.getMember();  // OauthMemberDetails에서 Member 객체 가져오기
+        groupService.updateGroupName(groupId, newName, member);
+        return ResponseEntity.ok("그룹 이름이 수정되었습니다.");
     }
 
 }

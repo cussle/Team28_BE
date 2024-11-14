@@ -8,18 +8,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 그룹에 추가 버튼 클릭 시 모달 표시
     addToGroupButton?.addEventListener('click', function() {
-        console.log("모달 표시 중...");
         groupModal.classList.add('visible')
         modalOverlay.classList.add('visible');
     });
-
-    // // 모달 외부 클릭 시 모달 닫기
-    // document.addEventListener('click', function(event) {
-    //     if (event.target === groupModal || event.target.closest('#group-modal') === null) {
-    //         console.log("닫음");
-    //         groupModal.style.display = 'none';
-    //     }
-    // });
 
     // 그룹 선택 시 명함을 해당 그룹에 추가
     document.querySelectorAll('.group-option').forEach(function(button) {
@@ -34,8 +25,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     alert('그룹에 명함이 추가되었습니다.');
                     groupModal.style.display = 'none';
                 },
-                error: function() {
-                    alert('명함 추가에 실패했습니다.');
+                error: function(jqXHR) {
+                    try {
+                        const response = JSON.parse(jqXHR.responseText);
+                        const errorMessage = response.error || '명함 추가에 실패했습니다.';
+                        alert(errorMessage);
+                    } catch (e) {
+                        alert('명함 추가에 실패했습니다.');
+                    }
                 }
             });
         });

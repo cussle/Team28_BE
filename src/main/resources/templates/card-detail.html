@@ -7,11 +7,13 @@
 
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/card/home-nav-bar.css}">
+    <link rel="stylesheet" th:href="@{/css/card/card.css}">
     <link rel="stylesheet" th:href="@{/css/card/card-detail.css}">
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/card/card.js}"></script>
 
     <!-- 카카오 JavaScript SDK 로드 -->
     <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
@@ -43,22 +45,9 @@
             </li>
         </ul>
     </div>
-    <div class="card">
-        <!-- Business card title -->
-        <h2>[[${card.name}]]</h2>
 
-        <!-- Card details -->
-        <p>회사: [[${card.company}]]</p>
-        <p>직책: [[${card.position}]]</p>
-        <p>📱 전화번호: [[${card.phone}]]</p>
-        <p>📧 이메일: [[${card.email}]]</p>
-
-        <p>💻 GitHub:
-            <a th:href="'https://github.com/' + ${card.githubId}" target="_blank" class="github-link">[[${card.githubId}]]</a>
-        </p>
-        <!-- Card introduction -->
-        <p>소개: [[${card.bio}]]</p>
-    </div>
+    <!-- 명함 -->
+    <div th:replace="card :: cardSection"></div>
 
     <div class="share-options" id="share-options" style="display: none;">
         <button id="kakao-share-btn" class="share-button-icon">
@@ -74,6 +63,9 @@
             NFC
         </button>
     </div>
+    <div id="qr-image-container" style="display: none; text-align: center; margin-top: 20px;">
+        <!-- QR code image will be appended here dynamically -->
+    </div>
 </div>
 
 <!-- 하단 네비게이션 바 -->
@@ -86,10 +78,14 @@
 <script>
     function toggleShareOptions() {
         const shareOptions = document.getElementById("share-options");
+        const qrContainer = document.getElementById("qr-image-container");
+
         if (shareOptions.style.display === "none") {
             shareOptions.style.display = "flex";
         } else {
             shareOptions.style.display = "none";
+            qrContainer.style.display = "none";  // QR 코드 이미지도 함께 숨기기
+            qrContainer.innerHTML = '';  // QR 코드 이미지 제거
         }
     }
 </script>

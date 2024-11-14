@@ -1,6 +1,7 @@
 package com.devcard.devcard.chat.service;
 
 import static com.devcard.devcard.chat.util.Constants.CHAT_ROOM_NOT_FOUND;
+import static com.devcard.devcard.chat.util.Constants.CHAT_ROOM_NOT_FOUND_BY_PARTICIPANTS;
 
 import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.chat.dto.ChatMessageResponse;
@@ -15,6 +16,7 @@ import com.devcard.devcard.chat.repository.ChatRepository;
 import com.devcard.devcard.chat.repository.ChatRoomRepository;
 import com.devcard.devcard.chat.repository.ChatUserRepository;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -122,7 +124,7 @@ public class ChatRoomService {
     }
 
     /**
-     * 채팅방 삭제
+     * chatId를 이용해 채팅방 삭제
      * @param chatId 채팅방 ID
      */
     public void deleteChatRoom(String chatId) {
@@ -137,6 +139,23 @@ public class ChatRoomService {
 
         // 채팅방 삭제
         chatRoomRepository.deleteById(chatRoomId);
+    }
+
+    /**
+     * 참여자 ID를 이용해 채팅방 삭제
+     * @param participantsId 채팅방에 참여하는 모든 유저의 ID List
+     */
+    public void deleteChatRoomByParticipants(List<Long> participantsId) {
+        // 참여자 ID 목록으로 채팅방 조회
+        ChatRoom chatRoom = chatRoomRepository.findByParticipantsIdIn(Collections.singleton(participantsId))
+            .orElseThrow(() -> new ChatRoomNotFoundException(
+                CHAT_ROOM_NOT_FOUND_BY_PARTICIPANTS + participantsId.toString()));
+
+        // 관련된 메시지 삭제
+        chatRepository.deleteByChatRoomId(chatRoom.getId());
+
+        // 채팅방 삭제
+        chatRoomRepository.delete(chatRoom);
     }
 
     /**

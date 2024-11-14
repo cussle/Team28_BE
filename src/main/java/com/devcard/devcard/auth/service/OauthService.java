@@ -3,7 +3,7 @@ package com.devcard.devcard.auth.service;
 import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.auth.model.OauthMemberDetails;
 import com.devcard.devcard.auth.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.devcard.devcard.card.service.CardService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,8 +23,13 @@ import java.util.Map;
 @Service
 public class OauthService extends DefaultOAuth2UserService {
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+    private final CardService cardService;
+
+    public OauthService(MemberRepository memberRepository, CardService cardService) {
+        this.memberRepository = memberRepository;
+        this.cardService = cardService;
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException{
@@ -50,13 +55,14 @@ public class OauthService extends DefaultOAuth2UserService {
                     new Timestamp(System.currentTimeMillis())
             );
             memberRepository.save(member);
+
+            // 회원가입시 멤버 정보로 명함 자동 생성
+            cardService.createCardWithDefaultInfo(member);
         } else {
             // 기존 회원 정보 업데이트
             member.updateFromAttributes(attributes);
             memberRepository.save(member);
         }
-
-
 
         // OauthMemberDetails 반환
         return new OauthMemberDetails(member, attributes);

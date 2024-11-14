@@ -1,0 +1,85 @@
+/* 전체 화면 설정 */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 컨테이너 설정 */
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    overflow-y: auto; /* 스크롤 가능하게 설정 */
+}
+
+/* 카드 리스트 가운데 정렬 */
+.card-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* 카드 리스트의 최대 너비 설정 */
+}
+
+/* 상단 헤더 */
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+/* 카드 스타일 */
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: black;
+    color: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 10px 0;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.card-content p {
+    margin-bottom: 8px;
+}
+
+.card-content a {
+    color: #00bfff;
+    text-decoration: none;
+}
+
+.card-image img {
+    width: 100px;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* 고정된 네비게이션 바 */
+.nav-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* 네비게이션 바를 최상위에 고정 */
+}

@@ -15,9 +15,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 const cardItem = document.createElement("div");
                 cardItem.className = "card-item";
 
+                // 사용자 이름 또는 닉네임 결정
+                const displayName = card.name || card.nickname; // @Todo CardResponseDto에서 nickname반환 필요
+
                 // 카드 내용 추가
                 cardItem.innerHTML = `
-                <h2>${card.name}</h2>
+                <h2>${displayName}</h2>
                 <p>회사: ${card.company}</p>
                 <p>직책: ${card.position}</p>
                 <p>전화번호: ${card.phone}</p>

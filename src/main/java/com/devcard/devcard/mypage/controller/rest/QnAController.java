@@ -3,6 +3,10 @@ package com.devcard.devcard.mypage.controller.rest;
 import com.devcard.devcard.mypage.dto.NoticeRequest;
 import com.devcard.devcard.mypage.dto.NoticeResponse;
 import com.devcard.devcard.mypage.dto.NoticeUpdateRequest;
+import com.devcard.devcard.mypage.dto.QnAListResponse;
+import com.devcard.devcard.mypage.dto.QnARequest;
+import com.devcard.devcard.mypage.dto.QnAResponse;
+import com.devcard.devcard.mypage.dto.QnAUpdateRequest;
 import com.devcard.devcard.mypage.service.QnAService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -26,27 +30,27 @@ public class QnAController {
     }
 
     @GetMapping
-    public ResponseEntity<List<NoticeResponse>> getAllQnA(){
-        return ResponseEntity.status(201).body(qnAService.getNoticeList());
+    public ResponseEntity<List<QnAListResponse>> getAllQnA(){
+        return ResponseEntity.status(201).body(qnAService.getQnAList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NoticeResponse> getQnA(@PathVariable("id") Long id){
-        return ResponseEntity.ok(qnAService.getNotice(id));
+    public ResponseEntity<QnAResponse> getQnA(@PathVariable("id") Long id){
+        return ResponseEntity.ok(qnAService.getQnA(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<NoticeResponse> addQnA(@RequestBody NoticeRequest noticeRequest){
-        return ResponseEntity.ok(qnAService.addNotice(noticeRequest));
+    public ResponseEntity<QnAResponse> addQnA(@RequestBody QnARequest qnARequest){
+        return ResponseEntity.ok(qnAService.addQnA(qnARequest));
     }
 
     @PutMapping("")
-    public ResponseEntity<NoticeResponse> updateQnA(@RequestBody NoticeUpdateRequest noticeUpdateRequest){
-        return ResponseEntity.ok(qnAService.updateNotice(noticeUpdateRequest));
+    public ResponseEntity<QnAResponse> updateQnA(@RequestBody QnAUpdateRequest qnAUpdateRequest){
+        return ResponseEntity.ok(qnAService.updateQnA(qnAUpdateRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<NoticeResponse> deleteQnA(@PathVariable("id") Long id){
-        return ResponseEntity.ok(qnAService.deleteNotice(id));
+    public ResponseEntity<QnAResponse> deleteQnA(@PathVariable("id") Long id){
+        return ResponseEntity.ok(qnAService.deleteQnA(id));
     }
 }

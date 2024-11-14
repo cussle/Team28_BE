@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QnA 작성</title>
+
+  <!-- Google Material Icons and CSS -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <!-- CSS -->
+  <link rel="stylesheet" th:href="@{/css/global.css}">
+  <link rel="stylesheet" th:href="@{/css/mypage/qna-create.css}">
+
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script th:src="@{/js/script.js}"></script>
+
+</head>
+
+<body>
+<div class="qna-create-container">
+  <div class="header">
+    <span class="material-symbols-outlined" id="backButton">arrow_back_ios</span>
+    <h2 class="title">QnA 작성</h2>
+  </div>
+
+  <!-- QnA 작성 폼 -->
+  <form id="qnaForm">
+    <input type="hidden" id="qnaId" name="qnaId" th:value="${qna.id}" />
+
+    <div class="form-group">
+      <label for="questionTitle">제목</label>
+      <input type="text" id="questionTitle" name="questionTitle" th:value="${qna.questionTitle}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="questionContent">내용</label>
+      <textarea id="questionContent" name="questionContent" rows="8" required th:text="${qna.questionContent}"></textarea>
+    </div>
+
+    <button type="submit" class="submit-button">제출</button>
+  </form>
+</div>
+
+
+<!-- 하단 네비게이션 바 -->
+<div th:replace="nav-bar :: navBar"></div>
+
+<!-- Toast 알림 -->
+<div id="toast" class="toast"></div>
+
+<script>
+  // 뒤로 가기 버튼 클릭 시 페이지 이동
+  document.getElementById("backButton").addEventListener("click", function() {
+    window.location.href = '/mypage/qna'; // 목록 페이지로 이동
+  });
+
+  // 폼 제출 시 AJAX로 데이터 전송
+  $('#qnaForm').submit(function(event) {
+    event.preventDefault(); // 기본 폼 제출 방지
+
+    const qnaId = $('#qnaId').val();
+    const questionTitle = $('#questionTitle').val();
+    const questionContent = $('#questionContent').val();
+
+    const data = {
+      id: qnaId,
+      questionTitle: questionTitle,
+      questionContent: questionContent
+    };
+
+    // AJAX 요청으로 데이터 전송 (PUT 방식)
+    $.ajax({
+      url: '/qna',
+      type: 'PUT', // PUT 요청 사용
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      success: function(response) {
+        // 성공적으로 응답을 받으면 목록 페이지로 리다이렉트
+        window.location.href = '/mypage/qna';
+      },
+      error: function(error) {
+        alert('QnA 수정 실패: ' + error.responseText);
+      }
+    });
+  });
+</script>
+</body>
+
+</html>

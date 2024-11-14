@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QnA 목록</title>
+
+  <!-- Google Material Icons and CSS -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" th:href="@{/css/global.css}">
+  <link rel="stylesheet" th:href="@{/css/mypage/qna-list.css}">
+
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script th:src="@{/js/script.js}"></script>
+</head>
+
+<body>
+<!-- QnA 목록 컨테이너 -->
+<div class="qna-list">
+  <div class="header">
+    <span class="material-symbols-outlined" id="backButton">arrow_back_ios</span>
+    <h2 class="title" id="roomTitle">QnA 목록</h2>
+    <button class="create-button" id="createButton">작성</button>
+  </div>
+
+  <!-- Thymeleaf를 사용해 서버에서 전달된 QnA 리스트 렌더링 -->
+  <div id="qna-container">
+    <ul>
+      <!-- qnaList를 반복하여 각 QnA 항목 생성 -->
+      <li th:each="qna : ${qnaList}" class="qna-item">
+        <a th:href="@{/mypage/qna/{id}(id=${qna.id})}" style="display: flex; width: 100%; align-items: center; text-decoration: none;">
+          <div class="qna-id" th:text="${qna.id}">QnA id</div>
+          <div class="qna-name" th:text="${qna.name}">QnA 작성자 이름</div>
+          <div class="qna-title" th:text="${qna.questionTitle}">QnA 제목</div>
+          <div class="qna-date" th:text="${qna.questionTimestamp}">2024-01-01 12:00</div>
+          <span class="qna-status" th:classappend="${qna.answerCompleted ? 'answered' : 'pending'}">
+              <span th:text="${qna.answerCompleted ? '답변 완료' : '미답변'}">미답변</span>
+            </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- 하단 네비게이션 바 -->
+<div th:replace="nav-bar :: navBar"></div>
+
+<!-- Toast 알림 -->
+<div id="toast" class="toast"></div>
+
+<script>
+  // 타임스탬프 형식을 변환하는 함수
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  }
+
+  // 페이지 로드 시 타임스탬프 변환
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".qna-date").forEach(element => {
+      const originalTimestamp = element.textContent.trim();
+      element.textContent = formatTimestamp(originalTimestamp);
+    });
+  });
+  // 뒤로 가기 버튼 클릭 시 페이지 이동
+  document.getElementById("backButton").addEventListener("click", function() {
+    window.location.href = /*[[@{/mypage}]]*/ '/mypage';
+  });
+
+  // "작성" 버튼 클릭 시 작성 페이지로 이동
+  document.getElementById("createButton").addEventListener("click", function() {
+    window.location.href = '/mypage/qna/create'; // 경로를 QnA 작성 페이지로 변경
+  });
+</script>
+</body>
+
+</html>
+
+
+
+
+
+
+

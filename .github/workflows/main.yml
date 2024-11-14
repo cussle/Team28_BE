@@ -18,7 +18,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.repository == 'kakao-tech-campus-2nd-step3/Team28_BE' && github.event.pull_request.merged == true
+#    if: github.repository == 'kakao-tech-campus-2nd-step3/Team28_BE' && github.event.pull_request.merged == true
     permissions:
       contents: read
       packages: write

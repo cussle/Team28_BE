@@ -2,7 +2,10 @@ name: Build and Deploy to EC2
 
 # 워크플로우가 언제 실행될 것인지 조건 명시
 on:
+  push:
+    branches: [ "weekly/11"]
   pull_request:
+    #    branches: [ "Master" ]
     types: [closed]
 
 # AWS 관련 값 변수로 설정
@@ -15,49 +18,44 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.repository == 'kakao-tech-campus-2nd-step3/Team28_BE' && github.event.pull_request.merged == true
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
 
-      # JDK 21 설치
+      # JDK 17 설치
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      # `application-secret.properties` 생성 단계 제거
-
-      # 환경 변수 확인 단계 수정
+      # 개별 환경 변수를 사용하여 application-secret.properties 파일 생성
+      - name: make application-secret.properties
+        run: |
+          mkdir -p ./src/main/resources
+          cd ./src/main/resources
+          touch ./application-secret.properties
+          echo "kakao.javascript.key=${{ secrets.KAKAO_JAVASCRIPT_KEY }}" >> ./application-secret.properties
+          echo "GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> ./application-secret.properties
+          echo "GITHUB_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> ./application-secret.properties
+          echo "GITHUB_REDIRECT_URI=${{ secrets.GH_REDIRECT_URI }}" >> ./application-secret.properties
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> ./application-secret.properties
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> ./application-secret.properties
       - name: Check environment variables
         run: |
           echo "AWS_REGION: ${{ env.AWS_REGION }}"
           echo "AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}"
           echo "AWS_CODE_DEPLOY_APPLICATION: ${{ env.AWS_CODE_DEPLOY_APPLICATION }}"
           echo "AWS_CODE_DEPLOY_GROUP: ${{ env.AWS_CODE_DEPLOY_GROUP }}"
-          echo "DB_USERNAME: ${{ secrets.DB_USERNAME }}"
-          echo "DB_PASSWORD: ${{ secrets.DB_PASSWORD }}"
-          echo "KAKAO_JAVASCRIPT_KEY: ${{ secrets.KAKAO_JAVASCRIPT_KEY }}"
-          echo "GH_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}"
-          echo "GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}"
-          echo "GH_REDIRECT_URI: ${{ secrets.GH_REDIRECT_URI }}"
+          echo "DATABASE_URL: ${{ secrets.DATABASE_URL }}"
       # 권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
 
-      # Build and Test 단계에서 환경 변수 사용
       - name: Build and Test
-        env:
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          KAKAO_JAVASCRIPT_KEY: ${{ secrets.KAKAO_JAVASCRIPT_KEY }}
-          GH_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
-          GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
-          GH_REDIRECT_URI: ${{ secrets.GH_REDIRECT_URI }}
         run: ./gradlew build test --info
 
       # 빌드 파일을 zip 형식으로 압축
@@ -65,7 +63,7 @@ jobs:
         run: zip -r ./$GITHUB_SHA.zip .
         shell: bash
 
-      # AWS 자격 증명 설정
+      # AWS 권한
       - name: AWS credential 설정
         uses: aws-actions/configure-aws-credentials@v1
         with:

@@ -1,12 +1,9 @@
 name: Build and Deploy to EC2
 
-# 워크플로우가 언제 실행될 것인지 조건 명시
+# 워크플로우가 언제 실행될 것인지 조건 설정
 on:
   push:
     branches: [ "weekly/11"]
-  pull_request:
-    #    branches: [ "Master" ]
-    types: [closed]
 
 # AWS 관련 값 변수로 설정
 env:

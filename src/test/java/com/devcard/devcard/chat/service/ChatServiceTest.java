@@ -2,6 +2,9 @@ package com.devcard.devcard.chat.service;
 
 import static com.devcard.devcard.chat.util.Constants.CHAT_ROOM_NOT_FOUND;
 import static com.devcard.devcard.chat.util.Constants.EMPTY_MESSAGE;
+import static com.devcard.devcard.chat.util.Constants.MEMBER_NOT_FOUND;
+import static com.devcard.devcard.chat.util.Constants.NO_QUERY_PARAMETER;
+import static com.devcard.devcard.chat.util.Constants.NUMBER_FORMAT_ERROR;
 import static com.devcard.devcard.chat.util.Constants.USER_NOT_IN_CHAT_ROOM;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -21,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.auth.repository.MemberRepository;
+import com.devcard.devcard.chat.dto.ChatUserResponse;
 import com.devcard.devcard.chat.exception.room.ChatRoomNotFoundException;
 import com.devcard.devcard.chat.model.ChatMessage;
 import com.devcard.devcard.chat.model.ChatRoom;
@@ -374,7 +378,7 @@ public class ChatServiceTest {
     }
 
     @Test
-    @DisplayName("쿼리 파라미터 없음")
+    @DisplayName("쿼리 파라미터 없음 - chatId")
     void testExtractChatIdFromSession_NoChatId() {
         // chatId가 없는 URI 설정
         when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws"));
@@ -384,7 +388,7 @@ public class ChatServiceTest {
             IllegalArgumentException.class,
             () -> chatService.extractChatIdFromSession(session)
         );
-        assertEquals("chatId 파라미터가 없음", exception.getMessage());
+        assertEquals("chatId" + NO_QUERY_PARAMETER, exception.getMessage());
     }
 
     @Test
@@ -398,7 +402,7 @@ public class ChatServiceTest {
             IllegalArgumentException.class,
             () -> chatService.extractChatIdFromSession(session)
         );
-        assertEquals("chatId 추출 중 숫자 형식 오류", exception.getMessage());
+        assertEquals("chatId" + NUMBER_FORMAT_ERROR, exception.getMessage());
     }
 
     @Test
@@ -413,7 +417,7 @@ public class ChatServiceTest {
     }
 
     @Test
-    @DisplayName("userId 없음")
+    @DisplayName("쿼리 파라미터 없음 - userId")
     void testExtractUserIdFromSession_NoUserId() {
         // userId가 없는 URI 설정
         when(session.getUri()).thenReturn(URI.create("ws://localhost:8080/ws"));
@@ -423,7 +427,7 @@ public class ChatServiceTest {
             IllegalArgumentException.class,
             () -> chatService.extractUserIdFromSession(session)
         );
-        assertEquals("userId 파라미터가 없음", exception.getMessage());
+        assertEquals("userId" + NO_QUERY_PARAMETER, exception.getMessage());
     }
 
     @Test
@@ -437,7 +441,55 @@ public class ChatServiceTest {
             IllegalArgumentException.class,
             () -> chatService.extractUserIdFromSession(session)
         );
-        assertEquals("userId 추출 중 숫자 형식 오류", exception.getMessage());
+        assertEquals("userId" + NUMBER_FORMAT_ERROR, exception.getMessage());
     }
 
+    @Test
+    @DisplayName("유효한 유저 ID로 프로필 반환")
+    void testGetUserProfileById_ValidUserId() {
+        when(member.getUsername()).thenReturn("John Doe");
+        when(member.getProfileImg()).thenReturn("profile_img.jpg");
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
+
+        ChatUserResponse response = chatService.getUserProfileById("1");
+
+        assertEquals("John Doe", response.name());
+        assertEquals("profile_img.jpg", response.profileImage());
+    }
+
+    @Test
+    @DisplayName("닉네임 사용 프로필 반환")
+    void testGetUserProfileById_UseNickname() {
+        when(member.getUsername()).thenReturn(null);
+        when(member.getNickname()).thenReturn("Nickname123");
+        when(member.getProfileImg()).thenReturn("profile_img.jpg");
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
+
+        ChatUserResponse response = chatService.getUserProfileById("1");
+
+        assertEquals("Nickname123", response.name());
+        assertEquals("profile_img.jpg", response.profileImage());
+    }
+
+    @Test
+    @DisplayName("유효하지 않은 유저 ID로 예외 발생")
+    void testGetUserProfileById_InvalidUserId() {
+        when(memberRepository.findById(1L)).thenReturn(Optional.empty());
+
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> chatService.getUserProfileById("1")
+        );
+        assertEquals(MEMBER_NOT_FOUND + 1L, exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("유효하지 않은 형식의 ID 예외 발생")
+    void testGetUserProfileById_InvalidFormatId() {
+        NumberFormatException exception = assertThrows(
+            NumberFormatException.class,
+            () -> chatService.getUserProfileById("invalid_id")
+        );
+        assertTrue(exception.getMessage().contains("For input string"));
+    }
 }

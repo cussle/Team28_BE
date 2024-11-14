@@ -2,6 +2,9 @@ package com.devcard.devcard.chat.service;
 
 import static com.devcard.devcard.chat.util.Constants.CHAT_ROOM_NOT_FOUND;
 import static com.devcard.devcard.chat.util.Constants.EMPTY_MESSAGE;
+import static com.devcard.devcard.chat.util.Constants.MEMBER_NOT_FOUND;
+import static com.devcard.devcard.chat.util.Constants.NO_QUERY_PARAMETER;
+import static com.devcard.devcard.chat.util.Constants.NUMBER_FORMAT_ERROR;
 import static com.devcard.devcard.chat.util.Constants.USER_NOT_IN_CHAT_ROOM;
 
 import com.devcard.devcard.auth.entity.Member;
@@ -215,7 +218,7 @@ public class ChatService {
             String[] parts = uri.split("\\?");
             if (parts.length < 2) {
                 logger.warn("쿼리 파라미터 없음: {}", uri);
-                throw new IllegalArgumentException(paramName + " 파라미터가 없음");
+                throw new IllegalArgumentException(paramName + NO_QUERY_PARAMETER);
             }
             // 쿼리 부분을 "&"로 나누어 매개변수 배열로 변환
             return Stream.of(parts[1].split("&"))  // 쿼리 문자열에서 &로 분리 (e.g. `["chatId=1", "userId=1"]`)
@@ -227,7 +230,7 @@ public class ChatService {
                 .orElse(null);  // 없으면 null 반환
         } catch (NumberFormatException e) {
             logger.error("URI에서 {} 추출 실패: {}", paramName, uri, e);
-            throw new IllegalArgumentException(paramName + " 추출 중 숫자 형식 오류");
+            throw new IllegalArgumentException(paramName + NUMBER_FORMAT_ERROR);
         }
     }
 
@@ -238,7 +241,7 @@ public class ChatService {
      */
     public ChatUserResponse getUserProfileById(String userId) {
         Member member = memberRepository.findById(Long.parseLong(userId))
-            .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
+            .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND + userId));
 
         // member.getUserName()이 null일 경우 member.getNickname()을 사용
         String name = (member.getUsername() != null) ? member.getUsername() : member.getNickname();

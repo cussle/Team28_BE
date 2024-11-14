@@ -19,7 +19,7 @@
             <img th:src="@{/images/profile.svg}" alt="User Profile Photo">
         </div>
         <div class="profile-info">
-            <h2 class="username" th:text="${member.nickname}">닉네임</h2>
+            <h2 class="username" th:text="${member.username != null ? member.username : member.nickname}">닉네임</h2>
         </div>
     </div>
     <div class="menu-section">
@@ -30,13 +30,13 @@
             </a>
         </div>
         <div class="menu-item">
-            <a th:href="@{/cards/manage}">   <!-- 수정 필요  -->
+            <a th:href="@{/cards/manage}">
                 <img th:src="@{/images/card_black.svg}" alt="Card Management Icon">
                 <p>카드 관리</p>
             </a>
         </div>
         <div class="menu-item">
-            <a th:href="@{/customer-service}">   <!-- 수정 필요  -->
+            <a th:href="@{/customer-service}">
                 <img th:src="@{/images/customer-service.svg}" alt="Customer Service Icon">
                 <p>Q & A</p>
             </a>

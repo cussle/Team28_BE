@@ -15,9 +15,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 const cardItem = document.createElement("div");
                 cardItem.className = "card-item";
 
+                // 사용자 이름 또는 닉네임 결정
+                const displayName = card.name || card.nickname; // @Todo CardResponseDto에서 nickname반환 필요
+
                 // 카드 내용 추가
                 cardItem.innerHTML = `
-                <h2>${card.name}</h2>
+                <h2>${displayName}</h2>
                 <p>회사: ${card.company}</p>
                 <p>직책: ${card.position}</p>
                 <p>전화번호: ${card.phone}</p>
@@ -48,16 +51,16 @@ document.addEventListener("DOMContentLoaded", function() {
                         })
                             .then(response => {
                                 if (response.ok) {
-                                    alert("명함이 삭제되었습니다.");
+                                    handleSuccess("명함이 삭제되었습니다.", 300);
                                     // 삭제된 카드 항목 제거
                                     cardItem.remove();
                                 } else {
-                                    alert("명함 삭제에 실패했습니다.");
+                                    handleError("명함 삭제에 실패했습니다.", 300);
                                 }
                             })
                             .catch(error => {
                                 console.error("명함 삭제 실패:", error);
-                                alert("명함 삭제에 실패했습니다.");
+                                handleError("명함 삭제에 실패했습니다.", 300);
                             });
                     }
                 });
@@ -70,5 +73,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 cardListSection.appendChild(cardItem);
             });
         })
-        .catch(error => console.error("명함 목록 로딩 실패:", error));
+        .catch(error => {
+            console.error("명함 목록 로딩 실패:", error);
+            handleError("명함 목록을 불러오는 데 실패했습니다.", 300);
+        });
 });

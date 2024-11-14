@@ -6,6 +6,7 @@
     <title>[[${card.name}]]님의 명함</title>
 
     <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/card/home-nav-bar.css}">
     <link rel="stylesheet" th:href="@{/css/card/card-detail.css}">
 
     <!-- JS -->
@@ -47,26 +48,39 @@
         <p>소개: [[${card.bio}]]</p>
     </div>
 
-    <!-- Share button with improved styling -->
-    <button id="kakao-share-btn" class="share-button">카카오톡으로 공유하기</button>
-
-    <!-- QR 공유 버튼 -->
-    <button id="qr-share-btn" class="share-button" th:attr="data-card-id=${card.id}">QR 코드로 공유하기</button>
-    <!-- QR 코드 이미지를 표시할 컨테이너 -->
-    <div id="qr-image-container"></div>
-
-    <!-- NFC 공유 버튼 -->
-    <button id="nfc-share-btn" class="share-button" th:attr="data-card-id=${card.id}">NFC로 공유하기</button>
-
+    <div class="share-options" id="share-options" style="display: none;">
+        <button id="kakao-share-btn" class="share-button-icon">
+            <img th:src="@{/images/kakaotalk-icon.svg}" alt="KakaoTalk Icon" class="icon">
+            카카오톡
+        </button>
+        <button id="qr-share-btn" class="share-button-icon" th:attr="data-card-id=${card.id}">
+            <img th:src="@{/images/qr-icon.svg}" alt="QR Code Icon" class="icon">
+            QR
+        </button>
+        <button id="nfc-share-btn" class="share-button-icon" th:attr="data-card-id=${card.id}">
+            <img th:src="@{/images/nfc-icon.svg}" alt="NFC Icon" class="icon">
+            NFC
+        </button>
+    </div>
 </div>
 
 <!-- 하단 네비게이션 바 -->
-<div th:replace="nav-bar :: navBar"></div>
+<div th:replace="home-nav-bar :: navBar"></div>
 
 <!-- Toast 알림 -->
 <div id="toast" class="toast"></div>
 
-<!-- JavaScript for Kakao sharing & Qr code functionality -->
+<!-- 토글 share 버튼 누른 경우 카카오톡, nfc, qr 공유 버튼 활성화 -->
+<script>
+    function toggleShareOptions() {
+        const shareOptions = document.getElementById("share-options");
+        if (shareOptions.style.display === "none") {
+            shareOptions.style.display = "flex";
+        } else {
+            shareOptions.style.display = "none";
+        }
+    }
+</script>
 <script th:src="@{/js/card/card-share.js}"></script>
 
 </body>

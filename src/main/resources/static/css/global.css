@@ -100,3 +100,10 @@ body {
   background-color: var(--cnu-sky-blue); /* 정상 동작 알림 배경 색상 */
 }
 
+/* Back button CSS */
+div.header > span#backButton {
+  cursor: pointer;
+  color: var(--cnu-light-blue);
+  position: absolute;
+  left: 2rem;
+}

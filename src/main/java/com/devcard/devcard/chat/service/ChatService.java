@@ -231,6 +231,11 @@ public class ChatService {
         }
     }
 
+    /**
+     * ID를 통해 유저의 프로필을 반환
+     * @param userId    유저의 ID
+     * @return 해당 유저의 name과 이미지 반환
+     */
     public ChatUserResponse getUserProfileById(String userId) {
         Member member = memberRepository.findById(Long.parseLong(userId))
             .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
@@ -241,6 +246,7 @@ public class ChatService {
         return new ChatUserResponse(name, member.getProfileImg());
     }
 
+    // getter
     public ConcurrentMap<Long, List<WebSocketSession>> getChatRoomSessions() {
         return chatRoomSessions;
     }

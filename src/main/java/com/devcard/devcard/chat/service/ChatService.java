@@ -234,7 +234,11 @@ public class ChatService {
     public ChatUserResponse getUserProfileById(String userId) {
         Member member = memberRepository.findById(Long.parseLong(userId))
             .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
-        return new ChatUserResponse(member.getNickname(), member.getProfileImg());
+
+        // member.getUserName()이 null일 경우 member.getNickname()을 사용
+        String name = (member.getUsername() != null) ? member.getUsername() : member.getNickname();
+
+        return new ChatUserResponse(name, member.getProfileImg());
     }
 
     public ConcurrentMap<Long, List<WebSocketSession>> getChatRoomSessions() {

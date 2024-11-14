@@ -47,7 +47,7 @@ $(document).ready(function () {
                 return new Promise((resolve) => {
                     fetchUserProfile(participantId, function(profile) {
                         // 검색어가 포함된 경우 하이라이트 처리
-                        const highlightedName = highlightText(profile.nickname, searchTerm);
+                        const highlightedName = highlightText(profile.name, searchTerm);
                         const highlightedMessage = highlightText(lastMessage, searchTerm);
 
                         const chatItem = $('<div>', {class: 'chat-item'});
@@ -240,7 +240,7 @@ $(document).ready(function () {
             if (!receiverName) {
                 // 프로필 닉네임을 비동기로 가져오고 receiverName 저장
                 fetchUserProfile(participantId, function(profile) {
-                    receiverName = profile.nickname;
+                    receiverName = profile.name;
                     renderMessages(chatRoom.messages);
                     $("#roomTitle").text(receiverName);
                 });

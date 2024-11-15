@@ -1,3 +1,4 @@
+// Kakao 공유 버튼
 document.getElementById('kakao-share-btn').addEventListener('click', function () {
     if (!cardId) {
         console.error('Card ID가 제공되지 않았습니다.');
@@ -5,17 +6,16 @@ document.getElementById('kakao-share-btn').addEventListener('click', function ()
         return;
     }
 
-    // 기본 content 설정
+    // Kakao 공유 설정
     const content = {
         title: `${cardName}님의 명함`,
         imageUrl: 'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png',
         link: {
-            mobileWebUrl: `http://3.34.144.148:8080/cards/${cardId}/view`,
-            webUrl: `http://3.34.144.148:8080/cards/${cardId}/view`
+            mobileWebUrl: `http://3.34.144.148:8080/shared/cards/${cardId}`,
+            webUrl: `http://3.34.144.148:8080/shared/cards/${cardId}`
         }
     };
 
-    // description이 있는 경우에만 추가
     if (cardCompany || cardPosition) {
         content.description = `회사: ${cardCompany || ''}${cardCompany && cardPosition ? ', ' : ''}직책: ${cardPosition || ''}`;
     }
@@ -27,20 +27,21 @@ document.getElementById('kakao-share-btn').addEventListener('click', function ()
             {
                 title: '명함 보기',
                 link: {
-                    mobileWebUrl: `http://3.34.144.148:8080/cards/${cardId}/view`,
-                    webUrl: `http://3.34.144.148:8080/cards/${cardId}/view`
+                    mobileWebUrl: `http://3.34.144.148:8080/shared/cards/${cardId}`,
+                    webUrl: `http://3.34.144.148:8080/shared/cards/${cardId}`
                 }
             }
         ],
-        fail: function(error) {
+        fail: function (error) {
             console.error(error);
             handleError('카카오톡 공유에 실패했습니다.', 300);
         }
     });
 });
 
+// QR 생성 및 렌더링
 document.getElementById('qr-share-btn').addEventListener('click', function () {
-    const cardId = this.getAttribute('data-card-id');  // QR 버튼에서 cardId 가져오기
+    const cardId = this.getAttribute('data-card-id'); // 버튼에서 cardId 가져오기
 
     if (!cardId) {
         console.error('Card ID가 제공되지 않았습니다.');
@@ -48,32 +49,27 @@ document.getElementById('qr-share-btn').addEventListener('click', function () {
         return;
     }
 
-    fetch(`/cards/${cardId}/qrcode`)
+    const qrContainer = document.getElementById('qr-image-container');
+    qrContainer.innerHTML = ''; // 이전 QR 코드 제거
+
+    // QR 코드 API 요청
+    fetch(`/cards/${cardId}/qrcode-image?t=${new Date().getTime()}`)
         .then(response => {
-            if (!response.ok) {
-                console.error(`서버 응답 오류: ${response.status} ${response.statusText}`);
-                return response.text();
-            }
-            return response.json();
+            if (!response.ok) throw new Error('QR 코드 생성에 실패했습니다.');
+            return response.blob();
         })
-        .then(data => {
-            console.log(data)
-            const qrUrl = `${data.qrcode_url}?t=${new Date().getTime()}`;  // 타임스탬프 추가
+        .then(blob => {
             const qrImage = document.createElement('img');
-            qrImage.src = qrUrl;
+            qrImage.src = URL.createObjectURL(blob);
             qrImage.alt = 'QR Code';
             qrImage.style.width = '200px';
-            qrImage.style.height = 'auto';
+            qrImage.style.height = '200px';
 
-            const qrContainer = document.getElementById('qr-image-container');
-            qrContainer.innerHTML = '';  // 기존 내용 지우기
-            qrContainer.appendChild(qrImage);  // QR 코드 이미지 추가
-
-            qrContainer.style.display = 'block';
-            handleSuccess('QR 코드가 성공적으로 생성되었습니다.', 400);
+            qrContainer.appendChild(qrImage); // QR 이미지 추가
+            qrContainer.style.display = 'block'; // QR 컨테이너 표시
         })
         .catch(error => {
-            console.error('QR 코드 fetch 오류:', error);
+            console.error('QR 코드 생성 중 오류:', error);
             handleError('QR 코드 생성에 실패했습니다.', 400);
         });
 });

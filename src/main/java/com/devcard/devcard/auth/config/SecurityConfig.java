@@ -38,7 +38,8 @@ public class SecurityConfig {
                             "/notice",
                             "/notice/**",
                             "/qna",
-                            "/qna/**"
+                            "/qna/**",
+                            "/shared/**"
                     ).permitAll();
                     // 그 외의 모든 요청은 인증 필요
                     auth.anyRequest().authenticated();

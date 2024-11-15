@@ -23,15 +23,15 @@
     <form id="card-edit-form">
       <div class="form-group">
         <label for="company">회사명</label>
-        <input type="text" id="company" name="company">
+        <input type="text" id="company" name="company" placeholder="회사명을 입력해주세요">
       </div>
       <div class="form-group">
         <label for="position">직책</label>
-        <input type="text" id="position" name="position">
+        <input type="text" id="position" name="position" placeholder="직책을 입력해주세요">
       </div>
       <div class="form-group">
         <label for="phone">연락처</label>
-        <input type="text" id="phone" name="phone">
+        <input type="text" id="phone" name="phone" placeholder="연락처를 입력해주세요">
       </div>
       <div class="form-group">
         <label for="cardName">명함 이름</label>
@@ -49,6 +49,42 @@
         <label for="bio">소개</label>
         <textarea id="bio" name="bio" rows="4"></textarea>
       </div>
+
+      <!-- 추가 입력 필드 -->
+      <div class="form-group">
+        <label for="linkedin">LinkedIn</label>
+        <input type="text" id="linkedin" name="linkedin" placeholder="LinkedIn URL">
+      </div>
+      <div class="form-group">
+        <label for="notion">Notion</label>
+        <input type="text" id="notion" name="notion" placeholder="Notion URL">
+      </div>
+      <div class="form-group">
+        <label for="certification">자격증</label>
+        <input type="text" id="certification" name="certification" placeholder="자격증">
+      </div>
+      <div class="form-group">
+        <label for="extra">기타</label>
+        <input type="text" id="extra" name="extra" placeholder="기타 정보">
+      </div>
+
+      <!-- GitHub 추가 설정 -->
+      <div class="github-settings">
+        <h3>GitHub 추가 설정</h3>
+        <div class="checkbox-group">
+          <input type="checkbox" id="techStack" name="techStack">
+          <label for="techStack">기술 스택</label>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="repository" name="repository">
+          <label for="repository">레포지토리</label>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="contributions" name="contributions">
+          <label for="contributions">잔디</label>
+        </div>
+      </div>
+
       <button type="submit" class="btn-submit">수정하기</button>
     </form>
   </div>

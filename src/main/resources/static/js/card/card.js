@@ -1,5 +1,3 @@
-// card.js
-// 카드 섹션을 채우는 함수
 function populateCardSection(data, container) {
     if (data) {
         const githubUsername = data.name || data.nickname;
@@ -25,7 +23,14 @@ function populateCardSection(data, container) {
                     </a>
                 </p>
                 ${data.email ? `<p>📧 Email: ${data.email}</p>` : ''}
+                ${data.linkedin ? `<p>🔗 LinkedIn <a href="${data.linkedin}" target="_blank">${data.linkedin}</a></p>` : ''}
+                ${data.notion ? `<p>📚 Notion <a href="${data.notion}" target="_blank">${data.notion}</a></p>` : ''}
+                ${data.certification ? `<p>📜 Certification: ${data.certification}</p>` : ''}
+                ${data.extra ? `<p>📝 Extra: ${data.extra}</p>` : ''}
                 ${data.bio ? `<p>📝 Bio: ${data.bio}</p>` : ''}
+                ${data.techStack ? `<p>✅ Tech Stack Included</p>` : ''}
+                ${data.repository ? `<p>✅ Repository Included</p>` : ''}
+                ${data.contributions ? `<p>✅ Contributions Included</p>` : ''}
             </div>
         `;
 

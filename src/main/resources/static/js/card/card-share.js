@@ -1,23 +1,34 @@
 document.getElementById('kakao-share-btn').addEventListener('click', function () {
-    const cardId = document.getElementById('qr-share-btn').getAttribute('data-card-id');  // cardId를 QR 버튼에서 가져옵니다.
+    if (!cardId) {
+        console.error('Card ID가 제공되지 않았습니다.');
+        handleError('Card ID가 유효하지 않습니다.', 300);
+        return;
+    }
+
+    // 기본 content 설정
+    const content = {
+        title: `${cardName}님의 명함`,
+        imageUrl: 'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png',
+        link: {
+            mobileWebUrl: `http://3.34.144.148:8080/cards/${cardId}/view`,
+            webUrl: `http://3.34.144.148:8080/cards/${cardId}/view`
+        }
+    };
+
+    // description이 있는 경우에만 추가
+    if (cardCompany || cardPosition) {
+        content.description = `회사: ${cardCompany || ''}${cardCompany && cardPosition ? ', ' : ''}직책: ${cardPosition || ''}`;
+    }
 
     Kakao.Link.sendDefault({
         objectType: 'feed',
-        content: {
-            title: '[[${card.name}]]님의 명함',
-            description: '회사: [[${card.company}]], 직책: [[${card.position}]]',
-            imageUrl: 'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png',
-            link: {
-                mobileWebUrl: 'http://3.34.144.148:8080/cards/' + cardId + '/view',
-                webUrl: 'http://3.34.144.148:8080/cards/' + cardId + '/view'
-            }
-        },
+        content: content,
         buttons: [
             {
                 title: '명함 보기',
                 link: {
-                    mobileWebUrl: 'http://3.34.144.148:8080/cards/' + cardId + '/view',
-                    webUrl: 'http://3.34.144.148:8080/cards/' + cardId + '/view'
+                    mobileWebUrl: `http://3.34.144.148:8080/cards/${cardId}/view`,
+                    webUrl: `http://3.34.144.148:8080/cards/${cardId}/view`
                 }
             }
         ],

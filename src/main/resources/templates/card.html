@@ -1,5 +1,5 @@
-<div th:fragment="cardSection">
-    <div id="cardSection">
-        <!--  카드 내용  -->
+<div th:fragment="cardSection(cardId)">
+    <div id="cardSection" th:attr="data-card-id=${cardId}">
+        <!-- 카드 내용 -->
     </div>
 </div>

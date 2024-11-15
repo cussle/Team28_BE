@@ -47,7 +47,7 @@
     </div>
 
     <!-- 명함 -->
-    <div th:replace="card :: cardSection"></div>
+    <div th:replace="card :: cardSection(${card?.id ?: 1})"></div>
 
     <div class = "buttons">
         <button class="edit-button button" th:attr="data-id=${card.id}">수정</button>

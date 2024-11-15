@@ -45,8 +45,7 @@ function populateCardSection(data, container) {
 document.addEventListener("DOMContentLoaded", function () {
     const cardSection = document.getElementById("cardSection");
     if (cardSection) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const cardId = urlParams.has('cardId') ? parseInt(urlParams.get('cardId'), 10) : 1;
+        const cardId = cardSection.getAttribute("data-card-id") || 1;
         fetchCardData(cardId, cardSection);
     }
 });

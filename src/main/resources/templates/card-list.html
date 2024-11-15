@@ -8,10 +8,12 @@
     <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/card/card-list.css}">
+    <link rel="stylesheet" th:href="@{/css/card/card.css}">
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/card/card.js}"></script>
     <script th:src="@{/js/card/card-list-delete.js}"></script>
 </head>
 <body>
@@ -22,22 +24,10 @@
 
     <div class="card-list">
         <!-- 카드 목록을 동적으로 생성 -->
-        <div class="card" th:each="card : ${cards}">
-            <a th:href="@{/cards/{id}/view(id=${card.id})}">
-                <div class="card-content">
-                    <h3 th:text="${card.name}">Card Name</h3>
-                    <p th:text="${card.position}">Position</p>
-                    <p th:text="${card.company}">Company</p>
-                    <p>📧: <span th:text="${card.email}">Email</span></p>
-                    <p>📱: <span th:text="${card.phone}">Phone</span></p>
-                    <p>💻: GitHub: <a th:href="${'https://github.com/' + card.githubId}" target="_blank" th:text="${card.githubId}">GitHub</a></p>
-                    <p th:text="${card.bio}">Bio</p>
-                </div>
-                <div class="card-image">
-                    <img th:src="@{${card.profileImg}}" alt="Profile Picture">
-                </div>
-            </a>
-            <button class="delete-button" th:attr="card-id=${card.id}" onclick="deleteCardFromGroup(this)">삭제</button>
+        <div th:each="card : ${cards}">
+            <div th:replace="card :: cardSection(${card.id})">
+                <button class="delete-button" th:attr="card-id=${card.id}" onclick="deleteCardFromGroup(this)">삭제</button>
+            </div>
         </div>
     </div>
 </div>

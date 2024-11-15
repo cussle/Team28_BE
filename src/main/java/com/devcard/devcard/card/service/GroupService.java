@@ -8,9 +8,12 @@ import com.devcard.devcard.card.repository.CardRepository;
 import com.devcard.devcard.card.repository.GroupRepository;
 import com.devcard.devcard.chat.dto.CreateRoomRequest;
 import com.devcard.devcard.chat.service.ChatRoomService;
+import com.devcard.devcard.chat.service.ChatService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class GroupService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
 
     private final GroupRepository groupRepository;
     private final CardRepository cardRepository;
@@ -62,6 +67,8 @@ public class GroupService {
         }
 
         // 채팅방 생성
+        logger.debug(
+            "Chat room participants: Member ID = " + member.getId() + ", Card Owner ID = " + card.getMember().getId());
         CreateRoomRequest createRoomRequest = new CreateRoomRequest(Arrays.asList(
             member.getId(),
             card.getMember().getId()

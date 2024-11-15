@@ -52,6 +52,7 @@ public class ChatRoomService {
         // jpa를 이용해 ChatUser 리스트 가져오기
         List<Member> participants = memberRepository.findByIdIn(createRoomRequest.getParticipantsId());
         ChatRoom chatRoom = new ChatRoom(participants, LocalDateTime.now()); // chatRoom생성
+        chatRoom.getParticipants().addAll(participants);
         chatRoomRepository.save(chatRoom); // db에 저장
         return makeCreateChatRoomResponse(chatRoom); // Response로 변환
     }

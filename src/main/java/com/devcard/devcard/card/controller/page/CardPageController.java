@@ -3,6 +3,7 @@ package com.devcard.devcard.card.controller.page;
 import com.devcard.devcard.auth.model.OauthMemberDetails;
 import com.devcard.devcard.card.dto.CardResponseDto;
 import com.devcard.devcard.card.dto.GroupResponseDto;
+import com.devcard.devcard.card.repository.GroupRepository;
 import com.devcard.devcard.card.service.CardService;
 import com.devcard.devcard.card.service.GroupService;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,13 +20,15 @@ public class CardPageController {
 
     private final CardService cardService;
     private final GroupService groupService;
+    private final GroupRepository groupRepository;
 
     @Value("${kakao.javascript.key}")
     private String kakaoJavascriptKey;
 
-    public CardPageController(CardService cardService, GroupService groupService) {
+    public CardPageController(CardService cardService, GroupService groupService, GroupRepository groupRepository) {
         this.cardService = cardService;
         this.groupService = groupService;
+        this.groupRepository = groupRepository;
     }
 
     @GetMapping("/cards/{id}/view")
@@ -55,6 +58,7 @@ public class CardPageController {
     public String viewCardList(@PathVariable("id") Long groupId, Model model, @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
         List<CardResponseDto> cards = cardService.getCardsByGroup(groupId, oauthMemberDetails.getMember());
         model.addAttribute("cards", cards);
+        model.addAttribute("group", groupRepository.findById(groupId).get());
         return "card-list";
     }
 

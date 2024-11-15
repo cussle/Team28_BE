@@ -34,12 +34,12 @@ jobs:
           mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application-secret.properties
+          echo "kakao.javascript.key=${{ secrets.KAKAO_JAVASCRIPT_KEY }}" >> ./application-secret.properties
 #          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> ./application-secret.properties
 #          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> ./application-secret.properties
 #          echo "GH_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> ./application-secret.properties
 #          echo "GH_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> ./application-secret.properties
 #          echo "GH_REDIRECT_URI=${{ secrets.GH_REDIRECT_URI }}" >> ./application-secret.properties
-          echo "kakao.javascript.key=${{ secrets.KAKAO_JAVASCRIPT_KEY }}" >> ./application-secret.properties
 
       # 권한 부여
       - name: Grant execute permission for gradlew

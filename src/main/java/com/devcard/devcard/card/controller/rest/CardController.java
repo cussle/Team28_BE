@@ -4,6 +4,7 @@ import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.auth.model.OauthMemberDetails;
 import com.devcard.devcard.card.dto.CardResponseDto;
 import com.devcard.devcard.card.dto.CardRequestDto;
+import com.devcard.devcard.card.dto.CardUpdateDto;
 import com.devcard.devcard.card.service.CardService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -61,11 +62,11 @@ public class CardController {
     @PutMapping("/{id}")
     public ResponseEntity<CardResponseDto> updateCard(
             @PathVariable Long id,
-            @Valid @RequestBody CardRequestDto cardRequestDto,
+            @Valid @RequestBody CardUpdateDto cardUpdateDto,
             @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
 
         Member member = oauthMemberDetails.getMember();
-        CardResponseDto responseDto = cardService.updateCard(id, cardRequestDto, member);
+        CardResponseDto responseDto = cardService.updateCard(id, cardUpdateDto, member);
         return ResponseEntity.ok(responseDto);
     }
 

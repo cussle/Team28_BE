@@ -10,13 +10,13 @@ document.addEventListener("DOMContentLoaded", function() {
     })
         .then(response => response.json())
         .then(data => {
-            document.getElementById("company").value = data.company;
-            document.getElementById("position").value = data.position;
-            document.getElementById("phone").value = data.phone;
-            document.getElementById("cardName").value = data.nickname || data.name;
-            document.getElementById("email").value = data.email;
-            document.getElementById("profileImg").value = data.profileImg;
-            document.getElementById("bio").value = data.bio;
+            document.getElementById("company").value = data.company || "";
+            document.getElementById("position").value = data.position || "";
+            document.getElementById("phone").value = data.phone || "";
+            document.getElementById("cardName").value = data.nickname || data.name || ""; // 둘 다 없으면 빈 값
+            document.getElementById("email").value = data.email || "";
+            document.getElementById("profileImg").value = data.profileImg || "";
+            document.getElementById("bio").value = data.bio || "";
         })
         .catch(error => {
             console.error("명함 데이터 로딩 실패:", error);

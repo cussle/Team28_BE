@@ -9,6 +9,7 @@ function populateCardSection(data, container) {
         cardElement.id = `card-${data.id}`;
 
         cardElement.innerHTML = `
+            <button class="delete-button" th:attr="card-id=${data.id}" onclick="deleteCardFromGroup(this, event)">삭제</button>
             <div class="card-image">
                 <img src="${data.profileImg}" alt="Person profile">
             </div>

@@ -25,9 +25,7 @@
     <div class="card-list">
         <!-- 카드 목록을 동적으로 생성 -->
         <div th:each="card : ${cards}">
-            <div th:replace="card :: cardSection(${card.id})">
-                <button class="delete-button" th:attr="card-id=${card.id}" onclick="deleteCardFromGroup(this)">삭제</button>
-            </div>
+            <div th:replace="card :: cardSection(${card.id})"></div>
         </div>
     </div>
 </div>

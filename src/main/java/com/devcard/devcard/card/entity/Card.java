@@ -29,6 +29,15 @@ public class Card {
     private String position;
     private String phone;
     private String bio;
+    private String linkedin;
+    private String notion;
+    private String certification;
+    private String extra;
+
+    private boolean techStack;
+    private boolean repository;
+    private boolean contributions;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -46,10 +55,16 @@ public class Card {
         this.position = builder.position;
         this.phone = builder.phone;
         this.bio = builder.bio;
+        this.linkedin = builder.linkedin;
+        this.notion = builder.notion;
+        this.certification = builder.certification;
+        this.extra = builder.extra;
+        this.techStack = builder.techStack;
+        this.repository = builder.repository;
+        this.contributions = builder.contributions;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
-
 
     // 빌더 패턴을 위한 생성자
     public static class Builder {
@@ -61,6 +76,13 @@ public class Card {
         private String position;
         private String phone;
         private String bio;
+        private String linkedin;
+        private String notion;
+        private String certification;
+        private String extra;
+        private boolean techStack;
+        private boolean repository;
+        private boolean contributions;
 
         public Builder(Member member) {
             this.member = member;
@@ -101,6 +123,41 @@ public class Card {
             return this;
         }
 
+        public Builder linkedin(String linkedin) {
+            this.linkedin = linkedin;
+            return this;
+        }
+
+        public Builder notion(String notion) {
+            this.notion = notion;
+            return this;
+        }
+
+        public Builder certification(String certification) {
+            this.certification = certification;
+            return this;
+        }
+
+        public Builder extra(String extra) {
+            this.extra = extra;
+            return this;
+        }
+
+        public Builder techStack(boolean techStack) {
+            this.techStack = techStack;
+            return this;
+        }
+
+        public Builder repository(boolean repository) {
+            this.repository = repository;
+            return this;
+        }
+
+        public Builder contributions(boolean contributions) {
+            this.contributions = contributions;
+            return this;
+        }
+
         public Card build() {
             return new Card(this);
         }
@@ -116,6 +173,13 @@ public class Card {
     public String getPosition() { return position; }
     public String getPhone() { return phone; }
     public String getBio() { return bio; }
+    public String getLinkedin() { return linkedin; }
+    public String getNotion() { return notion; }
+    public String getCertification() { return certification; }
+    public String getExtra() { return extra; }
+    public boolean isTechStack() { return techStack; }
+    public boolean isRepository() { return repository; }
+    public boolean isContributions() { return contributions; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public List<Group> getGroups() { return groups; }
@@ -133,7 +197,13 @@ public class Card {
         this.email = dto.getEmail();
         this.nickname = dto.getCardName();
         this.profileImg = dto.getProfileImg();
+        this.linkedin = dto.getLinkedin();
+        this.notion = dto.getNotion();
+        this.certification = dto.getCertification();
+        this.extra = dto.getExtra();
+        this.techStack = dto.isTechStack();
+        this.repository = dto.isRepository();
+        this.contributions = dto.isContributions();
         this.updatedAt = LocalDateTime.now();
     }
-
 }

@@ -7,6 +7,7 @@ public class Constants {
     public static final String CHAT_ROOM_NOT_FOUND_BY_PARTICIPANTS = "해당 참여자 ID 목록으로 채팅방을 찾을 수 없습니다. 참여자 ID 목록: ";
     public static final String USER_NOT_IN_CHAT_ROOM = "사용자가 해당 채팅방의 참여자가 아닙니다.";
     public static final String EMPTY_MESSAGE = "메시지가 비어 있습니다.";
+    public static final String DUPLICATE_CHAT_ROOM_ERROR = "이미 동일한 참여자로 구성된 채팅방이 존재합니다.";
 
     // 멤버 상수
     public static final String MEMBER_NOT_FOUND = "멤버를 다음의 id로 찾을 수 없습니다. id: ";

@@ -1,7 +1,7 @@
 package com.devcard.devcard.card.entity;
 
 import com.devcard.devcard.auth.entity.Member;
-import com.devcard.devcard.card.dto.CardRequestDto;
+import com.devcard.devcard.card.dto.CardUpdateDto;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -125,11 +125,15 @@ public class Card {
     }
 
     // DTO 기반 업데이트 메서드
-    public void updateFromDto(CardRequestDto dto) {
+    public void updateFromDto(CardUpdateDto dto) {
         if (dto.getCompany() != null) this.company = dto.getCompany();
         if (dto.getPosition() != null) this.position = dto.getPosition();
         if (dto.getPhone() != null) this.phone = dto.getPhone();
         if (dto.getBio() != null) this.bio = dto.getBio();
+        if (dto.getEmail() != null) this.email = dto.getEmail();
+        if (dto.getCardName() != null) this.nickname = dto.getCardName();
+        if (dto.getProfileImg() != null) this.profileImg = dto.getProfileImg();
         this.updatedAt = LocalDateTime.now();
     }
+
 }

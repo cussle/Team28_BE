@@ -3,6 +3,7 @@ package com.devcard.devcard.card.service;
 import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.card.dto.CardRequestDto;
 import com.devcard.devcard.card.dto.CardResponseDto;
+import com.devcard.devcard.card.dto.CardUpdateDto;
 import com.devcard.devcard.card.entity.Group;
 import com.devcard.devcard.card.exception.CardNotFoundException;
 import com.devcard.devcard.card.repository.CardRepository;
@@ -76,7 +77,7 @@ public class CardService {
     }
 
     @Transactional
-    public CardResponseDto updateCard(Long id, CardRequestDto cardRequestDto, Member member) {
+    public CardResponseDto updateCard(Long id, CardUpdateDto cardUpdateDto, Member member) {
         Card existingCard = cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException("해당 명함을 찾을 수 없습니다."));
 
@@ -86,7 +87,7 @@ public class CardService {
         }
 
         // 기존 엔티티의 필드 업데이트
-        existingCard.updateFromDto(cardRequestDto);
+        existingCard.updateFromDto(cardUpdateDto);
 
         return CardResponseDto.fromEntity(existingCard);
     }

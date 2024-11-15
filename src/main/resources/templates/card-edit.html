@@ -12,34 +12,48 @@
   <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
-
 <div class="header">
+  <span class="material-symbols-outlined" id="backButton" onclick="location.href='/cards/manage'">arrow_back_ios</span>
   <h2 class="title">명함 수정</h2>
 </div>
 
-<div class="card-create-container">
-  <form id="card-edit-form">
-    <div class="form-group">
-      <label for="company">회사명</label>
-      <input type="text" id="company" name="company" required>
-    </div>
-    <div class="form-group">
-      <label for="position">직책</label>
-      <input type="text" id="position" name="position" required>
-    </div>
-    <div class="form-group">
-      <label for="phone">연락처</label>
-      <input type="text" id="phone" name="phone" required>
-    </div>
-    <div class="form-group">
-      <label for="bio">소개</label>
-      <textarea id="bio" name="bio" rows="4"></textarea>
-    </div>
-    <button type="submit" class="btn-submit">수정하기</button>
-  </form>
+<div class="scrollable-container">
+  <div class="card-create-container">
+    <form id="card-edit-form">
+      <div class="form-group">
+        <label for="company">회사명</label>
+        <input type="text" id="company" name="company" required>
+      </div>
+      <div class="form-group">
+        <label for="position">직책</label>
+        <input type="text" id="position" name="position" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">연락처</label>
+        <input type="text" id="phone" name="phone" required>
+      </div>
+      <div class="form-group">
+        <label for="cardName">명함 이름</label>
+        <input type="text" id="cardName" name="cardName">
+      </div>
+      <div class="form-group">
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email">
+      </div>
+      <div class="form-group">
+        <label for="profileImg">프로필 이미지 URL</label>
+        <input type="text" id="profileImg" name="profileImg">
+      </div>
+      <div class="form-group">
+        <label for="bio">소개</label>
+        <textarea id="bio" name="bio" rows="4"></textarea>
+      </div>
+      <button type="submit" class="btn-submit">수정하기</button>
+    </form>
+  </div>
 </div>
 
-<!-- 하단 네비게이션 바 -->
+<!-- 네비게이션바 -->
 <div th:replace="nav-bar :: navBar"></div>
 
 <!-- Toast 알림 -->

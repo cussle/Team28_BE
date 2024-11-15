@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("company").value = data.company;
             document.getElementById("position").value = data.position;
             document.getElementById("phone").value = data.phone;
+            document.getElementById("cardName").value = data.nickname || data.name;
+            document.getElementById("email").value = data.email;
+            document.getElementById("profileImg").value = data.profileImg;
             document.getElementById("bio").value = data.bio;
         })
         .catch(error => {
@@ -28,8 +31,12 @@ document.addEventListener("DOMContentLoaded", function() {
             company: document.getElementById("company").value,
             position: document.getElementById("position").value,
             phone: document.getElementById("phone").value,
+            cardName: document.getElementById("cardName").value,
+            email: document.getElementById("email").value,
+            profileImg: document.getElementById("profileImg").value,
             bio: document.getElementById("bio").value,
         };
+        console.log(cardId);
 
         fetch(`/cards/${cardId}`, {
             method: "PUT",
@@ -39,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
             body: JSON.stringify(updatedData)
         })
             .then(response => {
+                console.log(response);
                 if (response.ok) {
                     handleSuccess("명함이 성공적으로 수정되었습니다!", 3000);
                     setTimeout(() => {

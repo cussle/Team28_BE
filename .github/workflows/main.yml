@@ -1,9 +1,9 @@
 name: Build and Deploy to EC2
 
-# 워크플로우가 언제 실행될 것인지 조건 설정
+# 워크플로우가 언제 실행될 것인지 조건 명시
 on:
   push:
-    branches: [ "weekly/11"]
+    branches: ['*']  # 모든 브랜치 대상
 
 # AWS 관련 값 변수로 설정
 env:
@@ -21,32 +21,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # JDK 17 설치
+      # JDK 21 설치
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      # 개별 환경 변수를 사용하여 application-secret.properties 파일 생성
-      - name: make application-secret.properties
-        run: |
-          mkdir -p ./src/main/resources
-          cd ./src/main/resources
-          touch ./application-secret.properties
-          echo "kakao.javascript.key=${{ secrets.KAKAO_JAVASCRIPT_KEY }}" >> ./application-secret.properties
-          echo "GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> ./application-secret.properties
-          echo "GITHUB_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> ./application-secret.properties
-          echo "GITHUB_REDIRECT_URI=${{ secrets.GH_REDIRECT_URI }}" >> ./application-secret.properties
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> ./application-secret.properties
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> ./application-secret.properties
-      - name: Check environment variables
-        run: |
-          echo "AWS_REGION: ${{ env.AWS_REGION }}"
-          echo "AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}"
-          echo "AWS_CODE_DEPLOY_APPLICATION: ${{ env.AWS_CODE_DEPLOY_APPLICATION }}"
-          echo "AWS_CODE_DEPLOY_GROUP: ${{ env.AWS_CODE_DEPLOY_GROUP }}"
-          echo "DATABASE_URL: ${{ secrets.DATABASE_URL }}"
+      # 환경 변수를 사용하여 application-secret.properties 파일 생성
+#      - name: make application-secret.properties
+#        run: |
+#          mkdir -p ./src/main/resources
+#          cd ./src/main/resources
+#          touch ./application-secret.properties
+#          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> ./src/main/resources/application-secret.properties
+#          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> ./src/main/resources/application-secret.properties
+#          echo "GH_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> ./src/main/resources/application-secret.properties
+#          echo "GH_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> ./src/main/resources/application-secret.properties
+#          echo "GH_REDIRECT_URI=${{ secrets.GH_REDIRECT_URI }}" >> ./src/main/resources/application-secret.properties
+#          echo "KAKAO_JAVASCRIPT_KEY=${{ secrets.KAKAO_JAVASCRIPT_KEY }}" >> ./src/main/resources/application-secret.properties
+
       # 권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew

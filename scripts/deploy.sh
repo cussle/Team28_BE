@@ -26,4 +26,5 @@ fi
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo ">>> DEPLOY_JAR 배포"    >> /home/ubuntu/deploy.log
 echo ">>> $DEPLOY_JAR을 실행합니다" >> /home/ubuntu/deploy.log
-nohup java -jar $DEPLOY_JAR >> /home/ubuntu/deploy.log 2>&1 &
+# nohup java -jar $DEPLOY_JAR >> /home/ubuntu/deploy.log 2>&1 &
+java -jar DevCard-0.0.1-SNAPSHOT.jar &  # 로그 확인용 임시

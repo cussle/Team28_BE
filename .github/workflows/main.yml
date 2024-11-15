@@ -46,6 +46,9 @@ jobs:
         shell: bash
 
       - name: Build and Test
+        env:
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: ./gradlew build test --info
 
       # 빌드 파일을 zip 형식으로 압축

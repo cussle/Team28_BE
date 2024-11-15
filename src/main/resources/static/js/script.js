@@ -6,7 +6,7 @@ $(document).ready(function () {
 
   if (path === '/home') {
     $(".nav-item[data-page='home']").addClass("active"); // MyCard에 active 클래스 추가
-  } else if (path === '/wallet-list') {
+  } else if (path === '/wallet-list' || path.startsWith('/groups')) {
     $(".nav-item[data-page='wallet']").addClass("active"); // Wallet에 active 클래스 추가
   } else if (path === '/chats') {
     $(".nav-item[data-page='chats']").addClass("active"); // Chats에 active 클래스 추가

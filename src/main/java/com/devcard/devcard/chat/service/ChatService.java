@@ -236,7 +236,7 @@ public class ChatService {
 
     /**
      * ID를 통해 유저의 프로필을 반환
-     * @param userId    유저의 ID
+     * @param userId 유저의 ID
      * @return 해당 유저의 name과 이미지 반환
      */
     public ChatUserResponse getUserProfileById(String userId) {

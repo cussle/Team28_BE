@@ -56,25 +56,36 @@ public class GroupService {
 
     @Transactional
     public void addCardToGroup(Long groupId, Long cardId, Member member) {
+        // 현재 사용자의 그룹 조회
         Group group = groupRepository.findByIdAndMember(groupId, member)
             .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 존재하지 않거나 접근 권한이 없습니다."));
 
+        // 추가하려는 명함(Card) 조회
         Card card = cardRepository.findById(cardId)
             .orElseThrow(() -> new IllegalArgumentException("해당 ID의 명함이 존재하지 않습니다."));
 
+        // 그룹에 이미 해당 카드가 포함되어 있는지 확인
         if (group.getCards().contains(card)) {
             throw new IllegalArgumentException("이미 해당 그룹에 추가되어 있는 명함입니다.");
         }
 
-        // 채팅방 생성
-        logger.debug(
-            "Chat room participants: Member ID = " + member.getId() + ", Card Owner ID = " + card.getMember().getId());
-        CreateRoomRequest createRoomRequest = new CreateRoomRequest(Arrays.asList(
-            member.getId(),
-            card.getMember().getId()
-        ));
-        chatRoomService.createChatRoom(createRoomRequest);
+        // 상대방의 그룹에서 현재 사용자의 Card를 포함하는 그룹이 있는지 확인
+        boolean isMutuallyAdded = groupRepository.existsByMemberAndCards_Id(card.getMember(), member.getId());
 
+        // 양쪽 모두 추가된 경우에만 채팅방 생성
+        if (isMutuallyAdded) {
+            logger.debug(
+                "Chat room participants: Member ID = " + member.getId() + ", Card Owner ID = " + card.getMember().getId());
+            CreateRoomRequest createRoomRequest = new CreateRoomRequest(Arrays.asList(
+                member.getId(),
+                card.getMember().getId()
+            ));
+            chatRoomService.createChatRoom(createRoomRequest);
+        } else {
+            logger.debug("Chat room not created: Mutual addition not satisfied.");
+        }
+
+        // 카드 추가
         group.addCard(card);
         groupRepository.save(group);
     }
@@ -112,6 +123,14 @@ public class GroupService {
     public void deleteGroup(Long groupId, Member member) {
         Group group = groupRepository.findByIdAndMember(groupId, member)
             .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 존재하지 않거나 접근 권한이 없습니다."));
+
+        // 그룹에 포함된 모든 카드의 채팅방 삭제
+        for (Card card : group.getCards()) {
+            chatRoomService.deleteChatRoomByParticipants(Arrays.asList(
+                member.getId(),
+                card.getMember().getId()
+            ));
+        }
 
         groupRepository.delete(group); // 그룹 삭제
     }

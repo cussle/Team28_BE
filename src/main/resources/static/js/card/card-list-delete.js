@@ -1,4 +1,6 @@
-function deleteCardFromGroup(button) {
+function deleteCardFromGroup(button, event) {
+    event.stopPropagation();
+
     const cardId = button.getAttribute('card-id');
     const groupId = getCurrentGroupId();
 

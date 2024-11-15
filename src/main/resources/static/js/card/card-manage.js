@@ -26,6 +26,12 @@ document.addEventListener("DOMContentLoaded", function () {
             // 개별 카드 정보를 표시하기 위해 card.js의 populateCardSection 함수를 호출하여 HTML을 생성
             populateCardSection(card, cardContainer);
 
+            // 클릭 이벤트 리스너 추가: 카드 클릭 시 해당 cardId로 상세 페이지 이동
+            cardContainer.addEventListener("click", () => {
+                const cardId = card.id || 1; // cardId가 없을 경우 1로 설정
+                window.location.href = `/cards/${cardId}/view`;
+            });
+
             cardListSection.appendChild(cardContainer);
         });
     }
@@ -33,3 +39,4 @@ document.addEventListener("DOMContentLoaded", function () {
     // 카드 목록을 가져옴
     fetchCardList();
 });
+

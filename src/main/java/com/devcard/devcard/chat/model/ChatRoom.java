@@ -22,12 +22,13 @@ public class ChatRoom {
     @JoinTable(name = "chat_room_participants")
     private List<Member> participants;
     private LocalDateTime createdAt;
-    private String lastMessage = "메세지를 보내보세요."; // 기본값 설정
+    private String lastMessage = "메세지를 보내보세요.";  // 기본값 설정
     private LocalDateTime lastMessageTime;
 
     public ChatRoom(List<Member> participants, LocalDateTime createdAt) {
         this.participants = participants;
         this.createdAt = createdAt;
+        this.lastMessageTime = createdAt;  // 초기 시간 설정
     }
 
     protected ChatRoom() {

@@ -19,24 +19,26 @@
 </head>
 <body>
 
-<!-- 상단 헤더 영역 -->
-<div class="header">
-    <span class="material-symbols-outlined" id="backButton" onclick="location.href='/mypage'">arrow_back_ios</span>
-    <h2 class="title">명함 관리</h2>
-</div>
+<div class="container">
+    <!-- 상단 헤더 영역 -->
+    <div class="header">
+        <span class="material-symbols-outlined" id="backButton" onclick="location.href='/mypage'">arrow_back_ios</span>
+        <h2 class="title">명함 관리</h2>
+    </div>
 
-<!-- 명함 추가 버튼 -->
-<div class="add-card-btn-container">
-    <button class="add-card-button" onclick="location.href='/cards/create-view'">명함 추가</button>
-</div>
+    <!-- 명함 추가 버튼 -->
+    <div class="add-card-btn-container">
+        <button class="add-card-button" onclick="location.href='/cards/create-view'">명함 추가</button>
+    </div>
 
-<!-- 명함 리스트 표시 영역 -->
-<div class="card-list-section" id="card-list-section">
-    <!-- 명함 아이템이 동적으로 추가 -->
-</div>
+    <!-- 명함 리스트 표시 영역 -->
+    <div class="card-list-section" id="card-list-section">
+        <!-- 명함 아이템이 동적으로 추가 -->
+    </div>
 
-<!-- 하단 네비게이션 바 -->
-<div th:replace="nav-bar :: navBar"></div>
+    <!-- 하단 네비게이션 바 -->
+    <div th:replace="nav-bar :: navBar"></div>
+</div>
 
 <!-- Toast 알림 -->
 <div id="toast" class="toast"></div>

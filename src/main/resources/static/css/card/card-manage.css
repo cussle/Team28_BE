@@ -1,3 +1,10 @@
+.container {
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
 .header {
     display: flex;
     justify-content: center;
@@ -34,6 +41,7 @@
 
 /* 명함 리스트 섹션 */
 .card-list-section {
+    overflow-y: auto;
     padding: 1rem;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

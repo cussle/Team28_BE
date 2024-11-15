@@ -33,7 +33,13 @@ public class SecurityConfig {
                             "/js/**",
                             "/images/**",
                             "/h2-console/**",
-                            "/walletList"
+                            "/walletList",
+                            "/qrcodes/**",
+                            "/notice",
+                            "/notice/**",
+                            "/qna",
+                            "/qna/**",
+                            "/shared/**"
                     ).permitAll();
                     // 그 외의 모든 요청은 인증 필요
                     auth.anyRequest().authenticated();

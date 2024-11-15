@@ -1,4 +1,4 @@
-package com.devcard.devcard.auth.controller;
+package com.devcard.devcard.auth.controller.rest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller("gitHubLoginController")
 public class LoginController {
 
-    @GetMapping("login")
+    @GetMapping("/login")
     public String login() {
         return "login";
     }

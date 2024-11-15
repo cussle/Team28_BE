@@ -4,6 +4,7 @@ import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.auth.model.OauthMemberDetails;
 import com.devcard.devcard.card.dto.CardResponseDto;
 import com.devcard.devcard.card.dto.CardRequestDto;
+import com.devcard.devcard.card.dto.CardUpdateDto;
 import com.devcard.devcard.card.service.CardService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -38,10 +39,17 @@ public class CardController {
         return ResponseEntity.created(location).body(responseDto);
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<CardResponseDto> getCard(@PathVariable Long id) {
         CardResponseDto responseDto = cardService.getCard(id);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<CardResponseDto>> getMyCards(
+            @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
+        Member member = oauthMemberDetails.getMember();
+        List<CardResponseDto> responseDto = cardService.getMyCards(member.getId());
         return ResponseEntity.ok(responseDto);
     }
 
@@ -54,11 +62,11 @@ public class CardController {
     @PutMapping("/{id}")
     public ResponseEntity<CardResponseDto> updateCard(
             @PathVariable Long id,
-            @Valid @RequestBody CardRequestDto cardRequestDto,
+            @Valid @RequestBody CardUpdateDto cardUpdateDto,
             @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
 
         Member member = oauthMemberDetails.getMember();
-        CardResponseDto responseDto = cardService.updateCard(id, cardRequestDto, member);
+        CardResponseDto responseDto = cardService.updateCard(id, cardUpdateDto, member);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -70,16 +78,6 @@ public class CardController {
         Member member = oauthMemberDetails.getMember();
         cardService.deleteCard(id, member);
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/{id}/add-to-group/{groupId}")
-    public ResponseEntity<Void> addCardToGroup(
-            @PathVariable Long id,
-            @PathVariable Long groupId
-    ) {
-        cardService.addCardToGroup(id, groupId);
-
-        return ResponseEntity.ok().build();
     }
 
 }

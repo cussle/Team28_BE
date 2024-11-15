@@ -1,83 +1,198 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-}
 
-.container {
+/* Header styling (like home.css) */
+.header {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    min-height: 80vh;
-    padding: 20px;
+    align-items: center;
+    padding: 1rem; /* Increased padding */
+    margin: 0.5rem 0;
+    color: black;
+    font-family: Arial, sans-serif;
 }
 
-.card {
-    background-color: #000;
-    color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 400px;
+.title {
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 1.5rem; /* Increased font size for better emphasis */
+    margin-bottom: 20px;
 }
 
-.card h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
+/* Container for the main content */
+.container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    flex-flow: column;
 }
 
-.github-link {
-    color: #00aced;
-    text-decoration: none;
-}
-
-.github-link:hover {
-    text-decoration: underline;
-}
-
+/* Share button styling */
 .share-button {
     margin-top: 20px;
-    padding: 15px;
-    border-radius: 50%;
-    background-color: #3b5998; /* Kakao 버튼 색상 */
-    color: #fff;
+    padding: 10px 20px; /* More compact padding */
+    border-radius: 50px;
+    background-color: var(--cnu-dark-blue); /* Bright yellow button */
+    color: white;
     border: none;
-    font-size: 1em;
+    font-size: 1rem;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.share-button:hover {
-    background-color: #2a427a;
-}
-
-.nav-bar {
-    display: flex;
-    justify-content: space-around;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
     width: 100%;
-    position: fixed;
-    bottom: 0;
-    background-color: #fff;
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-    padding: 10px 0;
-}
-
-.nav-item {
+    max-width: 220px;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    font-size: 0.9em;
+}
+
+/* Hover effect for share button */
+.share-button:hover {
+    background-color: var(--cnu-yellow);
+    transform: scale(1.1);
+}
+
+.share-button:active {
+    transform: scale(1);
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 480px) {
+    .card {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .card h3 {
+        font-size: 1.3rem;
+    }
+
+    .card .github-link {
+        font-size: 0.9em;
+    }
+
+    .share-button {
+        padding: 12px 24px;
+        font-size: 1.1em;
+    }
+}
+
+#modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100dvh;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* 배경이 페이지 전체를 덮도록 설정 */
+    display: none; /* 기본적으로 숨김 */
+}
+
+/* 모달 창 설정 */
+#group-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(255 255 255 / 94%);
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    z-index: 1001; /* 모달 창이 배경 위에 표시되도록 설정 */
+    display: none; /* 기본적으로 숨김 */
+}
+
+/* 모달과 배경이 활성화될 때 */
+#modal-overlay.visible,
+#group-modal.visible {
+    display: block;
+}
+
+.group-option {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    border: none;
+    background: none;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.nav-item p {
-    margin-top: 5px;
+.group-option:hover {
+    color: #007bff;
+    transform: translateY(-2px);
 }
 
-.nav-icon {
-    width: 24px;
+#group-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#group-modal h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #555;
+}
+
+.add-to-group-button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: var(--cnu-yellow);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-group-button:hover {
+    background-color: var(--cnu-orange);
+}
+
+
+/* Base button styling */
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Edit button styling */
+.edit-button.button {
+    background-color: grey; /* Green */
+    color: white;
+}
+
+.edit-button.button:hover {
+    background-color: #16a085; /* Darker green */
+}
+
+/* Delete button styling */
+.delete-button.button {
+    background-color: grey; /* Red */
+    color: white;
+    margin-left: 10px; /* Spacing between buttons */
+}
+
+.delete-button.button:hover {
+    background-color: #16a085; /* Darker red */
+}
+
+#qr-image-container {
+    display: none;
+    text-align: center;
+    margin-top: 10px; /* 기존 20px에서 10px로 줄임 */
+    position: relative; /* 컨테이너의 위치를 세부 조정할 수 있도록 설정 */
+    top: -10px; /* 컨테이너를 위로 이동 */
 }

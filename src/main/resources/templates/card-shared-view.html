@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[[${card.name}]] 명함</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios,send" />
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/card/card.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script th:src="@{/js/script.js}"></script>
+
+    <style>
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            background-color: grey; /* Green */
+            color: white;
+        }
+        .button:hover {
+            background-color: #16a085; /* Darker green */
+        }
+    </style>
+</head>
+<body>
+
+<div class="card-title-container">
+    <h2 class="title">[[${card.name}]] 명함</h2>
+    <!-- 명함 Card-->
+    <div th:replace="card :: cardSection(${card?.id ?: 1})"></div>
+    <div>
+        <button class="edit-button button">명함 추가하기</button>
+    </div>
+</div>
+
+
+
+<!-- 하단 네비게이션 바 -->
+<div th:replace="nav-bar :: navBar"></div>
+
+<!-- Toast 알림 -->
+<div id="toast" class="toast"></div>
+
+</body>
+
+<script>
+    function populateCardSection(data, container) {
+        if (data) {
+            const githubUsername = data.name || data.nickname;
+            const githubLink = githubUsername ? `https://github.com/${githubUsername}` : '#';
+
+            // 카드 요소 생성
+            const cardElement = document.createElement("div");
+            cardElement.classList.add("card");
+            cardElement.id = `card-${data.id}`;
+
+            cardElement.innerHTML = `
+            <div class="card-image">
+                <img src="${data.profileImg}" alt="Person profile">
+            </div>
+            <div class="card-content">
+                <h3>${data.nickname || data.name}</h3>
+                ${data.company ? `<p>🏢 Company: ${data.company}</p>` : ''}
+                ${data.position ? `<p>📌 Position: ${data.position}</p>` : ''}
+                ${data.phone ? `<p>📞 Phone: ${data.phone}</p>` : ''}
+                <p>💻 GitHub:
+                    <a href="${githubLink}" target="_blank">
+                        ${githubUsername || 'GitHub Profile'}
+                    </a>
+                </p>
+                ${data.email ? `<p>📧 Email: ${data.email}</p>` : ''}
+                ${data.linkedin ? `<p>🔗 LinkedIn <a href="${data.linkedin}" target="_blank">${data.linkedin}</a></p>` : ''}
+                ${data.notion ? `<p>📚 Notion <a href="${data.notion}" target="_blank">${data.notion}</a></p>` : ''}
+                ${data.certification ? `<p>📜 Certification: ${data.certification}</p>` : ''}
+                ${data.extra ? `<p>📝 Extra: ${data.extra}</p>` : ''}
+                ${data.bio ? `<p>📝 Bio: ${data.bio}</p>` : ''}
+                ${data.techStack ? `<p>✅ Tech Stack Included</p>` : ''}
+                ${data.repository ? `<p>✅ Repository Included</p>` : ''}
+                ${data.contributions ? `<p>✅ Contributions Included</p>` : ''}
+            </div>
+        `;
+            // 컨테이너에 카드 요소 추가
+            container.appendChild(cardElement);
+        } else {
+            container.innerHTML = `<p>Card data not available.</p>`;
+        }
+    }
+
+    // 개별 카드 데이터 가져오기 함수 (이 함수는 개별 카드 페이지에서만 사용됩니다)
+    document.addEventListener("DOMContentLoaded", function () {
+        const cardSection = document.getElementById("cardSection");
+        if (cardSection) {
+            const cardId = cardSection.getAttribute("data-card-id") || 1;
+            fetchCardData(cardId, cardSection);
+        }
+    });
+
+    function fetchCardData(cardId, container) {
+        fetch(`/cards/${cardId}`)
+            .then(response => response.json())
+            .then(data => populateCardSection(data, container))
+            .catch(error => console.error('Error fetching card data:', error));
+    }
+</script>
+</html>

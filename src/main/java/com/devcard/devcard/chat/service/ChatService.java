@@ -1,6 +1,11 @@
 package com.devcard.devcard.chat.service;
 
 import static com.devcard.devcard.chat.util.Constants.CHAT_ROOM_NOT_FOUND;
+import static com.devcard.devcard.chat.util.Constants.EMPTY_MESSAGE;
+import static com.devcard.devcard.chat.util.Constants.MEMBER_NOT_FOUND;
+import static com.devcard.devcard.chat.util.Constants.NO_QUERY_PARAMETER;
+import static com.devcard.devcard.chat.util.Constants.NUMBER_FORMAT_ERROR;
+import static com.devcard.devcard.chat.util.Constants.USER_NOT_IN_CHAT_ROOM;
 
 import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.auth.repository.MemberRepository;
@@ -14,7 +19,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -47,7 +51,11 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
 
-    public ChatService(ChatRepository chatRepository, ChatRoomRepository chatRoomRepository, MemberRepository memberRepository) {
+    public ChatService(
+        ChatRepository chatRepository,
+        ChatRoomRepository chatRoomRepository,
+        MemberRepository memberRepository
+    ) {
         this.chatRepository = chatRepository;
         this.chatRoomRepository = chatRoomRepository;
         this.memberRepository = memberRepository;
@@ -60,6 +68,11 @@ public class ChatService {
      * @param message 전송하려는 메시지
      */
     public void handleIncomingMessage(Long chatId, Long userId, String message) {
+        // message가 null이거나 빈 문자열인 경우 예외 처리
+        if (message == null || message.trim().isEmpty()) {
+            throw new IllegalArgumentException(EMPTY_MESSAGE);
+        }
+
         // ChatRoom 조회
         ChatRoom chatRoom = chatRoomRepository.findById(chatId)
             .orElseThrow(() -> new ChatRoomNotFoundException(CHAT_ROOM_NOT_FOUND + chatId));
@@ -70,7 +83,7 @@ public class ChatService {
 
         if (!isParticipant) {
             logger.warn("사용자가 채팅방에 참여하지 않음: userId={}, chatId={}", userId, chatId);
-            throw new IllegalArgumentException("사용자가 해당 채팅방의 참여자가 아닙니다.");
+            throw new IllegalArgumentException(USER_NOT_IN_CHAT_ROOM);
         }
 
         // 메시지 저장
@@ -158,8 +171,14 @@ public class ChatService {
     public String extractMessage(String payload) {
         JSONParser parser = new JSONParser();
         try {
-            JSONObject jsonObject = (JSONObject) parser.parse(payload);
-            return jsonObject.getAsString("content");
+            Object obj = parser.parse(payload);
+            if (obj instanceof JSONObject) {  // JSONObject로 캐스팅 가능한지 확인
+                JSONObject jsonObject = (JSONObject) obj;
+                return jsonObject.getAsString("content");
+            } else {
+                logger.error("유효하지 않은 JSON 형식: {}", payload);
+                return null;
+            }
         } catch (ParseException e) {
             logger.error("payload에서 message 추출 실패: {}", payload, e);
             return null; // 예외 발생 시 null 반환
@@ -193,13 +212,13 @@ public class ChatService {
      * @return 해당 파라미터 값 (존재하지 않으면 null 반환)
      */
     private Long extractParamFromUri(String uri, String paramName) {
-        // e.g. `ws://localhost:8080/ws?chatId=1&userId=1` 입력의 경우,
+        // e.g. `ws://3.34.144.148:8080/ws?chatId=1&userId=1` 입력의 경우,
         try {
             // "?"로 나누어 쿼리 파라미터 부분만 가져옴 (e.g. `chatId=1&userId=1`)
             String[] parts = uri.split("\\?");
             if (parts.length < 2) {
                 logger.warn("쿼리 파라미터 없음: {}", uri);
-                throw new IllegalArgumentException(paramName + " 파라미터가 없음");
+                throw new IllegalArgumentException(paramName + NO_QUERY_PARAMETER);
             }
             // 쿼리 부분을 "&"로 나누어 매개변수 배열로 변환
             return Stream.of(parts[1].split("&"))  // 쿼리 문자열에서 &로 분리 (e.g. `["chatId=1", "userId=1"]`)
@@ -211,13 +230,27 @@ public class ChatService {
                 .orElse(null);  // 없으면 null 반환
         } catch (NumberFormatException e) {
             logger.error("URI에서 {} 추출 실패: {}", paramName, uri, e);
-            throw new IllegalArgumentException(paramName + " 추출 중 숫자 형식 오류");
+            throw new IllegalArgumentException(paramName + NUMBER_FORMAT_ERROR);
         }
     }
 
+    /**
+     * ID를 통해 유저의 프로필을 반환
+     * @param userId 유저의 ID
+     * @return 해당 유저의 name과 이미지 반환
+     */
     public ChatUserResponse getUserProfileById(String userId) {
-        Member member = memberRepository.findById(Integer.parseInt(userId))
-            .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
-        return new ChatUserResponse(member.getNickname(), member.getProfileImg());
+        Member member = memberRepository.findById(Long.parseLong(userId))
+            .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND + userId));
+
+        // member.getUserName()이 null일 경우 member.getNickname()을 사용
+        String name = (member.getUsername() != null) ? member.getUsername() : member.getNickname();
+
+        return new ChatUserResponse(name, member.getProfileImg());
+    }
+
+    // getter
+    public ConcurrentMap<Long, List<WebSocketSession>> getChatRoomSessions() {
+        return chatRoomSessions;
     }
 }

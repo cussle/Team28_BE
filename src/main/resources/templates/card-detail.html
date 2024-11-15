@@ -5,81 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[[${card.name}]]님의 명함</title>
 
-    <!-- CSS 파일 로드 -->
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/card/home-nav-bar.css}">
+    <link rel="stylesheet" th:href="@{/css/card/card.css}">
     <link rel="stylesheet" th:href="@{/css/card/card-detail.css}">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/card/card.js}"></script>
 
     <!-- 카카오 JavaScript SDK 로드 -->
     <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script th:inline="javascript">
         /*<![CDATA[*/
         Kakao.cleanup();
-        Kakao.init(/*[[${kakaoJavascriptKey}]]*/ '');
+        Kakao.init(/*[[${kakaoJavascriptKey}]]*/ '' );
         /*]]>*/
     </script>
 </head>
 <body>
+
+<!-- Header with smaller margin and padding -->
+<div class="header">
+    <h2 class="title">명함</h2>
+</div>
+
+<!-- Main container holding the card -->
 <div class="container">
-    <div class="card">
-        <h2>[[${card.name}]]</h2>
-        <p>회사: [[${card.company}]]</p>
-        <p>직책: [[${card.position}]]</p>
-        <p>전화번호: [[${card.phone}]]</p>
-        <p>이메일: [[${card.email}]]</p>
-        <p>GitHub: <a th:href="'https://github.com/' + ${card.githubId}" target="_blank" class="github-link">[[${card.githubId}]]</a></p>
-        <p>소개: [[${card.bio}]]</p>
+    <button th:if="!${isMyCard}" id="add-to-group-btn" class="add-to-group-button">그룹에 추가</button>
+
+    <div id="modal-overlay" style="display: none;"></div>
+
+    <div id="group-modal">
+        <h3>그룹 선택</h3>
+        <ul id="group-list">
+            <li th:each="group : ${groups}">
+                <button class="group-option" th:attr="data-group-id=${group.id}">[[${group.name}]]</button>
+            </li>
+        </ul>
     </div>
-    <button id="kakao-share-btn" class="share-button">카카오톡으로 공유하기</button>
+
+    <!-- 명함 -->
+    <div th:replace="card :: cardSection(${card?.id ?: 1})"></div>
+
+    <div class = "buttons">
+        <button class="edit-button button" th:attr="data-id=${card.id}">수정</button>
+        <button class="delete-button button" th:attr="data-id=${card.id}">삭제</button>
+    </div>
+    <div class="share-options" id="share-options" style="display: none;">
+        <button id="kakao-share-btn" class="share-button-icon">
+            <img th:src="@{/images/kakaotalk-icon.svg}" alt="KakaoTalk Icon" class="icon">
+            카카오톡
+        </button>
+        <button id="qr-share-btn" class="share-button-icon" th:attr="data-card-id=${card.id}">
+            <img th:src="@{/images/qr-icon.svg}" alt="QR Code Icon" class="icon">
+            QR
+        </button>
+        <button id="nfc-share-btn" class="share-button-icon" th:attr="data-card-id=${card.id}">
+            <img th:src="@{/images/nfc-icon.svg}" alt="NFC Icon" class="icon">
+            NFC
+        </button>
+    </div>
+    <div id="qr-image-container" style="display: none; text-align: center; margin-top: 20px;">
+        <!-- QR code image will be appended here dynamically -->
+    </div>
 </div>
 
-<div class="nav-bar">
-    <div class="nav-item">
-        <img src="mycard-icon.png" alt="My Card" class="nav-icon">
-        <p>MyCard</p>
-    </div>
-    <div class="nav-item">
-        <img src="wallet-icon.png" alt="Wallet" class="nav-icon">
-        <p>Wallet</p>
-    </div>
-    <div class="nav-item">
-        <img src="chat-icon.png" alt="Chat" class="nav-icon">
-        <p>Chats</p>
-    </div>
-    <div class="nav-item">
-        <img src="mypage-icon.png" alt="My Page" class="nav-icon">
-        <p>MyPage</p>
-    </div>
-</div>
+<!-- 하단 네비게이션 바 -->
+<div th:replace="home-nav-bar :: navBar"></div>
 
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    document.getElementById('kakao-share-btn').addEventListener('click', function () {
-        Kakao.Link.sendDefault({
-            objectType: 'feed',
-            content: {
-                title: '[[${card.name}]]님의 명함',
-                description: '회사: [[${card.company}]], 직책: [[${card.position}]]',
-                imageUrl: 'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png',
-                link: {
-                    mobileWebUrl: 'http://localhost:8080/cards/[[${card.id}]]/view',
-                    webUrl: 'http://localhost:8080/cards/[[${card.id}]]/view'
-                }
-            },
-            buttons: [
-                {
-                    title: '명함 보기',
-                    link: {
-                        mobileWebUrl: 'http://localhost:8080/cards/[[${card.id}]]/view',
-                        webUrl: 'http://localhost:8080/cards/[[${card.id}]]/view'
-                    }
-                }
-            ],
-            fail: function(error) {
-                console.error(error);
-                alert('카카오톡 공유에 실패했습니다.');
-            }
-        });
-    });
-    /*]]>*/
+<!-- Toast 알림 -->
+<div id="toast" class="toast"></div>
+
+<!-- 토글 share 버튼 누른 경우 카카오톡, nfc, qr 공유 버튼 활성화 -->
+<script>
+    function toggleShareOptions() {
+        const shareOptions = document.getElementById("share-options");
+        const qrContainer = document.getElementById("qr-image-container");
+
+        if (shareOptions.style.display === "none") {
+            shareOptions.style.display = "flex";
+        } else {
+            shareOptions.style.display = "none";
+            qrContainer.style.display = "none";  // QR 코드 이미지도 함께 숨기기
+            qrContainer.innerHTML = '';  // QR 코드 이미지 제거
+        }
+    }
 </script>
+<script th:inline="javascript">
+    // 서버 데이터를 Thymeleaf 표현식으로 JavaScript 변수에 전달
+    const cardId = /*[[${card.id}]]*/ null; // 카드 ID
+    const cardName = /*[[${card.name}]]*/ ''; // 카드 이름
+    const cardCompany = /*[[${card.company}]]*/ ''; // 회사 이름
+    const cardPosition = /*[[${card.position}]]*/ ''; // 직책
+</script>
+
+
 </body>
+
+<script th:src="@{/js/card/card-detail.js}"></script>
+<script th:src="@{/js/card/card-share.js}"></script>
+<script th:src="@{/js/wallet/wallet-add.js}"></script>
+
 </html>

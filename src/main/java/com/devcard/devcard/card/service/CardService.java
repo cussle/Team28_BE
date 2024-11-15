@@ -3,6 +3,7 @@ package com.devcard.devcard.card.service;
 import com.devcard.devcard.auth.entity.Member;
 import com.devcard.devcard.card.dto.CardRequestDto;
 import com.devcard.devcard.card.dto.CardResponseDto;
+import com.devcard.devcard.card.dto.CardUpdateDto;
 import com.devcard.devcard.card.entity.Group;
 import com.devcard.devcard.card.exception.CardNotFoundException;
 import com.devcard.devcard.card.repository.CardRepository;
@@ -26,12 +27,26 @@ public class CardService {
     }
 
     @Transactional
+    public void createCardWithDefaultInfo(Member member) {
+        Card card = new Card.Builder(member)
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .profileImg(member.getProfileImg())
+                .build();
+        cardRepository.save(card);
+    }
+
+
+    @Transactional
     public CardResponseDto createCard(CardRequestDto cardRequestDto, Member member) {
         Card card = new Card.Builder(member)
                 .company(cardRequestDto.getCompany())
                 .position(cardRequestDto.getPosition())
                 .phone(cardRequestDto.getPhone())
                 .bio(cardRequestDto.getBio())
+                .email(cardRequestDto.getEmail())
+                .nickname(cardRequestDto.getCardName())
+                .profileImg(cardRequestDto.getProfileImg())
                 .build();
 
         Card savedCard = cardRepository.save(card);
@@ -46,6 +61,14 @@ public class CardService {
     }
 
     @Transactional(readOnly = true)
+    public List<CardResponseDto> getMyCards(Long memberId) {
+        List<Card> cards = cardRepository.findByMemberId(memberId);
+        return cards.stream()
+                .map(CardResponseDto::fromEntity)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<CardResponseDto> getCards() {
         List<Card> cards = cardRepository.findAll();
         return cards.stream()
@@ -54,7 +77,7 @@ public class CardService {
     }
 
     @Transactional
-    public CardResponseDto updateCard(Long id, CardRequestDto cardRequestDto, Member member) {
+    public CardResponseDto updateCard(Long id, CardUpdateDto cardUpdateDto, Member member) {
         Card existingCard = cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException("해당 명함을 찾을 수 없습니다."));
 
@@ -64,7 +87,7 @@ public class CardService {
         }
 
         // 기존 엔티티의 필드 업데이트
-        existingCard.updateFromDto(cardRequestDto);
+        existingCard.updateFromDto(cardUpdateDto);
 
         return CardResponseDto.fromEntity(existingCard);
     }

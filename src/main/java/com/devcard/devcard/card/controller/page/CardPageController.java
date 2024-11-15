@@ -2,7 +2,10 @@ package com.devcard.devcard.card.controller.page;
 
 import com.devcard.devcard.auth.model.OauthMemberDetails;
 import com.devcard.devcard.card.dto.CardResponseDto;
+import com.devcard.devcard.card.dto.GroupResponseDto;
+import com.devcard.devcard.card.repository.GroupRepository;
 import com.devcard.devcard.card.service.CardService;
+import com.devcard.devcard.card.service.GroupService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -16,19 +19,31 @@ import java.util.List;
 public class CardPageController {
 
     private final CardService cardService;
+    private final GroupService groupService;
+    private final GroupRepository groupRepository;
 
     @Value("${kakao.javascript.key}")
     private String kakaoJavascriptKey;
 
-    public CardPageController(CardService cardService) {
+    public CardPageController(CardService cardService, GroupService groupService, GroupRepository groupRepository) {
         this.cardService = cardService;
+        this.groupService = groupService;
+        this.groupRepository = groupRepository;
     }
 
     @GetMapping("/cards/{id}/view")
-    public String viewCard(@PathVariable("id") Long id, Model model) {
+    public String viewCard(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
         CardResponseDto card = cardService.getCard(id);
+        boolean isMyCard = card.getGithubId().equals(oauthMemberDetails.getMember().getGithubId());
         model.addAttribute("card", card);
+        model.addAttribute("isMyCard", isMyCard);
         model.addAttribute("kakaoJavascriptKey", kakaoJavascriptKey);
+
+        if (!isMyCard) {
+            List<GroupResponseDto> groups = groupService.getGroupsByMember(oauthMemberDetails.getMember());
+            model.addAttribute("groups", groups);
+        }
+
         return "card-detail";
     }
 
@@ -43,7 +58,31 @@ public class CardPageController {
     public String viewCardList(@PathVariable("id") Long groupId, Model model, @AuthenticationPrincipal OauthMemberDetails oauthMemberDetails) {
         List<CardResponseDto> cards = cardService.getCardsByGroup(groupId, oauthMemberDetails.getMember());
         model.addAttribute("cards", cards);
+        model.addAttribute("group", groupRepository.findById(groupId).get());
         return "card-list";
+    }
+
+    @GetMapping("/cards/manage")
+    public String cardManage() {
+        return "card-manage";
+    }
+
+    @GetMapping("/cards/create-view")
+    public String createCardView() {
+        return "card-create";
+    }
+
+    @GetMapping("/cards/{cardId}/edit")
+    public String editCardView(@PathVariable("cardId") Long cardId, Model model) {
+        model.addAttribute("cardId", cardId);
+        return "card-edit";
+    }
+
+    @GetMapping("/shared/cards/{cardId}")
+    public String sharedCardView(@PathVariable("cardId") Long cardId, Model model) {
+        CardResponseDto card = cardService.getCard(cardId);
+        model.addAttribute("card", card);
+        return "card-shared-view";
     }
 
 }

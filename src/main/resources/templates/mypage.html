@@ -2,9 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>마이페이지</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
+    <title>명함 관리</title>
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
+
+<div class="mypage-container">
+    <div class="profile-section">
+        <div class="profile-photo">
+            <img th:src="${member.profileImg}" alt="User Profile Photo">
+        </div>
+        <div class="profile-info">
+            <h2 class="username" th:text="${member.username != null ? member.username : member.nickname}">닉네임</h2>
+        </div>
+    </div>
+    <div class="menu-section">
+        <div class="menu-item">
+            <a th:href="@{/cards/manage}">
+                <img th:src="@{/images/card_black.svg}" alt="Card Management Icon">
+                <p>명함 관리</p>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a th:href="@{/mypage/qna}">
+                <img th:src="@{/images/customer-service.svg}" alt="Customer Service Icon">
+                <p>Q & A</p>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a th:href="@{/mypage/notice}">
+                <img th:src="@{/images/notice.svg}" alt="Notice Icon">
+                <p>공지사항</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- 하단 네비게이션 바 -->
+<div th:replace="nav-bar :: navBar"></div>
+
+<!-- Toast 알림 -->
+<div id="toast" class="toast"></div>
 
 </body>
 </html>

@@ -1,0 +1,58 @@
+/* 전체 화면 설정 */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 컨테이너 설정 */
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    overflow-y: auto; /* 스크롤 가능하게 설정 */
+}
+
+/* 카드 리스트 가운데 정렬 */
+.card-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* 카드 리스트의 최대 너비 설정 */
+}
+
+/* 상단 헤더 */
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+/* 삭제 버튼 */
+.delete-button {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    z-index: 10; /* 삭제 버튼이 다른 요소 위에 표시되도록 설정 */
+}
+
+/* 카드 hover 시 삭제 버튼 표시 */
+.card:hover .delete-button {
+    display: block;
+}

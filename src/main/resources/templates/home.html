@@ -6,29 +6,26 @@
     <title>My Business Card</title>
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/card/card.css}">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
-<div class="container">
+<div class="card-title-container">
     <h2 class="title">My Business Card</h2>
-    <div class="card">
-        <div class="card-content">
-            <h3>DevCard</h3>
-            <p>App Developer | Backend Engineer</p>
-            <p>📱: 010-1234-5678</p>
-            <p>📧: devcard@example.com</p>
-            <p>💻: GitHub: <a href="https://github.com/your-profile" target="_blank">your-profile</a></p>
-            <p>Location: Online</p>
-            <p>Contributor to 1,100+ open-source projects</p>
-        </div>
-        <div class="card-image">
-            <img th:src="@{/images/person-working.png}" alt="Person Working">
-        </div>
-    </div>
+    <!-- 명함 Card-->
+    <div th:replace="card :: cardSection(${cardId})"></div>
 </div>
 
-<!-- NavBar 포함 -->
-<div th:replace="~{/nav-bar :: navBar}"></div>
+<!-- 하단 네비게이션 바 -->
+<div th:replace="nav-bar :: navBar"></div>
 
-<script th:src="@{/script.js}"></script>
+<!-- Toast 알림 -->
+<div id="toast" class="toast"></div>
+
+<script th:src="@{/js/card/card.js}"></script>
+
 </body>
 </html>

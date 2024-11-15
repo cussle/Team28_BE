@@ -1,8 +1,11 @@
 package com.devcard.devcard.chat.service;
 
 import static com.devcard.devcard.chat.util.Constants.CHAT_ROOM_NOT_FOUND;
+import static com.devcard.devcard.chat.util.Constants.CHAT_ROOM_NOT_FOUND_BY_PARTICIPANTS;
+import static com.devcard.devcard.chat.util.Constants.DUPLICATE_CHAT_ROOM_ERROR;
 
 import com.devcard.devcard.auth.entity.Member;
+import com.devcard.devcard.auth.repository.MemberRepository;
 import com.devcard.devcard.chat.dto.ChatMessageResponse;
 import com.devcard.devcard.chat.dto.ChatRoomListResponse;
 import com.devcard.devcard.chat.dto.ChatRoomResponse;
@@ -13,7 +16,6 @@ import com.devcard.devcard.chat.model.ChatMessage;
 import com.devcard.devcard.chat.model.ChatRoom;
 import com.devcard.devcard.chat.repository.ChatRepository;
 import com.devcard.devcard.chat.repository.ChatRoomRepository;
-import com.devcard.devcard.chat.repository.ChatUserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,16 +32,16 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRepository chatRepository;
-    private final ChatUserRepository chatUserRepository;
+    private final MemberRepository memberRepository;
 
     public ChatRoomService(
         ChatRoomRepository chatRoomRepository,
         ChatRepository chatRepository,
-        ChatUserRepository chatUserRepository
+        MemberRepository memberRepository
     ) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatRepository = chatRepository;
-        this.chatUserRepository = chatUserRepository;
+        this.memberRepository = memberRepository;
     }
 
     /**
@@ -48,11 +50,22 @@ public class ChatRoomService {
      * @return 생성된 채팅방 정보
      */
     public CreateRoomResponse createChatRoom(CreateRoomRequest createRoomRequest) {
-        // jpa를 이용해 ChatUser 리스트 가져오기
-        List<Member> participants = chatUserRepository.findByIdIn(createRoomRequest.getParticipantsId());
-        ChatRoom chatRoom = new ChatRoom(participants, LocalDateTime.now()); // chatRoom생성
-        chatRoomRepository.save(chatRoom); // db에 저장
-        return makeCreateChatRoomResponse(chatRoom); // Response로 변환
+        // 참여자 ID를 기반으로 Member 리스트 가져오기
+        List<Member> participants = memberRepository.findByIdIn(createRoomRequest.getParticipantsId());
+        int participantSize = participants.size();
+
+        // 동일한 참여자 구성의 채팅방이 있는지 확인
+        chatRoomRepository.findByExactParticipants(createRoomRequest.getParticipantsId(), participantSize)
+            .ifPresent(existingRoom -> {
+                throw new IllegalArgumentException(DUPLICATE_CHAT_ROOM_ERROR);
+            });
+
+        // 새로운 채팅방 생성
+        ChatRoom chatRoom = new ChatRoom(participants, LocalDateTime.now());
+        chatRoomRepository.save(chatRoom); // DB에 저장
+
+        // Response 변환 및 반환
+        return makeCreateChatRoomResponse(chatRoom);
     }
 
 
@@ -122,7 +135,7 @@ public class ChatRoomService {
     }
 
     /**
-     * 채팅방 삭제
+     * chatId를 이용해 채팅방 삭제
      * @param chatId 채팅방 ID
      */
     public void deleteChatRoom(String chatId) {
@@ -137,6 +150,26 @@ public class ChatRoomService {
 
         // 채팅방 삭제
         chatRoomRepository.deleteById(chatRoomId);
+    }
+
+    /**
+     * 참여자 ID를 이용해 채팅방 삭제
+     * @param participantsId 채팅방에 참여하는 모든 유저의 ID List
+     */
+    public void deleteChatRoomByParticipants(List<Long> participantsId) {
+        // 참여자 수 계산
+        int size = participantsId.size();
+
+        // 정확히 일치하는 채팅방 조회
+        ChatRoom chatRoom = chatRoomRepository.findByExactParticipants(participantsId, size)
+            .orElseThrow(() -> new ChatRoomNotFoundException(
+                CHAT_ROOM_NOT_FOUND_BY_PARTICIPANTS + participantsId.toString()));
+
+        // 관련된 메시지 삭제
+        chatRepository.deleteByChatRoomId(chatRoom.getId());
+
+        // 채팅방 삭제
+        chatRoomRepository.delete(chatRoom);
     }
 
     /**

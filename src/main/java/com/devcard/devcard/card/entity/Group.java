@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "`groups`")
 public class Group {
 
     @Id
@@ -61,5 +61,9 @@ public class Group {
 
     public int getCount() {
         return cards.size();
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

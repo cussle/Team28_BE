@@ -1,7 +1,4 @@
 $(document).ready(function () {
-    $(".nav-item").removeClass("active"); // 모든 nav-item에서 active 클래스 제거
-    $(".nav-item[data-page='chats']").addClass("active"); // chats에 active 클래스 추가
-
     const path = window.location.pathname;
 
     // 특정 사용자 정보를 가져오는 함수
@@ -13,6 +10,7 @@ $(document).ready(function () {
                 callback(profile);
             },
             error: function (error) {
+                handleError("프로필 정보를 불러오지 못했습니다.");
                 console.error("프로필 정보를 불러오는데 오류가 발생했습니다:", error);
             }
         });
@@ -33,6 +31,7 @@ $(document).ready(function () {
                     renderChatRooms(chatRooms);
                 },
                 error: function (error) {
+                    handleError("채팅방 목록을 불러오지 못했습니다.");
                     console.error("채팅방 목록을 불러오는데 오류가 발생했습니다:", error);
                 }
             });
@@ -50,7 +49,7 @@ $(document).ready(function () {
                 return new Promise((resolve) => {
                     fetchUserProfile(participantId, function(profile) {
                         // 검색어가 포함된 경우 하이라이트 처리
-                        const highlightedName = highlightText(profile.nickname, searchTerm);
+                        const highlightedName = highlightText(profile.name, searchTerm);
                         const highlightedMessage = highlightText(lastMessage, searchTerm);
 
                         const chatItem = $('<div>', {class: 'chat-item'});
@@ -149,7 +148,7 @@ $(document).ready(function () {
         fetchChatRoom(chatId);
 
         // 임시로 로컬 서버 설정
-        const socket = new WebSocket(`ws://localhost:8080/ws?chatId=${chatId}&userId=${memberId}`);
+        const socket = new WebSocket(`ws://3.34.144.148:8080/ws?chatId=${chatId}&userId=${memberId}`);
 
         // 웹소켓 연결
         socket.addEventListener("open", () => {
@@ -158,6 +157,7 @@ $(document).ready(function () {
 
         // 웹소켓 예외처리
         socket.addEventListener("error", (error) => {
+            handleError("서버와 연결 중 오류가 발생했습니다.");
             console.error("웹소켓 연결 중 오류가 발생:", error);
         });
 
@@ -172,7 +172,7 @@ $(document).ready(function () {
         function sendMessage(messageContent) {
             // 메시지 길이 체크
             if (messageContent.length > 2000) {
-                console.log("메시지 최대 길이 초과");
+                handleError("보낼 수 있는 메시지의 최대 길이는 2,000자입니다.");
                 return;
             }
 
@@ -228,6 +228,7 @@ $(document).ready(function () {
                     renderChatRoom(chatRoom);
                 },
                 error: function (error) {
+                    handleError("채팅방 정보를 불러오지 못했습니다.");
                     console.error("채팅방 정보를 불러오는데 오류가 발생했습니다:", error);
                 }
             });
@@ -243,7 +244,7 @@ $(document).ready(function () {
             if (!receiverName) {
                 // 프로필 닉네임을 비동기로 가져오고 receiverName 저장
                 fetchUserProfile(participantId, function(profile) {
-                    receiverName = profile.nickname;
+                    receiverName = profile.name;
                     renderMessages(chatRoom.messages);
                     $("#roomTitle").text(receiverName);
                 });

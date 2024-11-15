@@ -113,6 +113,14 @@ public class GroupService {
         Group group = groupRepository.findByIdAndMember(groupId, member)
             .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 존재하지 않거나 접근 권한이 없습니다."));
 
+        // 그룹에 포함된 모든 카드의 채팅방 삭제
+        for (Card card : group.getCards()) {
+            chatRoomService.deleteChatRoomByParticipants(Arrays.asList(
+                member.getId(),
+                card.getMember().getId()
+            ));
+        }
+
         groupRepository.delete(group); // 그룹 삭제
     }
 

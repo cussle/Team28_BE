@@ -36,22 +36,6 @@ body, html {
     font-size: 1.2rem;
 }
 
-/* 카드 스타일 */
-.card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: black;
-    color: white;
-    border-radius: 15px;
-    padding: 20px;
-    margin: 10px 0;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative; /* 삭제 버튼 위치를 카드 내부로 제한하기 위해 relative 사용 */
-}
-
 /* 삭제 버튼 */
 .delete-button {
     display: none;
@@ -71,28 +55,4 @@ body, html {
 /* 카드 hover 시 삭제 버튼 표시 */
 .card:hover .delete-button {
     display: block;
-}
-
-.card-content {
-    flex: 1;
-}
-
-.card-content h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-}
-
-.card-content p {
-    margin-bottom: 8px;
-}
-
-.card-content a {
-    color: #00bfff;
-    text-decoration: none;
-}
-
-.card-image img {
-    width: 100px;
-    height: auto;
-    border-radius: 8px;
 }

@@ -14,6 +14,22 @@
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script th:src="@{/js/script.js}"></script>
+
+    <style>
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            background-color: grey; /* Green */
+            color: white;
+        }
+        .button:hover {
+            background-color: #16a085; /* Darker green */
+        }
+    </style>
 </head>
 <body>
 
@@ -21,10 +37,12 @@
     <h2 class="title">[[${card.name}]] 명함</h2>
     <!-- 명함 Card-->
     <div th:replace="card :: cardSection(${card?.id ?: 1})"></div>
+    <div>
+        <button class="edit-button button">명함 추가하기</button>
+    </div>
 </div>
 
-<!-- 명함 -->
-<div th:replace="card :: cardSection(${card?.id})"></div>
+
 
 <!-- 하단 네비게이션 바 -->
 <div th:replace="nav-bar :: navBar"></div>

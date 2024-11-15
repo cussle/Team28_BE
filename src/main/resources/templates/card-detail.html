@@ -93,6 +93,13 @@
         }
     }
 </script>
+<script th:inline="javascript">
+    // 서버 데이터를 Thymeleaf 표현식으로 JavaScript 변수에 전달
+    const cardId = /*[[${card.id}]]*/ null; // 카드 ID
+    const cardName = /*[[${card.name}]]*/ ''; // 카드 이름
+    const cardCompany = /*[[${card.company}]]*/ ''; // 회사 이름
+    const cardPosition = /*[[${card.position}]]*/ ''; // 직책
+</script>
 </body>
 
 <script th:src="@{/js/card/card-detail.js}"></script>

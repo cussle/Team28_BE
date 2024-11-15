@@ -34,7 +34,7 @@
                     <p th:text="${card.bio}">Bio</p>
                 </div>
                 <div class="card-image">
-                    <img th:src="@{${card.profilePicture}}" alt="Profile Picture">
+                    <img th:src="@{${card.profileImg}}" alt="Profile Picture">
                 </div>
             </a>
             <button class="delete-button" th:attr="card-id=${card.id}" onclick="deleteCardFromGroup(this)">삭제</button>

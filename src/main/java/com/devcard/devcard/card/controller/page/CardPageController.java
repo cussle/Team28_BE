@@ -78,4 +78,11 @@ public class CardPageController {
         return "card-edit";
     }
 
+    @GetMapping("/shared/cards/{cardId}")
+    public String sharedCardView(@PathVariable("cardId") Long cardId, Model model) {
+        CardResponseDto card = cardService.getCard(cardId);
+        model.addAttribute("card", card);
+        return "card-shared-view";
+    }
+
 }

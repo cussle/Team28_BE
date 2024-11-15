@@ -188,3 +188,11 @@
 .delete-button.button:hover {
     background-color: #16a085; /* Darker red */
 }
+
+#qr-image-container {
+    display: none;
+    text-align: center;
+    margin-top: 10px; /* 기존 20px에서 10px로 줄임 */
+    position: relative; /* 컨테이너의 위치를 세부 조정할 수 있도록 설정 */
+    top: -10px; /* 컨테이너를 위로 이동 */
+}

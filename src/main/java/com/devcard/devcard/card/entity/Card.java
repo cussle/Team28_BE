@@ -126,13 +126,13 @@ public class Card {
 
     // DTO 기반 업데이트 메서드
     public void updateFromDto(CardUpdateDto dto) {
-        if (dto.getCompany() != null) this.company = dto.getCompany();
-        if (dto.getPosition() != null) this.position = dto.getPosition();
-        if (dto.getPhone() != null) this.phone = dto.getPhone();
-        if (dto.getBio() != null) this.bio = dto.getBio();
-        if (dto.getEmail() != null) this.email = dto.getEmail();
-        if (dto.getCardName() != null) this.nickname = dto.getCardName();
-        if (dto.getProfileImg() != null) this.profileImg = dto.getProfileImg();
+        this.company = dto.getCompany();
+        this.position = dto.getPosition();
+        this.phone = dto.getPhone();
+        this.bio = dto.getBio();
+        this.email = dto.getEmail();
+        this.nickname = dto.getCardName();
+        this.profileImg = dto.getProfileImg();
         this.updatedAt = LocalDateTime.now();
     }
 

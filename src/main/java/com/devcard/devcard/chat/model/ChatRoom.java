@@ -2,9 +2,11 @@ package com.devcard.devcard.chat.model;
 
 import com.devcard.devcard.auth.entity.Member;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
@@ -18,8 +20,12 @@ public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToMany
-    @JoinTable(name = "chat_room_participants")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "chat_room_participants",
+        joinColumns = @JoinColumn(name = "chat_room_id"),
+        inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
     private List<Member> participants;
     private LocalDateTime createdAt;
     private String lastMessage = "메세지를 보내보세요.";  // 기본값 설정

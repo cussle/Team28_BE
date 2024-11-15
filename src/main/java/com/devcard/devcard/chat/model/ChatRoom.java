@@ -24,7 +24,7 @@ public class ChatRoom {
     @JoinTable(
         name = "chat_room_participants",
         joinColumns = @JoinColumn(name = "chat_room_id"),
-        inverseJoinColumns = @JoinColumn(name = "member_id") 
+        inverseJoinColumns = @JoinColumn(name = "member_id")
     )
     private List<Member> participants;
     private LocalDateTime createdAt;

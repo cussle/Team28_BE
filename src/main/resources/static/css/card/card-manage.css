@@ -41,6 +41,7 @@
 
 /* 명함 리스트 섹션 */
 .card-list-section {
+    height: 100%;
     overflow-y: auto;
     padding: 1rem;
     display: grid;

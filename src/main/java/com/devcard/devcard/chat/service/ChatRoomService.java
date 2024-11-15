@@ -145,8 +145,11 @@ public class ChatRoomService {
      * @param participantsId 채팅방에 참여하는 모든 유저의 ID List
      */
     public void deleteChatRoomByParticipants(List<Long> participantsId) {
-        // 참여자 ID 목록으로 채팅방 조회
-        ChatRoom chatRoom = chatRoomRepository.findByParticipants_IdIn(participantsId)
+        // 참여자 수 계산
+        int size = participantsId.size();
+
+        // 정확히 일치하는 채팅방 조회
+        ChatRoom chatRoom = chatRoomRepository.findByExactParticipants(participantsId, size)
             .orElseThrow(() -> new ChatRoomNotFoundException(
                 CHAT_ROOM_NOT_FOUND_BY_PARTICIPANTS + participantsId.toString()));
 
